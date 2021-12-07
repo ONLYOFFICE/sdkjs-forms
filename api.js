@@ -35,59 +35,6 @@
     window['Asc']['Addons'] = window['Asc']['Addons'] || {};
 	window['Asc']['Addons']['forms'] = true; // register addon
 	
-	window['Asc']['asc_docs_api'].prototype['asc_AddContentControl'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControl = function(nType, oContentControlPr)
-	{
-		var oLogicDocument = this.WordControl.m_oLogicDocument;
-		if (!oLogicDocument)
-			return null;
-
-		var oResult = null;
-		if (c_oAscSdtLevelType.Block === nType)
-		{
-			if (false === oLogicDocument.Document_Is_SelectionLocked(AscCommon.changestype_ContentControl_Add, null))
-			{
-				oLogicDocument.StartAction(AscDFH.historydescription_Document_AddBlockLevelContentControl);
-
-				var oContentControl = oLogicDocument.AddContentControl(c_oAscSdtLevelType.Block);
-				if (oContentControl)
-				{
-					if (oContentControlPr)
-						oContentControl.SetContentControlPr(oContentControlPr);
-
-					oLogicDocument.Recalculate();
-					oLogicDocument.UpdateInterface();
-					oLogicDocument.UpdateSelection();
-
-					oResult = oContentControl.GetContentControlPr();
-				}
-
-				oLogicDocument.FinalizeAction();
-			}
-		}
-		else if (c_oAscSdtLevelType.Inline === nType)
-		{
-			if (false === oLogicDocument.Document_Is_SelectionLocked(AscCommon.changestype_ContentControl_Add, null))
-			{
-				oLogicDocument.StartAction(AscDFH.historydescription_Document_AddInlineLevelContentControl);
-
-				var oContentControl = oLogicDocument.AddContentControl(c_oAscSdtLevelType.Inline);
-				if (oContentControl)
-				{
-					if (oContentControlPr)
-						oContentControl.SetContentControlPr(oContentControlPr);
-
-					oLogicDocument.Recalculate();
-					oLogicDocument.UpdateInterface();
-					oLogicDocument.UpdateSelection();
-
-					oResult = oContentControl.GetContentControlPr();
-				}
-
-				oLogicDocument.FinalizeAction();
-			}
-		}
-		return oResult;
-	};
 	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlCheckBox'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlCheckBox = function(oPr, oFormPr, oCommonPr)
 	{
 		var oLogicDocument = this.private_GetLogicDocument();
