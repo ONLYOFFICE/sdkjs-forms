@@ -75,27 +75,76 @@
 			isLoadFonts = true;
 			AscFonts.FontPickerByCharacter.getFontBySymbol(nUncheckedSymbol);
 		}
+
+		function private_ApplyPrToCheckBox(oCC)
+		{
+			if (!oCC)
+				return;
+
+			if (oFormPr)
+			{
+				oCC.SetFormPr(oFormPr);
+				oCC.UpdatePlaceHolderTextPrForForm();
+			}
+
+			if (oCommonPr)
+				oCC.SetContentControlPr(oCommonPr);
+		}
 		
 		function private_PerformAddCheckBox()
 		{
-			oLogicDocument.RemoveTextSelection();
-			if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
-			{
-				oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
 
-				var oCC = oLogicDocument.AddContentControlCheckBox(oPr);
-				if (oCC && oFormPr)
+			if (oLogicDocument.IsTextSelectionUse())
+			{
+				let arrSelectedParagraphs = oLogicDocument.GetSelectedParagraphs();
+
+				// Выделяем целиком параграфы, чтобы после действия все добавленные чекбоксы попали в выделение
+				for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
 				{
-					oCC.SetFormPr(oFormPr);
-					oCC.UpdatePlaceHolderTextPrForForm();
+					arrSelectedParagraphs[nIndex].SelectAll();
 				}
 
-				if (oCC && oCommonPr)
-					oCC.SetContentControlPr(oCommonPr);
+				let oState = oLogicDocument.SaveDocumentState(true);
 
-				oLogicDocument.UpdateInterface();
-				oLogicDocument.Recalculate();
-				oLogicDocument.FinalizeAction();
+				if (arrSelectedParagraphs.length > 0
+					&& !oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
+					Type      : AscCommon.changestype_2_ElementsArray_and_Type,
+					Elements  : arrSelectedParagraphs,
+					CheckType : changestype_Paragraph_Content
+				}))
+				{
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+
+					for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
+					{
+						let oCC = arrSelectedParagraphs[nIndex].AddCheckBoxToStartPos(oPr);
+						private_ApplyPrToCheckBox(oCC);
+					}
+
+					oLogicDocument.LoadDocumentState(oState);
+					oLogicDocument.UpdateInterface();
+					oLogicDocument.Recalculate();
+					oLogicDocument.FinalizeAction();
+				}
+				else
+				{
+					oLogicDocument.LoadDocumentState(oState);
+				}
+			}
+			else
+			{
+				oLogicDocument.RemoveTextSelection();
+				if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
+				{
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+
+					var oCC = oLogicDocument.AddContentControlCheckBox(oPr);
+					private_ApplyPrToCheckBox(oCC);
+
+					oLogicDocument.UpdateInterface();
+					oLogicDocument.Recalculate();
+					oLogicDocument.FinalizeAction();
+				}
 			}
 		}
 		
