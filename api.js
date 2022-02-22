@@ -110,7 +110,7 @@
 					&& !oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
 					Type      : AscCommon.changestype_2_ElementsArray_and_Type,
 					Elements  : arrSelectedParagraphs,
-					CheckType : changestype_Paragraph_Content
+					CheckType : AscCommon.changestype_Paragraph_Content
 				}))
 				{
 					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
