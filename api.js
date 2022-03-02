@@ -179,6 +179,12 @@
 				oCC.UpdatePlaceHolderTextPrForForm();
 				oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
+
+				if (!oCC.IsPlaceHolder())
+				{
+					oLogicDocument.Recalculate(true);
+					oCC.UpdatePictureFormLayout();
+				}
 			}
 
 			if (oCC && oCommonPr)
