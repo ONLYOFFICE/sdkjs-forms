@@ -99,9 +99,10 @@
 				let arrSelectedParagraphs = oLogicDocument.GetSelectedParagraphs();
 
 				// Выделяем целиком параграфы, чтобы после действия все добавленные чекбоксы попали в выделение
+				let nSelectDirection = oLogicDocument.GetSelectDirection();
 				for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
 				{
-					arrSelectedParagraphs[nIndex].SelectAll();
+					arrSelectedParagraphs[nIndex].SelectAll(nSelectDirection);
 				}
 
 				let oState = oLogicDocument.SaveDocumentState(true);
