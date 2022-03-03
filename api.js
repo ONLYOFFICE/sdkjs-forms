@@ -105,7 +105,7 @@
 					arrSelectedParagraphs[nIndex].SelectAll(nSelectDirection);
 				}
 
-				let oState = oLogicDocument.SaveDocumentState(true);
+				let oState = oLogicDocument.SaveDocumentState(false);
 
 				if (arrSelectedParagraphs.length > 0
 					&& !oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
@@ -115,6 +115,7 @@
 				}))
 				{
 					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+					oLogicDocument.RemoveSelection();
 
 					for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
 					{
