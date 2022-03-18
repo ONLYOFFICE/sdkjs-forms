@@ -98,7 +98,7 @@
 			{
 				let arrSelectedParagraphs = oLogicDocument.GetSelectedParagraphs();
 
-				// Выделяем целиком параграфы, чтобы после действия все добавленные чекбоксы попали в выделение
+				// ???????? ??????? ?????????, ????? ????? ???????? ??? ??????????? ???????? ?????? ? ?????????
 				let nSelectDirection = oLogicDocument.GetSelectDirection();
 				for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
 				{
@@ -181,6 +181,30 @@
 				oCC.UpdatePlaceHolderTextPrForForm();
 				oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
+				var aDrawings = oCC.GetAllDrawingObjects();
+				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing) 
+				{
+					var oGraphic = aDrawings[nDrawing].GraphicObj;
+					if(oGraphic && oGraphic.getObjectType() === AscDFH.historyitem_type_ImageShape) 
+					{
+						var oSpPr = oGraphic.spPr;
+						if(oSpPr) 
+						{
+							if(oSpPr.Fill) 
+							{
+								oSpPr.setFill(null);
+							}
+							if(oSpPr.ln) 
+							{
+								oSpPr.setLn(null);
+							}
+							if(oSpPr.geometry) 
+							{
+								oSpPr.setGeometry(null);
+							}
+						}
+					}
+				}
 
 				if (!oCC.IsPlaceHolder())
 				{
