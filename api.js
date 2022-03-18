@@ -184,7 +184,8 @@
 				var aDrawings = oCC.GetAllDrawingObjects();
 				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing) 
 				{
-					var oGraphic = aDrawings[nDrawing].GraphicObj;
+					var oDrawing = aDrawings[nDrawing];
+					var oGraphic = oDrawing.GraphicObj;
 					if(oGraphic && oGraphic.getObjectType() === AscDFH.historyitem_type_ImageShape) 
 					{
 						var oSpPr = oGraphic.spPr;
@@ -201,6 +202,26 @@
 							if(oSpPr.geometry) 
 							{
 								oSpPr.setGeometry(null);
+							}
+							var oXfrm = oSpPr.xfrm;
+							if(oXfrm)
+							{
+								if(!AscFormat.fApproxEqual(oXfrm.rot, 0.0))
+								{
+									oXfrm.setRot(0);
+								}
+								if(oXfrm.flipH)
+								{
+									oXfrm.setFlipH(false);
+								}
+								if(oXfrm.flipH)
+								{
+									oXfrm.setFlipH(false);
+								}
+								if(oXfrm.flipV)
+								{
+									oXfrm.setFlipV(false);
+								}
 							}
 						}
 					}
