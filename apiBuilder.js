@@ -149,7 +149,7 @@
 
 		function private_PerformAddCheckBox()
 		{
-			oCC = private_AddCommonFormToPara(oLogicDocument, oParagraph.private_GetImpl(), nPos, oFormPr);
+			oCC = private_AddCommonFormToPara(oParagraph.private_GetImpl(), nPos, oFormPr);
 
 			var oTextPr = oLogicDocument.GetDirectTextPr();
 			oCC.ApplyCheckBoxPr(oCheckboxPr, oTextPr);
@@ -176,24 +176,22 @@
 	};
 
 	/**
-	 * Adds the text form to specified paragraph.
-	 * @memberof Api
-	 * @param {ApiParagraph} oParagraph - the paragraph to which the form will be added.
-	 * @param {Number} [nPos=oParagraph.GetElementsCount()] - position to add form in the paragraph.
-	 * @param {FormPr} [oFormPr={Key: "", Fixed: false, Tip: "", Required: false}] - form properties.
+	 * Add the text form
+	 * @memberof AscBuilder.ApiParagraph
+	 * @param {Number} position to add form in the paragraph (add to the end if this parameter is not specified)
+	 * @param {FormPr} [oFormPr={Key: "", Fixed: false, Tip: "", Required: false}] - form properties
 	 * @returns {ApiTextForm}
 	 */
-	Api.prototype.AddTextForm = function(oParagraph, nPos, oFormPr)
+	AscBuilder.ApiParagraph.prototype.AddTextForm = function(nPos, oFormPr)
 	{
-		var oLogicDocument = this.private_GetLogicDocument();
-		if (!oLogicDocument || !oParagraph.GetClassType || oParagraph.GetClassType() !== "paragraph" || nPos < 0 || nPos > oParagraph.Paragraph.Content.length - 1)
-			return false;
+		let nParaLen = this.GetElementsCount();
+		nPos = undefined === nPos ? nParaLen : Math.max(0, Math.min(nParaLen, nPos));		
 
-		var oCC = private_AddCommonFormToPara(oLogicDocument, oParagraph.private_GetImpl(), nPos, oFormPr);
+		var oCC = private_AddCommonFormToPara(this.private_GetImpl(), nPos, oFormPr);
 		var oPr = new AscCommon.CSdtTextFormPr();
 		oCC.ApplyTextFormPr(oPr);
 
-		var oApiForm = this.private_CreateTextForm(oCC);
+		var oApiForm = new AscBuilder.ApiTextForm(oCC);
 		if (oFormPr.Fixed)
 			oApiForm.SetFixedForm(true);
 
@@ -221,7 +219,7 @@
 		var oPr = new CSdtComboBoxPr();
 		oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
 
-		var oCC = private_AddCommonFormToPara(oLogicDocument, oParagraph.private_GetImpl(), nPos, oFormPr);
+		var oCC = private_AddCommonFormToPara(oParagraph.private_GetImpl(), nPos, oFormPr);
 
 		if (isDropDown === true)
 		{
@@ -256,31 +254,31 @@
 	};
 
 	/**
-	 * Adds the picture form to specified paragraph.
-	 * @memberof Api
-	 * @param {ApiParagraph} oParagraph - the paragraph to which the form will be added.
-	 * @param {Number} [nPos=oParagraph.GetElementsCount()] - position to add form in the paragraph.
-	 * @param {PicFormPr} [oFormPr={Key: "", Tip: "", Required: false, Scale: "always"}] - picture form properties.
-	 * @returns {ApiComboBoxForm}
+	 * Add the picture form to specified paragraph
+	 * @memberof AscBuilder.ApiParagraph
+	 * @param {Number} position to add form in the paragraph (add to the end if this parameter is not specified)
+	 * @param {PicFormPr} [oFormPr={Key: "", Tip: "", Required: false, Scale: "always"}] - picture form properties
+	 * @returns {ApiPictureForm}
 	 */
-	Api.prototype.AddPictureForm = function(oParagraph, nPos, oFormPr)
+	AscBuilder.ApiParagraph.prototype.AddPictureForm = function(nPos, oFormPr)
 	{
-		var oLogicDocument = this.private_GetLogicDocument();
-		if (nPos === undefined)
-			nPos = oParagraph.GetElementsCount();
-
-		if (!oLogicDocument || !oParagraph.GetClassType || oParagraph.GetClassType() !== "paragraph" || nPos < 0 || nPos > oParagraph.Paragraph.Content.length - 1)
-			return false;
-
+		let nParaLen = this.GetElementsCount();
+		nPos = undefined === nPos ? nParaLen : Math.max(0, Math.min(nParaLen, nPos));		
+		
+		let oParagraph = this.private_GetImpl();
+		
+		if (!oFormPr)
+			oFormPr = {};
+		
 		if (typeof(oFormPr.Placeholder) !== "string" || oFormPr.Placeholder === "")
 			oFormPr.Placeholder = AscCommon.translateManager.getValue("Click to load image");
 
-		var oCC = private_AddCommonFormToPara(oLogicDocument, oParagraph.private_GetImpl(), nPos, oFormPr);
+		var oCC = private_AddCommonFormToPara(oParagraph, nPos, oFormPr);
 		oCC.ApplyPicturePr(true);
 		oCC.ConvertFormToFixed();
 		oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
 
-		var oApiForm = this.private_CreatePictureForm(oCC);
+		var oApiForm = new AscBuilder.ApiPictureForm(oCC);
 
 		if (typeof(oFormPr.Scale) === "string" || oFormPr.Scale !== "")
 			oApiForm.SetPictureScaleCase(oFormPr.Scale);
@@ -291,8 +289,11 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	function private_AddCommonFormToPara(oDocument, oParagraph, nPos, oFormPr)
+	function private_AddCommonFormToPara(oParagraph, nPos, oFormPr)
 	{
+		if (!oFormPr)
+			oFormPr = {};
+		
 		var oTempFormPr = new AscCommon.CSdtFormPr();
 		oTempFormPr.HelpText = oFormPr && oFormPr.Tip && typeof(oFormPr.Tip) === "string" && oFormPr.Tip !== "" ? oFormPr.Tip : undefined;
 		oTempFormPr.Required = oFormPr && oFormPr.Required && typeof(oFormPr.Required) === "boolean" ? oFormPr.Required : false;
@@ -303,7 +304,15 @@
 			oTempFormPr.Key = oFormPr && oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : undefined;
 
 		var oCC = new AscCommonWord.CInlineLevelSdt();
-		oCC.SetDefaultTextPr(oDocument.GetDirectTextPr());
+		
+		let oParaElement = oParagraph.GetElement(nPos);
+		if (oParaElement)
+		{
+			oParaElement.MoveCursorToStartPos();
+			let oTextPr = oParaElement.GetDirectTextPr();
+			if (oTextPr)			
+				oCC.SetDefaultTextPr(oTextPr);	
+		}				
 
 		if (typeof(oFormPr.Placeholder) === "string" && oFormPr.Placeholder !== "")
 			oCC.SetPlaceholderText(oFormPr.Placeholder);
@@ -311,8 +320,7 @@
 			oCC.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 
 		oCC.ReplaceContentWithPlaceHolder(false);
-
-		oParagraph.Internal_Content_Add(nPos, oCC);
+		oParagraph.AddToContent(nPos, oCC);
 		oCC.SetFormPr(oTempFormPr);
 		oCC.UpdatePlaceHolderTextPrForForm();
 
@@ -322,10 +330,11 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Api.prototype["AddCheckBoxForm"]      = Api.prototype.AddCheckBoxForm;
-	Api.prototype["AddTextForm"]          = Api.prototype.AddTextForm;
-	Api.prototype["AddDropDownForm"]      = Api.prototype.AddDropDownForm;
-	Api.prototype["AddPictureForm"]       = Api.prototype.AddPictureForm;
+	Api.prototype["AddCheckBoxForm"]      = Api.prototype.AddCheckBoxForm;	
+	Api.prototype["AddDropDownForm"]      = Api.prototype.AddDropDownForm;	
+	
+	AscBuilder.ApiParagraph.prototype["AddTextForm"]    = AscBuilder.ApiParagraph.prototype.AddTextForm;
+	AscBuilder.ApiParagraph.prototype["AddPictureForm"] = AscBuilder.ApiParagraph.prototype.AddPictureForm;
 
 }(window, null));
 
