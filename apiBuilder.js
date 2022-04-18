@@ -78,36 +78,32 @@
 	 */
 
 	/**
-	 * Adds the checkbox (or radiobutton) form to specified paragraph.
-	 * @memberof Api
-	 * @param {ApiParagraph} oParagraph - the paragraph to which the form will be added.
-	 * @param {Number} [nPos=oParagraph.GetElementsCount()] - position to add form in the paragraph.
+	 * Adds the checkbox (or radiobutton) form to current paragraph.
+	 * @memberof AscBuilder.ApiParagraph
+	 * @param {Number} nPos - position to add form in the paragraph (add to the end if this parameter is not specified)
 	 * @param {CheckBoxFormPr} [oFormPr={Key: "", Fixed: false, Tip: "", Required: false}] - checkbox(radiobutton) form properties.
-	 * @param {boolean} [isRadioButton=false] - Indicates whether radiobutton form will be added.
+	 * @param {boolean} [isRadioButton=false] - indicates whether radiobutton form will be added.
 	 * @returns {ApiCheckBoxForm}
 	 */
-	Api.prototype.AddCheckBoxForm = function(oParagraph, nPos, oFormPr, isRadioButton)
+	AscBuilder.ApiParagraph.prototype.AddCheckBoxForm = function(nPos, oFormPr, isRadioButton)
 	{
-		var oLogicDocument = this.private_GetLogicDocument();
-		if (typeof(nPos) !== "number")
-			nPos = oParagraph.GetElementsCount();
+		let nParaLen = this.GetElementsCount();
+		nPos = undefined === nPos ? nParaLen : Math.max(0, Math.min(nParaLen, nPos));		
+		
+		let oParagraph = this.private_GetImpl();
 
-		if (!oLogicDocument || !oParagraph.GetClassType || oParagraph.GetClassType() !== "paragraph" || nPos < 0 || nPos > oParagraph.Paragraph.Content.length - 1)
-			return false;
+		if (!oFormPr)
+			oFormPr = {};
 
-		oFormPr.Fixed = oFormPr && oFormPr.Fixed && typeof(oFormPr.Fixed) === "boolean" ? oFormPr.Fixed : false;
-		oFormPr.HelpText = oFormPr && oFormPr.Tip && typeof(oFormPr.Tip) === "string" && oFormPr.Tip !== "" ? oFormPr.Tip : undefined;
-		oFormPr.Required = oFormPr && oFormPr.Required && typeof(oFormPr.Required) === "boolean" ? oFormPr.Required : false;
 		oFormPr.Placeholder = undefined;
-
 		if (isRadioButton === true)
 		{
-			oFormPr.GroupKey = oFormPr && oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : "Group 1";
+			oFormPr.GroupKey = oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : "Group 1";
 			oFormPr.Key = undefined;
 		}
 		else
 		{
-			oFormPr.Key = oFormPr && oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : undefined;
+			oFormPr.Key = oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : undefined;
 			oFormPr.GroupKey = undefined;
 		}
 
@@ -127,7 +123,6 @@
 
 		oCheckboxPr.CheckedFont = "Segoe UI Symbol";
 		oCheckboxPr.UncheckedFont = "Segoe UI Symbol";
-		oCheckboxPr.Checked = oFormPr.Checked;
 
 		var nCheckedSymbol   = oCheckboxPr && oCheckboxPr.CheckedSymbol ? oCheckboxPr.CheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.CheckedSymbol;
 		var nUncheckedSymbol = oCheckboxPr && oCheckboxPr.UncheckedSymbol ? oCheckboxPr.UncheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.UncheckedSymbol;
@@ -149,10 +144,8 @@
 
 		function private_PerformAddCheckBox()
 		{
-			oCC = private_AddCommonFormToPara(oParagraph.private_GetImpl(), nPos, oFormPr);
-
-			var oTextPr = oLogicDocument.GetDirectTextPr();
-			oCC.ApplyCheckBoxPr(oCheckboxPr, oTextPr);
+			oCC = private_AddCommonFormToPara(oParagraph, nPos, oFormPr);
+			oCC.ApplyCheckBoxPr(oCheckboxPr);
 		}
 
 		if (isLoadFonts)
@@ -168,7 +161,7 @@
 			private_PerformAddCheckBox();
 		}
 
-		var oApiForm = this.private_CreateCheckBoxForm(oCC);
+		var oApiForm = new AscBuilder.ApiCheckBoxForm(oCC);
 		if (oFormPr.Fixed)
 			oApiForm.SetFixedForm(true);
 
@@ -176,16 +169,19 @@
 	};
 
 	/**
-	 * Add the text form
+	 * Adds the text form to current paragraph.
 	 * @memberof AscBuilder.ApiParagraph
-	 * @param {Number} position to add form in the paragraph (add to the end if this parameter is not specified)
-	 * @param {FormPr} [oFormPr={Key: "", Fixed: false, Tip: "", Required: false}] - form properties
+	 * @param {Number} nPos - position to add form in the paragraph (add to the end if this parameter is not specified)
+	 * @param {FormPr} [oFormPr={Key: "", Fixed: false, Tip: "", Required: false}] - form properties.
 	 * @returns {ApiTextForm}
 	 */
 	AscBuilder.ApiParagraph.prototype.AddTextForm = function(nPos, oFormPr)
 	{
 		let nParaLen = this.GetElementsCount();
 		nPos = undefined === nPos ? nParaLen : Math.max(0, Math.min(nParaLen, nPos));		
+
+		if (!oFormPr)
+			oFormPr = {};
 
 		var oCC = private_AddCommonFormToPara(this.private_GetImpl(), nPos, oFormPr);
 		var oPr = new AscCommon.CSdtTextFormPr();
@@ -199,27 +195,27 @@
 	};
 
 	/**
-	 * Adds the combobox (or dropdown) form to specified paragraph.
-	 * @memberof Api
-	 * @param {ApiParagraph} oParagraph - the paragraph to which the form will be added.
-	 * @param {Number} [nPos=oParagraph.GetElementsCount()] - position to add form in the paragraph.
+	 * Adds the combobox (or dropdown) form to current paragraph.
+	 * @memberof AscBuilder.ApiParagraph
+	 * @param {Number} nPos - position to add form in the paragraph (add to the end if this parameter is not specified)
 	 * @param {FormPr} [oFormPr={Key: "", Fixed: false, Tip: "", Required: false}] - form properties.
-	 * @param {boolean} [isDropDown=false] - Indicates whether dropdown form will be added.
+	 * @param {boolean} [isDropDown=false] - indicates whether dropdown form will be added.
 	 * @returns {ApiComboBoxForm}
 	 */
-	Api.prototype.AddDropDownForm = function(oParagraph, nPos, oFormPr, isDropDown)
+	AscBuilder.ApiParagraph.prototype.AddComboBoxForm = function(nPos, oFormPr, isDropDown)
 	{
-		var oLogicDocument = this.private_GetLogicDocument();
-		if (nPos === undefined)
-			nPos = oParagraph.GetElementsCount();
+		let nParaLen = this.GetElementsCount();
+		nPos = undefined === nPos ? nParaLen : Math.max(0, Math.min(nParaLen, nPos));	
 
-		if (!oLogicDocument || !oParagraph.GetClassType || oParagraph.GetClassType() !== "paragraph" || nPos < 0 || nPos > oParagraph.Paragraph.Content.length - 1)
-			return false;
+		let oParagraph = this.private_GetImpl();
+
+		if (!oFormPr)
+			oFormPr = {};
 
 		var oPr = new CSdtComboBoxPr();
 		oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
 
-		var oCC = private_AddCommonFormToPara(oParagraph.private_GetImpl(), nPos, oFormPr);
+		var oCC = private_AddCommonFormToPara(oParagraph, nPos, oFormPr);
 
 		if (isDropDown === true)
 		{
@@ -246,7 +242,7 @@
 			}
 		}
 
-		var oApiForm = this.private_CreateComboBoxForm(oCC);
+		var oApiForm = new AscBuilder.ApiComboBoxForm(oCC);
 		if (oFormPr.Fixed)
 			oApiForm.SetFixedForm(true);
 
@@ -254,9 +250,9 @@
 	};
 
 	/**
-	 * Add the picture form to specified paragraph
+	 * Add the picture form to current paragraph
 	 * @memberof AscBuilder.ApiParagraph
-	 * @param {Number} position to add form in the paragraph (add to the end if this parameter is not specified)
+	 * @param {Number} nPos - position to add form in the paragraph (add to the end if this parameter is not specified)
 	 * @param {PicFormPr} [oFormPr={Key: "", Tip: "", Required: false, Scale: "always"}] - picture form properties
 	 * @returns {ApiPictureForm}
 	 */
@@ -295,13 +291,9 @@
 			oFormPr = {};
 		
 		var oTempFormPr = new AscCommon.CSdtFormPr();
-		oTempFormPr.HelpText = oFormPr && oFormPr.Tip && typeof(oFormPr.Tip) === "string" && oFormPr.Tip !== "" ? oFormPr.Tip : undefined;
-		oTempFormPr.Required = oFormPr && oFormPr.Required && typeof(oFormPr.Required) === "boolean" ? oFormPr.Required : false;
-
-		if (typeof(oFormPr.GroupKey) === "string")
-			oTempFormPr.GroupKey = oFormPr && oFormPr.GroupKey && typeof(oFormPr.GroupKey) === "string" && oFormPr.GroupKey !== "" ? oFormPr.GroupKey : "Group 1";
-		else
-			oTempFormPr.Key = oFormPr && oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : undefined;
+		oTempFormPr.HelpText = oFormPr.Tip && typeof(oFormPr.Tip) === "string" && oFormPr.Tip !== "" ? oFormPr.Tip : undefined;
+		oTempFormPr.Required = oFormPr.Required && typeof(oFormPr.Required) === "boolean" ? oFormPr.Required : false;
+		oTempFormPr.Key = oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : undefined;
 
 		var oCC = new AscCommonWord.CInlineLevelSdt();
 		
@@ -330,11 +322,11 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Api.prototype["AddCheckBoxForm"]      = Api.prototype.AddCheckBoxForm;	
-	Api.prototype["AddDropDownForm"]      = Api.prototype.AddDropDownForm;	
 	
-	AscBuilder.ApiParagraph.prototype["AddTextForm"]    = AscBuilder.ApiParagraph.prototype.AddTextForm;
-	AscBuilder.ApiParagraph.prototype["AddPictureForm"] = AscBuilder.ApiParagraph.prototype.AddPictureForm;
+	AscBuilder.ApiParagraph.prototype["AddTextForm"]     = AscBuilder.ApiParagraph.prototype.AddTextForm;
+	AscBuilder.ApiParagraph.prototype["AddPictureForm"]  = AscBuilder.ApiParagraph.prototype.AddPictureForm;
+	AscBuilder.ApiParagraph.prototype["AddCheckBoxForm"] = AscBuilder.ApiParagraph.prototype.AddCheckBoxForm;	
+	AscBuilder.ApiParagraph.prototype["AddComboBoxForm"] = AscBuilder.ApiParagraph.prototype.AddComboBoxForm;	
 
 }(window, null));
 
