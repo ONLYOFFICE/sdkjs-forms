@@ -4,6 +4,7 @@
       "api.js"
     ],
     "common": [      
+	  "apiBuilder.js"
     ]
   }
 }
