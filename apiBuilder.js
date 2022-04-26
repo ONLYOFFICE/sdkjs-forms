@@ -86,25 +86,25 @@
 		if (!oFormPr)
 			oFormPr = {};
 
-		oFormPr.Placeholder = undefined;
+		oFormPr["Placeholder"] = undefined;
 		if (isRadioButton === true)
 		{
-			oFormPr.GroupKey = oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : "Group 1";
-			oFormPr.Key = undefined;
+			oFormPr["GroupKey"] = oFormPr["Key"] && typeof(oFormPr["Key"]) === "string" && oFormPr["Key"] !== "" ? oFormPr["Key"] : "Group 1";
+			oFormPr["Key"] = undefined;
 		}
 		else
 		{
-			oFormPr.Key = oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : undefined;
-			oFormPr.GroupKey = undefined;
+			oFormPr["Key"] = oFormPr["Key"] && typeof(oFormPr["Key"]) === "string" && oFormPr["Key"] !== "" ? oFormPr["Key"] : undefined;
+			oFormPr["GroupKey"] = undefined;
 		}
 
 		var oCC;
 		var oCheckboxPr  = new AscCommon.CSdtCheckBoxPr();
-		if (oFormPr.GroupKey)
+		if (oFormPr["GroupKey"])
 		{
 			oCheckboxPr.CheckedSymbol   = 0x25C9;
 			oCheckboxPr.UncheckedSymbol = 0x25CB;
-			oCheckboxPr.GroupKey        = oFormPr.GroupKey;
+			oCheckboxPr.GroupKey        = oFormPr["GroupKey"];
 		}
 		else
 		{
@@ -192,7 +192,7 @@
 
 		if (isDropDown === true)
 		{
-			if (typeof(oFormPr.Placeholder) !== "string" || oFormPr.Placeholder === "")
+			if (typeof(oFormPr["Placeholder"]) !== "string" || oFormPr["Placeholder"] === "")
 			{
 				oCC.ApplyDropDownListPr(oPr);
 			}
@@ -204,7 +204,7 @@
 		}
 		else
 		{
-			if (typeof(oFormPr.Placeholder) !== "string" || oFormPr.Placeholder === "")
+			if (typeof(oFormPr["Placeholder"]) !== "string" || oFormPr["Placeholder"] === "")
 			{
 				oCC.ApplyComboBoxPr(oPr);
 			}
@@ -229,8 +229,8 @@
 		if (!oFormPr)
 			oFormPr = {};
 		
-		if (typeof(oFormPr.Placeholder) !== "string" || oFormPr.Placeholder === "")
-			oFormPr.Placeholder = AscCommon.translateManager.getValue("Click to load image");
+		if (typeof(oFormPr["Placeholder"]) !== "string" || oFormPr["Placeholder"] === "")
+			oFormPr["Placeholder"] = AscCommon.translateManager.getValue("Click to load image");
 
 		var oCC = private_CreateCommonForm(oFormPr);
 		oCC.ApplyPicturePr(true);
@@ -239,8 +239,8 @@
 
 		var oApiForm = new AscBuilder.ApiPictureForm(oCC);
 
-		if (typeof(oFormPr.Scale) === "string" || oFormPr.Scale !== "")
-			oApiForm.SetPictureScaleCase(oFormPr.Scale);
+		if (typeof(oFormPr["Scale"]) === "string" || oFormPr["Scale"] !== "")
+			oApiForm.SetPictureScaleCase(oFormPr["Scale"]);
 
 		return oApiForm;
 	};
@@ -254,14 +254,14 @@
 			oFormPr = {};
 		
 		var oTempFormPr = new AscCommon.CSdtFormPr();
-		oTempFormPr.HelpText = oFormPr.Tip && typeof(oFormPr.Tip) === "string" && oFormPr.Tip !== "" ? oFormPr.Tip : undefined;
-		oTempFormPr.Required = oFormPr.Required && typeof(oFormPr.Required) === "boolean" ? oFormPr.Required : false;
-		oTempFormPr.Key = oFormPr.Key && typeof(oFormPr.Key) === "string" && oFormPr.Key !== "" ? oFormPr.Key : undefined;
+		oTempFormPr.HelpText = oFormPr["Tip"] && typeof(oFormPr["Tip"]) === "string" && oFormPr["Tip"] !== "" ? oFormPr["Tip"] : undefined;
+		oTempFormPr.Required = oFormPr["Required"] && typeof(oFormPr["Required"]) === "boolean" ? oFormPr["Required"] : false;
+		oTempFormPr.Key = oFormPr["Key"] && typeof(oFormPr["Key"]) === "string" && oFormPr["Key"] !== "" ? oFormPr["Key"] : undefined;
 
 		var oCC = new AscCommonWord.CInlineLevelSdt();
 		
-		if (typeof(oFormPr.Placeholder) === "string" && oFormPr.Placeholder !== "")
-			oCC.SetPlaceholderText(oFormPr.Placeholder);
+		if (typeof(oFormPr["Placeholder"]) === "string" && oFormPr["Placeholder"] !== "")
+			oCC.SetPlaceholderText(oFormPr["Placeholder"]);
 		else
 			oCC.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 
