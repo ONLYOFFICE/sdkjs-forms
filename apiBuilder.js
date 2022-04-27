@@ -34,6 +34,15 @@
 "use strict";
 (function(window, builder)
 {
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Import
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	const GetStringParameter = AscBuilder.GetStringParameter;
+	const GetBoolParameter   = AscBuilder.GetBoolParameter;
+	const GetNumberParameter = AscBuilder.GetNumberParameter;
+	const GetArrayParameter  = AscBuilder.GetArrayParameter;
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/**
 	 * Base class
 	 * @global
@@ -41,70 +50,124 @@
 	 * @name Api
 	 */
 	var Api = window["Asc"]["asc_docs_api"] || window["Asc"]["spreadsheet_api"];
-
+ 
 	/**
-	 * Checkbox form properties.
-	 * @typedef {Object} CheckBoxFormPr
-	 * @property {string} Key
-	 * @property {string} Tip
-	 * @property {boolean} Required
+	 * Form common properties
+	 * @typedef {Object} FormPrBase
+	 * @property {string} key
+	 * @property {string} tip
+	 * @property {boolean} required
+	 * @property {string} placeholder
 	 */
 
 	/**
-	 * Checkbox form properties.
-	 * @typedef {Object} FormPr
-	 * @property {string} Key
-	 * @property {string} Tip
-	 * @property {boolean} Required
-	 * @property {string} Placeholder
+	 * Text form specific properties
+	 * @typedef {Object} TextFormPrBase
+	 * @property {boolean} comb
+	 * @property {number} maxCharacters
+	 * @property {number} cellWidth
+	 * @property {boolean} multiLine
+	 * @property {boolean} autoFit
 	 */
 
 	/**
-	 * Checkbox form properties.
-	 * @typedef {Object} PicFormPr
-	 * @property {string} Key
-	 * @property {string} Tip
-	 * @property {boolean} Required
-	 * @property {string} Placeholder
-	 * @property {ScaleCase} Scale
+	 * Checkbox form properties
+	 * @typedef {FormPrBase & TextFormPrBase} TextFormPr
+	 */
+	 
+	/**
+	 * Checkbox specific properties
+	 * @typedef {Object} CheckBoxFormPrBase
+	 * @property {boolean} radio
+	 */
+
+	/**
+	 * Checkbox form properties
+	 * @typedef {FormPrBase & CheckBoxFormPrBase} CheckBoxFormPr
+	 */
+
+	/**
+	 * Combobox specific properties
+	 * @typedef {Object} ComboBoxFormPrBase
+	 * @property {boolean} editable
+	 * @property {boolean} autoFit
+	 * @property {Array.<string | Array.<string>>} items
+	 */
+
+	/**
+	 * Combobox form properties
+	 * @typedef {FormPrBase & ComboBoxFormPrBase} ComboBoxFormPr
 	 */
 
 	/**
 	 * Condition when to scale image.
-	 * @typedef {"always" | "never" | "tooBig" | "tooSmall"} ScaleCase
+	 * @typedef {"always" | "never" | "tooBig" | "tooSmall"} ScaleFlag
 	 */
 
 	/**
-	 * Creates the checkbox (or radiobutton) form.
-	 * @memberof Api
-	 * @param {CheckBoxFormPr} [oFormPr={Key: "", Tip: "", Required: false}] - checkbox(radiobutton) form properties.
-	 * @param {boolean} [isRadioButton=false] - indicates whether radiobutton form will be created.
-	 * @returns {ApiCheckBoxForm}
+	 * Value from 0 to 100
+	 * @typedef {number} percentage
 	 */
-	Api.prototype.CreateCheckBoxForm = function(oFormPr, isRadioButton)
+
+	/**
+	 * Picture form specific properties
+	 * @typedef {Object} PictureFormPrBase
+	 * @property {ScaleFlag} scaleFlag
+	 * @property {boolean} lockAspectRatio
+	 * @property {boolean} respectBorders
+	 * @property {percentage} shiftX
+	 * @property {percentage} shiftY
+	 */
+
+	/**
+	 * Picture form properties
+	 * @typedef {FormPrBase & PictureFormPrBase} PictureFormPr
+	 */
+
+	/**
+	 * Create a text form
+	 * @memberof Api
+	 * @param {TextFormPr} oFormPr - text form properties
+	 * @returns {ApiTextForm}
+	 */
+	Api.prototype.CreateTextForm = function(oFormPr)
 	{
 		if (!oFormPr)
 			oFormPr = {};
 
-		oFormPr["Placeholder"] = undefined;
-		if (isRadioButton === true)
-		{
-			oFormPr["GroupKey"] = oFormPr["Key"] && typeof(oFormPr["Key"]) === "string" && oFormPr["Key"] !== "" ? oFormPr["Key"] : "Group 1";
-			oFormPr["Key"] = undefined;
-		}
-		else
-		{
-			oFormPr["Key"] = oFormPr["Key"] && typeof(oFormPr["Key"]) === "string" && oFormPr["Key"] !== "" ? oFormPr["Key"] : undefined;
-			oFormPr["GroupKey"] = undefined;
-		}
+		let oCC = CreateCommonForm(oFormPr);
+
+		let oPr = new AscCommon.CSdtTextFormPr();
+		oPr.SetComb(GetBoolParameter(oFormPr["comb"], false));
+		oPr.SetMaxCharacters(GetNumberParameter(oFormPr["maxCharacters"], -1));
+		oPr.SetMultiLine(GetBoolParameter(oFormPr["multiLine"], false));
+		oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
+		oPr.SetWidth((GetNumberParameter(oFormPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
+
+		oCC.ApplyTextFormPr(oPr);
+
+		return new AscBuilder.ApiTextForm(oCC);
+	};
+	/**
+	 * Create the checkbox/radiobutton form
+	 * @memberof Api
+	 * @param {CheckBoxFormPr} oFormPr - checkbox(radiobutton) form properties
+	 * @returns {ApiCheckBoxForm}
+	 */
+	Api.prototype.CreateCheckBoxForm = function(oFormPr)
+	{
+		if (!oFormPr)
+			oFormPr = {};
+
+		oFormPr["placeholder"] = undefined;
 
 		var oCC;
 		var oCheckboxPr  = new AscCommon.CSdtCheckBoxPr();
-		if (oFormPr["GroupKey"])
+		if (GetBoolParameter(oFormPr["radio"], false))
 		{
 			oCheckboxPr.CheckedSymbol   = 0x25C9;
 			oCheckboxPr.UncheckedSymbol = 0x25CB;
-			oCheckboxPr.GroupKey        = oFormPr["GroupKey"];
+			oCheckboxPr.GroupKey        = GetStringParameter(oFormPr["key"], "Group1");
 		}
 		else
 		{
@@ -135,7 +198,7 @@
 
 		function private_PerformAddCheckBox()
 		{
-			oCC = private_CreateCommonForm(oFormPr);
+			oCC = CreateCommonForm(oFormPr);
 			oCC.ApplyCheckBoxPr(oCheckboxPr);
 		}
 
@@ -154,33 +217,13 @@
 
 		return new AscBuilder.ApiCheckBoxForm(oCC);
 	};
-
 	/**
-	 * Creates the text form.
+	 * Create a combobox/dropdown form
 	 * @memberof Api
-	 * @param {FormPr} [oFormPr={Key: "", Tip: "", Required: false}] - form properties.
-	 * @returns {ApiTextForm}
-	 */
-	Api.prototype.CreateTextForm = function(oFormPr)
-	{
-		if (!oFormPr)
-			oFormPr = {};
-
-		var oCC = private_CreateCommonForm(oFormPr);
-		var oPr = new AscCommon.CSdtTextFormPr();
-		oCC.ApplyTextFormPr(oPr);
-
-		return new AscBuilder.ApiTextForm(oCC);
-	};
-
-	/**
-	 * Creates the combobox (or dropdown) form.
-	 * @memberof Api
-	 * @param {FormPr} [oFormPr={Key: "", Tip: "", Required: false}] - form properties.
-	 * @param {boolean} [isDropDown=false] - indicates whether dropdown form will be created.
+	 * @param {ComboBoxFormPr} oFormPr - combobox form properties
 	 * @returns {ApiComboBoxForm}
 	 */
-	Api.prototype.CreateComboBoxForm = function(oFormPr, isDropDown)
+	Api.prototype.CreateComboBoxForm = function(oFormPr)
 	{
 		if (!oFormPr)
 			oFormPr = {};
@@ -188,11 +231,32 @@
 		var oPr = new CSdtComboBoxPr();
 		oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
 
-		var oCC = private_CreateCommonForm(oFormPr);
+		var oCC = CreateCommonForm(oFormPr);
 
-		if (isDropDown === true)
+		let sPlaceholder = GetStringParameter(oFormPr["placeholder"], undefined);
+
+		let arrList = GetArrayParameter(oFormPr["items"], []);
+		for (let nIndex = 0, nCount = arrList.length; nIndex < nCount; ++nIndex)
 		{
-			if (typeof(oFormPr["Placeholder"]) !== "string" || oFormPr["Placeholder"] === "")
+			let oItem = arrList[nIndex];
+
+			if (GetStringParameter(oItem, null))
+			{
+				oPr.AddItem(oItem, oItem);
+			}
+			else if (GetArrayParameter(oItem, null))
+			{
+				let sDisplay = GetStringParameter(oItem[0], null);
+				let sValue   = GetStringParameter(oItem[1], null);
+				if (null !== sDisplay && null !== sValue)
+					oPr.AddItem(sDisplay, sValue);
+			}
+		}
+		oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
+
+		if (!GetBoolParameter(oFormPr["editable"], false))
+		{
+			if (sPlaceholder)
 			{
 				oCC.ApplyDropDownListPr(oPr);
 			}
@@ -204,7 +268,7 @@
 		}
 		else
 		{
-			if (typeof(oFormPr["Placeholder"]) !== "string" || oFormPr["Placeholder"] === "")
+			if (sPlaceholder)
 			{
 				oCC.ApplyComboBoxPr(oPr);
 			}
@@ -217,51 +281,62 @@
 
 		return new AscBuilder.ApiComboBoxForm(oCC);
 	};
-
 	/**
-	 * Creates the picture form.
+	 * Create a picture form
 	 * @memberof Api
-	 * @param {PicFormPr} [oFormPr={Key: "", Tip: "", Required: false, Scale: "always"}] - picture form properties
+	 * @param {PictureFormPr} oFormPr - picture form properties
 	 * @returns {ApiPictureForm}
 	 */
 	Api.prototype.CreatePictureForm = function(oFormPr)
 	{
 		if (!oFormPr)
 			oFormPr = {};
-		
-		if (typeof(oFormPr["Placeholder"]) !== "string" || oFormPr["Placeholder"] === "")
-			oFormPr["Placeholder"] = AscCommon.translateManager.getValue("Click to load image");
 
-		var oCC = private_CreateCommonForm(oFormPr);
+		if (GetStringParameter("placeholder", null))
+			oFormPr["placeholder"] = AscCommon.translateManager.getValue("Click to load image");
+
+		var oCC = CreateCommonForm(oFormPr);
 		oCC.ApplyPicturePr(true);
 		oCC.ConvertFormToFixed();
-		oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
 
-		var oApiForm = new AscBuilder.ApiPictureForm(oCC);
+		let oPr = new AscCommon.CSdtPictureFormPr();
 
-		if (typeof(oFormPr["Scale"]) === "string" || oFormPr["Scale"] !== "")
-			oApiForm.SetPictureScaleCase(oFormPr["Scale"]);
+		let sScale = GetStringParameter(oFormPr["scaleFlag"], undefined);
+		switch (sScale)
+		{
+			case "always": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Always); break;
+			case "never": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Never); break;
+			case "tooBig": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Bigger); break;
+			case "tooSmall": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Smaller); break;
+		}
 
-		return oApiForm;
+		oPr.SetConstantProportions(GetBoolParameter(oFormPr["lockAspectRatio"], true));
+		oPr.SetRespectBorders(GetBoolParameter(oFormPr["respectBorders"], false));
+		oPr.SetShiftX(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftX"], 50))) / 100);
+		oPr.SetShiftY(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftY"], 50))) / 100);
+
+		oCC.SetPictureFormPr(oPr);
+
+		return new AscBuilder.ApiPictureForm(oCC);
 	};
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	function private_CreateCommonForm(oFormPr)
+	function CreateCommonForm(oFormPr)
 	{
 		if (!oFormPr)
 			oFormPr = {};
 		
 		var oTempFormPr = new AscCommon.CSdtFormPr();
-		oTempFormPr.HelpText = oFormPr["Tip"] && typeof(oFormPr["Tip"]) === "string" && oFormPr["Tip"] !== "" ? oFormPr["Tip"] : undefined;
-		oTempFormPr.Required = oFormPr["Required"] && typeof(oFormPr["Required"]) === "boolean" ? oFormPr["Required"] : false;
-		oTempFormPr.Key = oFormPr["Key"] && typeof(oFormPr["Key"]) === "string" && oFormPr["Key"] !== "" ? oFormPr["Key"] : undefined;
+		oTempFormPr.SetHelpText(GetStringParameter(oFormPr["tip"], undefined));
+		oTempFormPr.SetRequired(GetBoolParameter(oFormPr["required"], false));
+		oTempFormPr.SetKey(GetStringParameter(oFormPr["key"], undefined));
 
 		var oCC = new AscCommonWord.CInlineLevelSdt();
-		
-		if (typeof(oFormPr["Placeholder"]) === "string" && oFormPr["Placeholder"] !== "")
-			oCC.SetPlaceholderText(oFormPr["Placeholder"]);
+
+		let sPlaceHolder = GetStringParameter(oFormPr["placeholder"], undefined);
+		if (sPlaceHolder)
+			oCC.SetPlaceholderText(sPlaceHolder);
 		else
 			oCC.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 
@@ -271,17 +346,12 @@
 
 		return oCC;
 	}
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;	
 
 }(window, null));
-
-
-
