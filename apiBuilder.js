@@ -73,7 +73,7 @@
 
 	/**
 	 * Checkbox form properties
-	 * @typedef {FormPrBase & TextFormPrBase} TextFormPr
+	 * @typedef {FormPrBase | TextFormPrBase} TextFormPr
 	 */
 	 
 	/**
@@ -84,7 +84,7 @@
 
 	/**
 	 * Checkbox form properties
-	 * @typedef {FormPrBase & CheckBoxFormPrBase} CheckBoxFormPr
+	 * @typedef {FormPrBase | CheckBoxFormPrBase} CheckBoxFormPr
 	 */
 
 	/**
@@ -97,7 +97,7 @@
 
 	/**
 	 * Combobox form properties
-	 * @typedef {FormPrBase & ComboBoxFormPrBase} ComboBoxFormPr
+	 * @typedef {FormPrBase | ComboBoxFormPrBase} ComboBoxFormPr
 	 */
 
 	/**
@@ -122,7 +122,7 @@
 
 	/**
 	 * Picture form properties
-	 * @typedef {FormPrBase & PictureFormPrBase} PictureFormPr
+	 * @typedef {FormPrBase | PictureFormPrBase} PictureFormPr
 	 */
 
 	/**
