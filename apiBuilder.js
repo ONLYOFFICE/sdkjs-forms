@@ -53,82 +53,92 @@
 	var Api = window["Asc"]["asc_docs_api"] || window["Asc"]["spreadsheet_api"];
  
 	/**
-	 * Form common properties
+	 * Common form properties.
 	 * @typedef {Object} FormPrBase
-	 * @property {string} key
-	 * @property {string} tip
-	 * @property {boolean} required
-	 * @property {string} placeholder
+	 * @property {string} key - Form key.
+	 * @property {string} tip - Form tip text.
+	 * @property {boolean} required - Specifies if the form is required or not.
+	 * @property {string} placeholder - Form placeholder text.
 	 */
 
 	/**
-	 * Text form specific properties
+	 * Specific text form properties.
 	 * @typedef {Object} TextFormPrBase
-	 * @property {boolean} comb
-	 * @property {number} maxCharacters
-	 * @property {number} cellWidth
-	 * @property {boolean} multiLine
-	 * @property {boolean} autoFit
+	 * @property {boolean} comb - Specifies if the text form should be a comb of characters with the same cell width. The maximum number of characters must be set to a positive value.
+	 * @property {number} maxCharacters - The maximum number of characters in the text form.
+	 * @property {number} cellWidth - The cell width for each character measured in millimeters. If this parameter is not specified or equal to 0 or less, then the width will be set automatically.
+	 * @property {boolean} multiLine - Specifies if the current fixed size text form is multiline or not.
+	 * @property {boolean} autoFit - Specifies if the text form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
 	 */
 
 	/**
-	 * Checkbox form properties
+	 * Text form properties.
 	 * @typedef {FormPrBase | TextFormPrBase} TextFormPr
 	 */
 	 
 	/**
-	 * Checkbox specific properties
+	 * Specific checkbox properties.
 	 * @typedef {Object} CheckBoxFormPrBase
-	 * @property {boolean} radio
+	 * @property {boolean} radio - Specifies if the current checkbox is a radio button. In this case, the key parameter is considered as an identifier for the group of radio buttons.
 	 */
 
 	/**
-	 * Checkbox form properties
+	 * Checkbox form properties.
 	 * @typedef {FormPrBase | CheckBoxFormPrBase} CheckBoxFormPr
 	 */
 
 	/**
-	 * Combobox specific properties
+	 * Specific combo box properties.
 	 * @typedef {Object} ComboBoxFormPrBase
-	 * @property {boolean} editable
-	 * @property {boolean} autoFit
-	 * @property {Array.<string | Array.<string>>} items
+	 * @property {boolean} editable - Specifies if the combo box text can be edited.
+	 * @property {boolean} autoFit - Specifies if the combo box form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
+	 * @property {Array.<string | Array.<string>>} items - The combo box items.
+     * This array consists of strings or arrays of two strings where the first string is the displayed value and the second one is its meaning.
+     * If the array consists of single strings, then the displayed value and its meaning are the same.
+     * Example: ["First", ["Second", "2"], ["Third", "3"], "Fourth"].
+
 	 */
 
 	/**
-	 * Combobox form properties
+	 * Combo box form properties.
 	 * @typedef {FormPrBase | ComboBoxFormPrBase} ComboBoxFormPr
 	 */
 
 	/**
-	 * Condition when to scale image.
+	 * The condition to scale an image in the picture form.
 	 * @typedef {"always" | "never" | "tooBig" | "tooSmall"} ScaleFlag
 	 */
 
 	/**
-	 * Value from 0 to 100
+	 * Value from 0 to 100.
 	 * @typedef {number} percentage
 	 */
 
 	/**
-	 * Picture form specific properties
+	 * Specific picture form properties.
 	 * @typedef {Object} PictureFormPrBase
-	 * @property {ScaleFlag} scaleFlag
-	 * @property {boolean} lockAspectRatio
-	 * @property {boolean} respectBorders
-	 * @property {percentage} shiftX
-	 * @property {percentage} shiftY
+	 * @property {ScaleFlag} scaleFlag - The condition to scale an image in the picture form: "always", "never", "tooBig" or "tooSmall".
+	 * @property {boolean} lockAspectRatio - Specifies if the aspect ratio of the picture form is locked or not.
+	 * @property {boolean} respectBorders - Specifies if the form border width is respected or not when scaling the image.
+	 * @property {percentage} shiftX - Horizontal picture position inside the picture form measured in percent:
+	 * * <b>0</b> - the picture is placed on the left;
+	 * * <b>50</b> - the picture is placed in the center;
+	 * * <b>100</b> - the picture is placed on the right.
+	 * @property {percentage} shiftY - Vertical picture position inside the picture form measured in percent:
+	 * * <b>0</b> - the picture is placed on top;
+	 * * <b>50</b> - the picture is placed in the center;
+	 * * <b>100</b> - the picture is placed on the bottom.
 	 */
 
 	/**
-	 * Picture form properties
+	 * Picture form properties.
 	 * @typedef {FormPrBase | PictureFormPrBase} PictureFormPr
 	 */
 
 	/**
-	 * Create a text form
+	 * Creates a text form with the specified text form properties.
 	 * @memberof Api
-	 * @param {TextFormPr} oFormPr - text form properties
+	 * @param {TextFormPr} oFormPr - Text form properties.
 	 * @returns {ApiTextForm}
 	 */
 	Api.prototype.CreateTextForm = function(oFormPr)
@@ -150,9 +160,9 @@
 		return new AscBuilder.ApiTextForm(oCC);
 	};
 	/**
-	 * Create the checkbox/radiobutton form
+	 * Creates a checkbox/radio button form with the specified checkbox/radio button form properties.
 	 * @memberof Api
-	 * @param {CheckBoxFormPr} oFormPr - checkbox(radiobutton) form properties
+	 * @param {CheckBoxFormPr} oFormPr - Checkbox/radio button form properties.
 	 * @returns {ApiCheckBoxForm}
 	 */
 	Api.prototype.CreateCheckBoxForm = function(oFormPr)
@@ -219,9 +229,9 @@
 		return new AscBuilder.ApiCheckBoxForm(oCC);
 	};
 	/**
-	 * Create a combobox/dropdown form
+	 * Creates a combo box/dropdown form with the specified combo box/dropdown form properties.
 	 * @memberof Api
-	 * @param {ComboBoxFormPr} oFormPr - combobox form properties
+	 * @param {ComboBoxFormPr} oFormPr - Combo box/dropdown form properties.
 	 * @returns {ApiComboBoxForm}
 	 */
 	Api.prototype.CreateComboBoxForm = function(oFormPr)
@@ -283,9 +293,9 @@
 		return new AscBuilder.ApiComboBoxForm(oCC);
 	};
 	/**
-	 * Create a picture form
+	 * Creates a picture form with the specified picture form properties.
 	 * @memberof Api
-	 * @param {PictureFormPr} oFormPr - picture form properties
+	 * @param {PictureFormPr} oFormPr - Picture form properties.
 	 * @returns {ApiPictureForm}
 	 */
 	Api.prototype.CreatePictureForm = function(oFormPr)
