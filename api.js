@@ -181,6 +181,7 @@
 				oCC.UpdatePlaceHolderTextPrForForm();
 				oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
+				oCC.SelectContentControl();
 				var aDrawings = oCC.GetAllDrawingObjects();
 				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing) 
 				{
