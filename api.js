@@ -75,27 +75,78 @@
 			isLoadFonts = true;
 			AscFonts.FontPickerByCharacter.getFontBySymbol(nUncheckedSymbol);
 		}
+
+		function private_ApplyPrToCheckBox(oCC)
+		{
+			if (!oCC)
+				return;
+
+			if (oFormPr)
+			{
+				oCC.SetFormPr(oFormPr);
+				oCC.UpdatePlaceHolderTextPrForForm();
+			}
+
+			if (oCommonPr)
+				oCC.SetContentControlPr(oCommonPr);
+		}
 		
 		function private_PerformAddCheckBox()
 		{
-			oLogicDocument.RemoveTextSelection();
-			if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
-			{
-				oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
 
-				var oCC = oLogicDocument.AddContentControlCheckBox(oPr);
-				if (oCC && oFormPr)
+			if (oLogicDocument.IsTextSelectionUse())
+			{
+				let arrSelectedParagraphs = oLogicDocument.GetSelectedParagraphs();
+
+				// Select entire paragraphs so that after the action all added checkboxes are included in the selection
+				let nSelectDirection = oLogicDocument.GetSelectDirection();
+				for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
 				{
-					oCC.SetFormPr(oFormPr);
-					oCC.UpdatePlaceHolderTextPrForForm();
+					arrSelectedParagraphs[nIndex].SelectAll(nSelectDirection);
 				}
 
-				if (oCC && oCommonPr)
-					oCC.SetContentControlPr(oCommonPr);
+				let oState = oLogicDocument.SaveDocumentState(false);
 
-				oLogicDocument.UpdateInterface();
-				oLogicDocument.Recalculate();
-				oLogicDocument.FinalizeAction();
+				if (arrSelectedParagraphs.length > 0
+					&& !oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
+					Type      : AscCommon.changestype_2_ElementsArray_and_Type,
+					Elements  : arrSelectedParagraphs,
+					CheckType : AscCommon.changestype_Paragraph_Content
+				}))
+				{
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+					oLogicDocument.RemoveSelection();
+
+					for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
+					{
+						let oCC = arrSelectedParagraphs[nIndex].AddCheckBoxToStartPos(oPr);
+						private_ApplyPrToCheckBox(oCC);
+					}
+
+					oLogicDocument.LoadDocumentState(oState);
+					oLogicDocument.UpdateInterface();
+					oLogicDocument.Recalculate();
+					oLogicDocument.FinalizeAction();
+				}
+				else
+				{
+					oLogicDocument.LoadDocumentState(oState);
+				}
+			}
+			else
+			{
+				oLogicDocument.RemoveTextSelection();
+				if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
+				{
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+
+					var oCC = oLogicDocument.AddContentControlCheckBox(oPr);
+					private_ApplyPrToCheckBox(oCC);
+
+					oLogicDocument.UpdateInterface();
+					oLogicDocument.Recalculate();
+					oLogicDocument.FinalizeAction();
+				}
 			}
 		}
 		
@@ -130,6 +181,58 @@
 				oCC.UpdatePlaceHolderTextPrForForm();
 				oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
+				oCC.SelectContentControl();
+				var aDrawings = oCC.GetAllDrawingObjects();
+				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing) 
+				{
+					var oDrawing = aDrawings[nDrawing];
+					var oGraphic = oDrawing.GraphicObj;
+					if(oGraphic && oGraphic.getObjectType() === AscDFH.historyitem_type_ImageShape) 
+					{
+						var oSpPr = oGraphic.spPr;
+						if(oSpPr) 
+						{
+							if(oSpPr.Fill) 
+							{
+								oSpPr.setFill(null);
+							}
+							if(oSpPr.ln) 
+							{
+								oSpPr.setLn(null);
+							}
+							if(oSpPr.geometry) 
+							{
+								oSpPr.setGeometry(null);
+							}
+							var oXfrm = oSpPr.xfrm;
+							if(oXfrm)
+							{
+								if(!AscFormat.fApproxEqual(oXfrm.rot, 0.0))
+								{
+									oXfrm.setRot(0);
+								}
+								if(oXfrm.flipH)
+								{
+									oXfrm.setFlipH(false);
+								}
+								if(oXfrm.flipH)
+								{
+									oXfrm.setFlipH(false);
+								}
+								if(oXfrm.flipV)
+								{
+									oXfrm.setFlipV(false);
+								}
+							}
+						}
+					}
+				}
+
+				if (!oCC.IsPlaceHolder())
+				{
+					oLogicDocument.Recalculate(true);
+					oCC.UpdatePictureFormLayout();
+				}
 			}
 
 			if (oCC && oCommonPr)
