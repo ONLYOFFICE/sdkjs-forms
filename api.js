@@ -175,13 +175,13 @@
 			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlPicture);
 
 			var oCC = oLogicDocument.AddContentControlPicture();
+			let oFormParaDrawing = null;
 			if (oCC && oFormPr)
 			{
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
-				oCC.ConvertFormToFixed();
+				oFormParaDrawing = oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
-				oCC.SelectContentControl();
 				var aDrawings = oCC.GetAllDrawingObjects();
 				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing) 
 				{
@@ -240,7 +240,15 @@
 
 			oLogicDocument.UpdateInterface();
 			oLogicDocument.Recalculate();
-			oLogicDocument.FinalizeAction();
+			if(oFormParaDrawing) 
+			{
+				let oFormShape = oFormParaDrawing.GraphicObj;
+				if(oFormShape) 
+				{
+					oFormShape.Set_CurrentElement(true, null, true);
+				}
+			}
+ 			oLogicDocument.FinalizeAction();
 		}
 	};
 	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlList'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlList = function(isComboBox, oPr, oFormPr, oCommonPr)
