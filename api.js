@@ -326,5 +326,68 @@
 			oLogicDocument.FinalizeAction();
 		}
 	};
+	window['Asc']['asc_docs_api'].prototype['asc_AddComplexForm'] = window['Asc']['asc_docs_api'].prototype.asc_AddComplexForm = function(json, formPr)
+	{
+		let logicDocument = this.private_GetLogicDocument();
+		if (!logicDocument)
+			return;
+
+		function AddComplexForm()
+		{
+			logicDocument.RemoveTextSelection();
+			if (!logicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
+			{
+				logicDocument.StartAction(AscDFH.historydescription_Document_AddComplexForm);
+
+				let complexForm = logicDocument.AddComplexForm(new AscWord.CSdtComplexFormPr(), formPr);
+
+				if (json)
+					AscWord.JsonToForm(json, complexForm);
+
+				logicDocument.UpdateInterface();
+				logicDocument.Recalculate();
+				logicDocument.FinalizeAction();
+			}
+		}
+
+		if (json)
+		{
+			AscFonts.FontPickerByCharacter.checkText(AscWord.GetUnicodesFromJsonToForm(), this, function() {
+				AddComplexForm();
+			}, true);
+		}
+		else
+		{
+			AddComplexForm();
+		}
+	};
+	window['Asc']['asc_docs_api'].prototype['asc_GetCurrentComplexForm'] = window['Asc']['asc_docs_api'].prototype.asc_GetCurrentComplexForm = function()
+	{
+		let logicDocument = this.private_GetLogicDocument();
+		if (!logicDocument)
+			return null;
+
+		let form = logicDocument.GetContentControl();
+		if (!form || !form.IsForm())
+			return null;
+
+		let mainForm = form.GetMainForm();
+
+		return (mainForm.IsComplexForm() ? mainForm : null);
+	};
+	window['Asc']['asc_docs_api'].prototype['asc_ConvertFormToJson'] = window['Asc']['asc_docs_api'].prototype.asc_ConvertFormToJson = function(form)
+	{
+		let logicDocument = this.private_GetLogicDocument();
+		if (!logicDocument)
+			return null;
+
+		if (typeof (form) === "string")
+			form = AscCommon.g_oTableId.Get_ById(form);
+
+		if (!form || !(form instanceof AscWord.CInlineLevelSdt) || !form.IsForm())
+			return null;
+
+		return AscWord.FormToJson(form);
+	};
 
 })(window, window.document);
