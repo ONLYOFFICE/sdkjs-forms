@@ -304,21 +304,31 @@
 			oLogicDocument.FinalizeAction();
 		}
 	};
-	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlTextForm'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlTextForm = function(oPr, oFormPr)
+	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlTextForm'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlTextForm = function(contentControlPr)
 	{
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
 			return;
 
+		let textFormPr      = contentControlPr ? contentControlPr.TextFormPr : null;
+		let formPr          = contentControlPr ? contentControlPr.FormPr : null;
+		let placeholderText = contentControlPr ? contentControlPr.PlaceholderText : "";
+
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
 			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlTextForm);
 
-			var oCC = oLogicDocument.AddContentControlTextForm(oPr);
-			if (oCC && oFormPr)
+			var oCC = oLogicDocument.AddContentControlTextForm(textFormPr);
+			if (oCC)
 			{
-				oCC.SetFormPr(oFormPr);
-				oCC.UpdatePlaceHolderTextPrForForm();
+				if (placeholderText)
+					oCC.SetPlaceholderText(placeholderText);
+
+				if (formPr)
+				{
+					oCC.SetFormPr(formPr);
+					oCC.UpdatePlaceHolderTextPrForForm();
+				}
 			}
 
 			oLogicDocument.UpdateInterface();
