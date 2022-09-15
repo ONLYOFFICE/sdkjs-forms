@@ -344,7 +344,6 @@
 
 		function AddComplexForm()
 		{
-			logicDocument.RemoveTextSelection();
 			if (!logicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 			{
 				logicDocument.StartAction(AscDFH.historydescription_Document_AddComplexForm);
