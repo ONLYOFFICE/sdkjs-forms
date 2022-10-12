@@ -1,8 +1,9 @@
 {
   "sdk": {
     "min": [
-      "api.js"
-    ],
+      "api.js",
+	  "apiPlugins.js"
+	],
     "common": [      
 	  "apiBuilder.js"
     ]
