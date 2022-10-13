@@ -410,13 +410,8 @@
 			return;
 
 		let key = form.GetFormKey();
-		if (key && "" !== key)
+		if (key && "" !== key.trim())
 			return;
-
-		if (form.IsRadioButton())
-		{
-			// TODO: Проверить группу
-		}
 
 		let formManager  = logicDocument.GetFormsManager();
 		let keyGenerator = formManager.GetKeyGenerator();
