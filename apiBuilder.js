@@ -240,7 +240,7 @@
 		if (!oFormPr)
 			oFormPr = {};
 
-		var oPr = new CSdtComboBoxPr();
+		var oPr = new AscCommon.CSdtComboBoxPr();
 		oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
 
 		var oCC = CreateCommonForm(oFormPr);
