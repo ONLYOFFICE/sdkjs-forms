@@ -34,7 +34,6 @@
 (function(window, document) {
     window['Asc']['Addons'] = window['Asc']['Addons'] || {};
 	window['Asc']['Addons']['forms'] = true; // register addon
-	
 	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlCheckBox'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlCheckBox = function(oPr, oFormPr, oCommonPr)
 	{
 		var oLogicDocument = this.private_GetLogicDocument();
@@ -85,6 +84,7 @@
 			{
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
+				private_CheckFormKey(oCC, oLogicDocument);
 			}
 
 			if (oCommonPr)
@@ -180,27 +180,29 @@
 			{
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
+				private_CheckFormKey(oCC, oLogicDocument);
+
 				oFormParaDrawing = oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
 				var aDrawings = oCC.GetAllDrawingObjects();
-				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing) 
+				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing)
 				{
 					var oDrawing = aDrawings[nDrawing];
 					var oGraphic = oDrawing.GraphicObj;
-					if(oGraphic && oGraphic.getObjectType() === AscDFH.historyitem_type_ImageShape) 
+					if(oGraphic && oGraphic.getObjectType() === AscDFH.historyitem_type_ImageShape)
 					{
 						var oSpPr = oGraphic.spPr;
-						if(oSpPr) 
+						if(oSpPr)
 						{
-							if(oSpPr.Fill) 
+							if(oSpPr.Fill)
 							{
 								oSpPr.setFill(null);
 							}
-							if(oSpPr.ln) 
+							if(oSpPr.ln)
 							{
 								oSpPr.setLn(null);
 							}
-							if(oSpPr.geometry) 
+							if(oSpPr.geometry)
 							{
 								oSpPr.setGeometry(null);
 							}
@@ -240,10 +242,10 @@
 
 			oLogicDocument.UpdateInterface();
 			oLogicDocument.Recalculate();
-			if(oFormParaDrawing) 
+			if(oFormParaDrawing)
 			{
 				let oFormShape = oFormParaDrawing.GraphicObj;
-				if(oFormShape) 
+				if(oFormShape)
 				{
 					oFormShape.Set_CurrentElement(true, null, true);
 				}
@@ -272,6 +274,7 @@
 			{
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
+				private_CheckFormKey(oCC, oLogicDocument);
 			}
 
 			if (oCC && oCommonPr)
@@ -328,6 +331,7 @@
 				{
 					oCC.SetFormPr(formPr);
 					oCC.UpdatePlaceHolderTextPrForForm();
+					private_CheckFormKey(oCC, oLogicDocument);
 				}
 			}
 
@@ -349,6 +353,7 @@
 				logicDocument.StartAction(AscDFH.historydescription_Document_AddComplexForm);
 
 				let complexForm = logicDocument.AddComplexForm(new AscWord.CSdtComplexFormPr(), formPr);
+				private_CheckFormKey(complexForm, logicDocument);
 
 				if (json)
 					AscWord.JsonToForm(json, complexForm);
@@ -398,5 +403,26 @@
 
 		return AscWord.FormToJson(form);
 	};
+
+	function private_CheckFormKey(form, logicDocument)
+	{
+		if (!form || !form.IsForm() || !logicDocument)
+			return;
+
+		let key = form.GetFormKey();
+		if (key && "" !== key.trim())
+			return;
+
+		let formManager  = logicDocument.GetFormsManager();
+		let keyGenerator = formManager.GetKeyGenerator();
+
+		let formPr = form.GetFormPr().Copy();
+		if (!formPr)
+			return;
+
+		key = keyGenerator.GetNewKey(form);
+		formPr.SetKey(key);
+		form.SetFormPr(formPr);
+	}
 
 })(window, window.document);
