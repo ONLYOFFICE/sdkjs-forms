@@ -156,7 +156,7 @@
 		oPr.SetWidth((GetNumberParameter(oFormPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
 
 		oCC.ApplyTextFormPr(oPr);
-
+		CheckFormKey(oCC);
 		return new AscBuilder.ApiTextForm(oCC);
 	};
 	/**
@@ -226,6 +226,7 @@
 			private_PerformAddCheckBox();
 		}
 
+		CheckFormKey(oCC);
 		return new AscBuilder.ApiCheckBoxForm(oCC);
 	};
 	/**
@@ -239,7 +240,7 @@
 		if (!oFormPr)
 			oFormPr = {};
 
-		var oPr = new CSdtComboBoxPr();
+		var oPr = new AscCommon.CSdtComboBoxPr();
 		oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
 
 		var oCC = CreateCommonForm(oFormPr);
@@ -290,6 +291,7 @@
 			}
 		}
 
+		CheckFormKey(oCC);
 		return new AscBuilder.ApiComboBoxForm(oCC);
 	};
 	/**
@@ -328,6 +330,7 @@
 
 		oCC.SetPictureFormPr(oPr);
 
+		CheckFormKey(oCC);
 		return new AscBuilder.ApiPictureForm(oCC);
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -356,6 +359,27 @@
 		oCC.UpdatePlaceHolderTextPrForForm();
 
 		return oCC;
+	}
+	function CheckFormKey(form)
+	{
+		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
+		if (!form || !form.IsForm() || !logicDocument)
+			return;
+
+		let key = form.GetFormKey();
+		if (key && "" !== key.trim())
+			return;
+
+		let formManager  = logicDocument.GetFormsManager();
+		let keyGenerator = formManager.GetKeyGenerator();
+
+		let formPr = form.GetFormPr().Copy();
+		if (!formPr)
+			return;
+
+		key = keyGenerator.GetNewKey(form);
+		formPr.SetKey(key);
+		form.SetFormPr(formPr);
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
