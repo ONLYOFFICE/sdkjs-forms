@@ -44,7 +44,6 @@
 	AscDFH.changesFactory[AscDFH.historyitem_FormFieldMaster_User] = CChangesContent;
 	AscDFH.changesFactory[AscDFH.historyitem_FormFieldMaster_Field] = CChangesObject;
 	AscDFH.changesFactory[AscDFH.historyitem_FormFieldMaster_SignRequest] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.historyitem_FormField_FieldData] = CChangesString;
 	AscDFH.changesFactory[AscDFH.historyitem_FormField_Content] = CChangesObject;
 	AscDFH.changesFactory[AscDFH.historyitem_FormField_EncryptedData] = CChangesContent;
 	AscDFH.changesFactory[AscDFH.historyitem_FormField_FieldMaster] = CChangesObject;
