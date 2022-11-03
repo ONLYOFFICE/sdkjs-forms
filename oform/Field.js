@@ -167,13 +167,15 @@
 			this.SignRequest.toXml(writer, oUsersIdMap);
 		}
 		writer.WriteXmlNodeEnd("FieldMaster");
-		if(this.Field) {
-			let oPart = writer.context.docPart.part.addPartWithoutRels(AscCommon.openXml.Types.field);
-			let oMemory = new AscCommon.CMemory();
-			oMemory.context = writer.context;
-			oPart.setDataXml(this.Field, oMemory);
-			oMemory.Seek(0);
-			oPart.addRelationship(AscCommon.openXml.Types.fieldMaster.relationType, oContext.part.uri)
+		if(writer.context.fileType === Asc.c_oAscFileType.OFORM) {
+			if(this.Field) {
+				let oPart = writer.context.docPart.part.addPartWithoutRels(AscCommon.openXml.Types.field);
+				let oMemory = new AscCommon.CMemory();
+				oMemory.context = writer.context;
+				oPart.setDataXml(this.Field, oMemory);
+				oMemory.Seek(0);
+				oPart.addRelationship(AscCommon.openXml.Types.fieldMaster.relationType, oContext.part.uri)
+			}
 		}
 	};
 

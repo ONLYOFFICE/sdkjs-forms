@@ -300,16 +300,11 @@
 		for(let nFldMaster = 0; nFldMaster < this.Fields.length; ++nFldMaster) {
 			let oFieldMaster = this.Fields[nFldMaster];
 			let oPart = oFldMasterPartMap[oFieldMaster.Id];
-			if(!oPart) {
-				oPart = writer.context.part.addPart(AscCommon.openXml.Types.fieldMaster);
-				let oFldMemory = new AscCommon.CMemory();
-				oFldMemory.context = writer.context;
-				oPart.part.setDataXml(oFieldMaster, oFldMemory);
-				oFldMasterPartMap[oFieldMaster.Id] = oPart;
+			if(oPart) {
+				let oNode = new CT_XmlNode();
+				oNode.attributes["r:id"] = oContext.part.addRelationship(AscCommon.openXml.Types.fieldMaster.relationType, oPart.part.uri);
+				oNode.toXml(writer, "Field");
 			}
-			let oNode = new CT_XmlNode();
-			oNode.attributes["r:id"] = oContext.part.addRelationship(AscCommon.openXml.Types.fieldMaster.relationType, oPart.part.uri);
-			oNode.toXml(writer, "Field");
 		}
 
 		writer.WriteXmlNodeEnd("FieldsGroup");
