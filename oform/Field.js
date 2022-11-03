@@ -40,38 +40,37 @@
 	const CChangesObject = AscDFH.CChangesDrawingsObject;
 	const CChangesContent = AscDFH.CChangesDrawingsContent;
 
-	AscDFH.changesFactory[AscDFH.histotyitem_FormFieldMaster_FieldId] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormFieldMaster_User] = CChangesContent;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormFieldMaster_Field] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormFieldMaster_SignRequest] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormField_FieldData] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormField_Body] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormField_EncryptedData] = CChangesContent;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormField_FieldMaster] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.histotyitem_SignRequest_User] = CChangesContent;
-	AscDFH.changesFactory[AscDFH.histotyitem_EncryptedData_Method] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_EncryptedData_Value] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_EncryptedData_KeyInfo] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.histotyitem_KeyInfo_User] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_KeyInfo_Value] = CChangesObject;
+	AscDFH.changesFactory[AscDFH.historyitem_FormFieldMaster_FieldId] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_FormFieldMaster_User] = CChangesContent;
+	AscDFH.changesFactory[AscDFH.historyitem_FormFieldMaster_Field] = CChangesObject;
+	AscDFH.changesFactory[AscDFH.historyitem_FormFieldMaster_SignRequest] = CChangesObject;
+	AscDFH.changesFactory[AscDFH.historyitem_FormField_FieldData] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_FormField_Content] = CChangesObject;
+	AscDFH.changesFactory[AscDFH.historyitem_FormField_EncryptedData] = CChangesContent;
+	AscDFH.changesFactory[AscDFH.historyitem_FormField_FieldMaster] = CChangesObject;
+	AscDFH.changesFactory[AscDFH.historyitem_SignRequest_User] = CChangesContent;
+	AscDFH.changesFactory[AscDFH.historyitem_EncryptedData_Method] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_EncryptedData_Value] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_EncryptedData_KeyInfo] = CChangesObject;
+	AscDFH.changesFactory[AscDFH.historyitem_KeyInfo_User] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_KeyInfo_Value] = CChangesObject;
 
 
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormFieldMaster_FieldId] = function(oClass, value) {oClass.FieldId = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormFieldMaster_Field] = function(oClass, value) {oClass.Field = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormFieldMaster_SignRequest] = function(oClass, value) {oClass.SignRequest = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormField_FieldData] = function(oClass, value) {oClass.FieldData = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormField_Body] = function(oClass, value) {oClass.Body = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormField_FieldMaster] = function(oClass, value) {oClass.FieldMaster = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_EncryptedData_Method] = function(oClass, value) {oClass.EncryptedMethod = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_EncryptedData_Value] = function(oClass, value) {oClass.EncryptedValue = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_EncryptedData_KeyInfo] = function(oClass, value) {oClass.KeyInfo = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_KeyInfo_User] = function(oClass, value) {oClass.FieldId = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_KeyInfo_Value] = function(oClass, value) {oClass.FieldId = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FormFieldMaster_FieldId] = function(oClass, value) {oClass.FieldId = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FormFieldMaster_Field] = function(oClass, value) {oClass.Field = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FormFieldMaster_SignRequest] = function(oClass, value) {oClass.SignRequest = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FormField_Content] = function(oClass, value) {oClass.FieldContent = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FormField_FieldMaster] = function(oClass, value) {oClass.FieldMaster = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_EncryptedData_Method] = function(oClass, value) {oClass.EncryptedMethod = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_EncryptedData_Value] = function(oClass, value) {oClass.EncryptedValue = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_EncryptedData_KeyInfo] = function(oClass, value) {oClass.KeyInfo = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_KeyInfo_User] = function(oClass, value) {oClass.FieldId = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_KeyInfo_Value] = function(oClass, value) {oClass.FieldId = value;};
 
 
-	AscDFH.drawingContentChanges[AscDFH.histotyitem_FormFieldMaster_User] = function (oClass) {return oClass.Users;};
-	AscDFH.drawingContentChanges[AscDFH.histotyitem_SignRequest_User] = function (oClass) {return oClass.Users;};
-	AscDFH.drawingContentChanges[AscDFH.histotyitem_FormField_EncryptedData] = function (oClass) {return oClass.EndcriptedData;};
+	AscDFH.drawingContentChanges[AscDFH.historyitem_FormFieldMaster_User] = function (oClass) {return oClass.Users;};
+	AscDFH.drawingContentChanges[AscDFH.historyitem_SignRequest_User] = function (oClass) {return oClass.Users;};
+	AscDFH.drawingContentChanges[AscDFH.historyitem_FormField_EncryptedData] = function (oClass) {return oClass.EndcriptedData;};
 
 
 	function CFieldMaster() {
@@ -83,22 +82,22 @@
 	}
 	InitClass(CFieldMaster, CBaseFormatObject, AscDFH.historyitem_type_FormFieldMaster);
 	CFieldMaster.prototype.setFieldId = function(sFieldId) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_FormFieldMaster_FieldId, this.FieldId, sFieldId));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_FormFieldMaster_FieldId, this.FieldId, sFieldId));
 		this.FieldId = sFieldId;
 	};
 	CFieldMaster.prototype.addUser = function(oUser) {
-		AscCommon.History.Add(new CChangesContent(this, AscDFH.histotyitem_FormFieldMaster_User, this.Users.length, [oUser], true));
+		AscCommon.History.Add(new CChangesContent(this, AscDFH.historyitem_FormFieldMaster_User, this.Users.length, [oUser], true));
 		this.Users.push(oUser);
 	};
 	CFieldMaster.prototype.setField = function(oField) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.histotyitem_FormFieldMaster_Field, this.Field, oField));
+		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_FormFieldMaster_Field, this.Field, oField));
 		this.Field = oField;
 		if(oField) {
 			oField.setFieldMaster(this);
 		}
 	};
 	CFieldMaster.prototype.setSignRequest = function(oSignRequest) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.histotyitem_FormFieldMaster_SignRequest, this.SignRequest, oSignRequest));
+		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_FormFieldMaster_SignRequest, this.SignRequest, oSignRequest));
 		this.SignRequest = oSignRequest;
 	};
 	CFieldMaster.prototype.readAttrXml = function(name, reader) {
@@ -184,7 +183,7 @@
 	}
 	InitClass(CSignRequest, CBaseFormatObject, AscDFH.historyitem_type_SignRequest);
 	CSignRequest.prototype.addUser = function(oUser) {
-		AscCommon.History.Add(new CChangesContent(this, AscDFH.histotyitem_SignRequest_User, this.Users.length, [oUser], true));
+		AscCommon.History.Add(new CChangesContent(this, AscDFH.historyitem_SignRequest_User, this.Users.length, [oUser], true));
 		this.Users.push(oUser);
 	};
 	CSignRequest.prototype.readChildXml = function (name, reader) {
@@ -210,37 +209,53 @@
 		writer.WriteXmlNodeEnd("Users");
 		writer.WriteXmlNodeEnd("SignRequest");
 	};
+
+	function CFieldContent() {
+		CParagraphContentWithParagraphLikeContent.call(this);
+	}
+	InitClass(CFieldContent, CParagraphContentWithParagraphLikeContent, 0);
+	CFieldContent.prototype.Add_ToContent = function(Pos, Item, UpdatePosition)
+	{
+		AscCommon.History.Add(new CChangesFormFieldAddItem(this, Pos, [Item]));
+		CParagraphContentWithParagraphLikeContent.prototype.Add_ToContent.apply(this, arguments);
+	};
+
+	CFieldContent.prototype.Remove_FromContent = function(Pos, Count, UpdatePosition)
+	{
+		let DeletedItems = this.Content.slice( Pos, Pos + Count );
+		AscCommon.History.Add(new CChangesFormFieldRemoveItem(this, Pos, DeletedItems));
+		CParagraphContentWithParagraphLikeContent.prototype.Remove_FromContent.apply(this, arguments);
+	};
+	CFieldContent.prototype.fromXml = function (reader) {
+		CParagraphContentWithParagraphLikeContent.prototype.fromXml.call(this, reader);
+	};
+	CFieldContent.prototype.toXml = function (writer) {
+		writer.WriteXmlNodeStart("w:sdtContent");
+		writer.WriteXmlAttributesEnd();
+		CParagraphContentWithParagraphLikeContent.prototype.toXml.call(this, writer);
+		writer.WriteXmlNodeEnd("w:sdtContent");
+	};
+
 	function CField() {
 		CBaseFormatObject.call(this);
-		this.FieldData = null;
 		this.EndcriptedData = [];
-		this.Body = null;
+		this.FieldContent = null;
 	}
 	InitClass(CField, CBaseFormatObject, AscDFH.historyitem_type_FormField);
-	CField.prototype.setFieldData = function(oFieldData) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_FormField_FieldData, this.FieldData, oFieldData));
-		this.FieldData = oFieldData;
-	};
-	CField.prototype.setBody = function(sBody) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_FormField_Body, this.Body, sBody));
-		this.Body = sBody;
+	CField.prototype.setFieldContent = function(oFieldContent) {
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_FormField_Content, this.FieldContent, oFieldContent));
+		this.FieldContent = oFieldContent;
 	};
 	CField.prototype.addEncryptedData = function(oEncryptedData) {
-		AscCommon.History.Add(new CChangesContent(this, AscDFH.histotyitem_FormField_EncryptedData, this.EndcriptedData.length, [oEncryptedData], true));
+		AscCommon.History.Add(new CChangesContent(this, AscDFH.historyitem_FormField_EncryptedData, this.EndcriptedData.length, [oEncryptedData], true));
 		this.EndcriptedData.push(oEncryptedData);
 	};
 	CField.prototype.setFieldMaster = function(oFieldMaster) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.histotyitem_FormField_FieldMaster, this.FieldMaster, oFieldMaster));
+		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_FormField_FieldMaster, this.FieldMaster, oFieldMaster));
 		this.FieldMaster = oFieldMaster;
 	};
 	CField.prototype.readChildXml = function (name, reader) {
 		switch (name) {
-			case "FieldData": {
-				let oFieldData = new AscCommon.CDocPart(this);
-				oFieldData.fromXml(reader);
-				this.setFieldData(oFieldData);
-				break;
-			}
 			case "EncryptedData": {
 				let oEncryptedData = new CEncryptedData();
 				oEncryptedData.fromXml(reader);
@@ -248,9 +263,19 @@
 				break;
 			}
 			case "Body": {
-				let oBodyNode = new CT_XmlNode();
-				oBodyNode.fromXml(reader);
-				this.setBody(oBodyNode.text);
+				let oFieldContent = null;
+				let oNode = new CT_XmlNode(function (reader, name) {
+					if(name === "sdtContent") {
+						oFieldContent = new CFieldContent();
+						oFieldContent.fromXml(reader);
+						return oFieldContent;
+					}
+					return null;
+				});
+				oNode.fromXml(reader);
+				if(oFieldContent) {
+					this.setFieldContent(oFieldContent);
+				}
 				break;
 			}
 		}
@@ -259,13 +284,12 @@
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
 		writer.WriteXmlNodeStart("Field");
 		writer.WriteXmlAttributesEnd();
-		if(this.Body) {
-			let oNode = new CT_XmlNode();
-			oNode.text = this.Body;
-			oNode.toXml(writer, "Body");
-		}
-		if(this.FieldData) {
-			this.FieldData.toXml(writer, "FieldData");
+		if(this.FieldContent) {
+			writer.WriteXmlNodeStart("Body");
+			writer.WriteXmlString(AscCommonWord.g_sXmlDocumentNamespaces);
+			writer.WriteXmlAttributesEnd();
+			this.FieldContent.toXml(writer);
+			writer.WriteXmlNodeEnd("Body");
 		}
 		for(let nData = 0; nData < this.EndcriptedData.length; ++nData) {
 			this.EndcriptedData[nData].toXml(writer);
@@ -281,15 +305,15 @@
 	}
 	InitClass(CEncryptedData, CBaseFormatObject, AscDFH.historyitem_type_EncryptedData);
 	CEncryptedData.prototype.setEncryptedMethod = function (sEncryptedMethod) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_EncryptedData_Method, this.EncryptedMethod, sEncryptedMethod));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_EncryptedData_Method, this.EncryptedMethod, sEncryptedMethod));
 		this.EncryptedMethod = sEncryptedMethod;
 	};
 	CEncryptedData.prototype.setEncryptedValue = function (sEncryptedValue) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_EncryptedData_Value, this.EncryptedValue, sEncryptedValue));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_EncryptedData_Value, this.EncryptedValue, sEncryptedValue));
 		this.EncryptedValue = sEncryptedValue;
 	};
 	CEncryptedData.prototype.setKeyInfo = function (oKeyInfo) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.histotyitem_EncryptedData_KeyInfo, this.KeyInfo, oKeyInfo));
+		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_EncryptedData_KeyInfo, this.KeyInfo, oKeyInfo));
 		this.KeyInfo = oKeyInfo;
 	};
 	CEncryptedData.prototype.readChildXml = function (name, reader) {
@@ -343,11 +367,11 @@
 	}
 	InitClass(CKeyInfo, CBaseFormatObject, AscDFH.historyitem_type_KeyInfo);
 	CKeyInfo.prototype.setUserId = function (sUserId) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_KeyInfo_User, this.UserId, sUserId));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_KeyInfo_User, this.UserId, sUserId));
 		this.UserId = sUserId;
 	};
 	CKeyInfo.prototype.setValue = function (sValue) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.histotyitem_KeyInfo_Value, this.Value, sValue));
+		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_KeyInfo_Value, this.Value, sValue));
 		this.Value = sValue;
 	};
 	CKeyInfo.prototype.readChildXml = function (name, reader) {
@@ -382,6 +406,7 @@
 		writer.WriteXmlNodeEnd("KeyInfo");
 	};
 
+	AscWord.CFieldContent = CFieldContent;
 	AscWord.CFieldMaster = CFieldMaster;
 	AscWord.CField = CField;
 	AscWord.CEncryptedData = CEncryptedData;

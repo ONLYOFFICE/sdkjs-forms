@@ -41,34 +41,34 @@
 	const CChangesContent = AscDFH.CChangesDrawingsContent;
 	const CChangesLong = AscDFH.CChangesDrawingsLong;
 
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_Author] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_Date] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_Description] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_Type] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_Application] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_DocumentId] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_FieldsGroups] = CChangesContent;
-	AscDFH.changesFactory[AscDFH.histotyitem_MainDocument_User] = CChangesContent;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormDate_Format] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_FormDate_Value] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_FieldsGroup_Id] = CChangesString;
-	AscDFH.changesFactory[AscDFH.histotyitem_FieldsGroup_Weight] = CChangesLong;
-	AscDFH.changesFactory[AscDFH.histotyitem_FieldsGroup_Field] = CChangesContent;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_Author] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_Date] = CChangesObject;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_Description] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_Type] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_Application] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_DocumentId] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_FieldsGroups] = CChangesContent;
+	AscDFH.changesFactory[AscDFH.historyitem_MainDocument_User] = CChangesContent;
+	AscDFH.changesFactory[AscDFH.historyitem_FormDate_Format] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_FormDate_Value] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_FieldsGroup_Id] = CChangesString;
+	AscDFH.changesFactory[AscDFH.historyitem_FieldsGroup_Weight] = CChangesLong;
+	AscDFH.changesFactory[AscDFH.historyitem_FieldsGroup_Field] = CChangesContent;
 
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_MainDocument_Author] = function (oClass, value) {oClass.Author = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_MainDocument_Date] = function (oClass, value) {oClass.Date = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_MainDocument_Description] = function (oClass, value) {oClass.Description = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_MainDocument_Type] = function (oClass, value) {oClass.Type = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_MainDocument_Application] = function (oClass, value) {oClass.Application = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_MainDocument_DocumentId] = function (oClass, value) {oClass.DocumentId = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormDate_Format] = function (oClass, value) {oClass.Format = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FormDate_Value] = function (oClass, value) {oClass.Value = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FieldsGroup_Id] = function (oClass, value) {oClass.GroupId = value;};
-	AscDFH.drawingsChangesMap[AscDFH.histotyitem_FieldsGroup_Weight] = function (oClass, value) {oClass.Weight = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_MainDocument_Author] = function (oClass, value) {oClass.Author = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_MainDocument_Date] = function (oClass, value) {oClass.Date = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_MainDocument_Description] = function (oClass, value) {oClass.Description = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_MainDocument_Type] = function (oClass, value) {oClass.Type = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_MainDocument_Application] = function (oClass, value) {oClass.Application = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_MainDocument_DocumentId] = function (oClass, value) {oClass.DocumentId = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FormDate_Format] = function (oClass, value) {oClass.Format = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FormDate_Value] = function (oClass, value) {oClass.Value = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FieldsGroup_Id] = function (oClass, value) {oClass.GroupId = value;};
+	AscDFH.drawingsChangesMap[AscDFH.historyitem_FieldsGroup_Weight] = function (oClass, value) {oClass.Weight = value;};
 
-	AscDFH.drawingContentChanges[AscDFH.histotyitem_MainDocument_FieldsGroups] = function (oClass) {return oClass.FieldsGroups;};
-	AscDFH.drawingContentChanges[AscDFH.histotyitem_MainDocument_User] = function (oClass) {return oClass.Users;};
-	AscDFH.drawingContentChanges[AscDFH.histotyitem_FieldsGroup_Field] = function (oClass) {return oClass.Fields;};
+	AscDFH.drawingContentChanges[AscDFH.historyitem_MainDocument_FieldsGroups] = function (oClass) {return oClass.FieldsGroups;};
+	AscDFH.drawingContentChanges[AscDFH.historyitem_MainDocument_User] = function (oClass) {return oClass.Users;};
+	AscDFH.drawingContentChanges[AscDFH.historyitem_FieldsGroup_Field] = function (oClass) {return oClass.Fields;};
 
 
 	function CMainDocument() {
@@ -85,35 +85,35 @@
 	}
 	InitClass(CMainDocument, CBaseFormatObject, AscDFH.historyitem_type_MainDocument);
 	CMainDocument.prototype.setAuthor = function (sAuthor) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_MainDocument_Author, this.Author, sAuthor));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_MainDocument_Author, this.Author, sAuthor));
 		this.Author = sAuthor;
 	};
 	CMainDocument.prototype.setDate = function (oDate) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.histotyitem_MainDocument_Date, this.Date, oDate));
+		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_MainDocument_Date, this.Date, oDate));
 		this.Date = oDate;
 	};
 	CMainDocument.prototype.setDescription = function (sDescription) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_MainDocument_Description, this.Description, sDescription));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_MainDocument_Description, this.Description, sDescription));
 		this.Description = sDescription;
 	};
 	CMainDocument.prototype.setType = function (sType) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_MainDocument_Type, this.Type, sType));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_MainDocument_Type, this.Type, sType));
 		this.Type = sType;
 	};
 	CMainDocument.prototype.setApplication = function (sApplication) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_MainDocument_Application, this.Application, sApplication));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_MainDocument_Application, this.Application, sApplication));
 		this.Application = sApplication;
 	};
 	CMainDocument.prototype.setDocumentId = function (sDocumentId) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_MainDocument_DocumentId, this.DocumentId, sDocumentId));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_MainDocument_DocumentId, this.DocumentId, sDocumentId));
 		this.DocumentId = sDocumentId;
 	};
 	CMainDocument.prototype.addFieldsGroups = function(oFieldsGroup) {
-		AscCommon.History.Add(new CChangesContent(this, AscDFH.histotyitem_MainDocument_FieldsGroups, this.FieldsGroups.length, [oFieldsGroup], true));
+		AscCommon.History.Add(new CChangesContent(this, AscDFH.historyitem_MainDocument_FieldsGroups, this.FieldsGroups.length, [oFieldsGroup], true));
 		this.FieldsGroups.push(oFieldsGroup);
 	};
 	CMainDocument.prototype.addUser = function(oUser) {
-		AscCommon.History.Add(new CChangesContent(this, AscDFH.histotyitem_MainDocument_User, this.FieldsGroups.length, [oUser], true));
+		AscCommon.History.Add(new CChangesContent(this, AscDFH.historyitem_MainDocument_User, this.FieldsGroups.length, [oUser], true));
 		this.Users.push(oUser);
 	};
 	CMainDocument.prototype.readChildXml = function (name, reader) {
@@ -208,11 +208,11 @@
 	}
 	InitClass(CFormDate, CBaseFormatObject, AscDFH.historyitem_type_FormDate);
 	CFormDate.prototype.setFormat = function(sFormat) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_FormDate_Format, this.Format, sFormat));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_FormDate_Format, this.Format, sFormat));
 		this.Format = sFormat;
 	};
 	CFormDate.prototype.setValue = function(sValue) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_FormDate_Value, this.Value, sValue));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_FormDate_Value, this.Value, sValue));
 		this.Value = sValue;
 	};
 	CFormDate.prototype.readChildXml = function (name, reader) {
@@ -254,15 +254,15 @@
 	}
 	InitClass(CFieldsGroup, CBaseFormatObject, AscDFH.historyitem_type_FieldsGroup);
 	CFieldsGroup.prototype.setGroupId = function (sGroupId) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_FieldsGroup_Id, this.GroupId, sGroupId));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_FieldsGroup_Id, this.GroupId, sGroupId));
 		this.GroupId = sGroupId;
 	};
 	CFieldsGroup.prototype.setWeight = function (nWeight) {
-		AscCommon.History.Add(new CChangesLong(this, AscDFH.histotyitem_FieldsGroup_Weight, this.Weight, nWeight));
+		AscCommon.History.Add(new CChangesLong(this, AscDFH.historyitem_FieldsGroup_Weight, this.Weight, nWeight));
 		this.Weight = nWeight;
 	};
 	CFieldsGroup.prototype.addField = function (oField) {
-		AscCommon.History.Add(new CChangesContent(this, AscDFH.histotyitem_FieldsGroup_Field, this.Fields.length, [oField], true));
+		AscCommon.History.Add(new CChangesContent(this, AscDFH.historyitem_FieldsGroup_Field, this.Fields.length, [oField], true));
 		this.Fields.push(oField);
 	};
 	CFieldsGroup.prototype.readAttrXml = function(name, reader) {

@@ -206,19 +206,19 @@
 	}
 	InitClass(CSignInfo, CBaseFormatObject, AscDFH.historyitem_type_SignInfo);
 	CSignInfo.prototype.setPublicKey = function (sPublicKey) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_SignInfo_PublicKey, this.PublicKey, sPublicKey));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_PublicKey, this.PublicKey, sPublicKey));
 		this.PublicKey = sPublicKey;
 	};
 	CSignInfo.prototype.setX509 = function (sX509) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_SignInfo_X509, this.X509, sX509));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_X509, this.X509, sX509));
 		this.X509 = sX509;
 	};
 	CSignInfo.prototype.setImageValid = function (sImageValid) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_SignInfo_ImageValid, this.ImageValid, sImageValid));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_ImageValid, this.ImageValid, sImageValid));
 		this.ImageValid = sImageValid;
 	};
 	CSignInfo.prototype.setImageInvalid = function (sImageInvalid) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_SignInfo_ImageInvalid, this.ImageInvalid, sImageInvalid));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_ImageInvalid, this.ImageInvalid, sImageInvalid));
 		this.ImageInvalid = sImageInvalid;
 	};
 	CSignInfo.prototype.readChildXml = function (name, reader) {
@@ -277,7 +277,7 @@
 	}
 	InitClass(CCipherInfo, CBaseFormatObject, AscDFH.historyitem_type_CipherInfo);
 	CCipherInfo.prototype.setPublicKey = function (sPublicKey) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.histotyitem_CipherInfo_PublicKey, this.PublicKey, sPublicKey));
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_CipherInfo_PublicKey, this.PublicKey, sPublicKey));
 		this.PublicKey = sPublicKey;
 	};
 	CCipherInfo.prototype.readChildXml = function (name, reader) {
