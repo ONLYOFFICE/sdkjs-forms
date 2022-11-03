@@ -5,7 +5,10 @@
 	  "apiPlugins.js"
 	],
     "common": [      
-	  "apiBuilder.js"
+	  "apiBuilder.js",
+	  "oform/Main.js",
+	  "oform/Field.js",
+	  "oform/User.js"
     ]
   }
 }
