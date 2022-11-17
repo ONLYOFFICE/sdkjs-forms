@@ -333,6 +333,26 @@
 		CheckFormKey(oCC);
 		return new AscBuilder.ApiPictureForm(oCC);
 	};
+
+	/**
+	 * Creates a complex form with the specified base form properties.
+	 * @memberof Api
+	 * @param {FormPrBase} oFormPr - base form property.
+	 * @returns {ApiComplexForm}
+	 */
+	Api.prototype.CreateComplexForm = function(oFormPr)
+	{
+		if (!oFormPr)
+			oFormPr = {};
+
+		let oCC = CreateCommonForm(oFormPr);
+		let oComplexPr = new AscWord.CSdtComplexFormPr();
+
+		oCC.SetComplexFormPr(oComplexPr);
+		CheckFormKey(oCC);
+		return new AscBuilder.ApiComplexForm(oCC);
+	};
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -388,5 +408,5 @@
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;	
-
+	Api.prototype["CreateComplexForm"]  = Api.prototype.CreateComplexForm;	
 }(window, null));
