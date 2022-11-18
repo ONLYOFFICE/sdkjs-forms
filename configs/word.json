@@ -9,7 +9,9 @@
 	  "oform/Main.js",
 	  "oform/Field.js",
 	  "oform/User.js",
-      "oform/UserMaster.js"
+      "oform/UserMaster.js",
+      "oform/changes/UserChanges.js",
+      "oform/changes/UserMasterChanges.js"
     ]
   }
 }

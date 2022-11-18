@@ -32,61 +32,56 @@
 
 "use strict";
 
-(function(window, undefined) {
-	const CBaseFormatObject = AscFormat.CBaseFormatObject;
-	const InitClass = AscFormat.InitClass;
-	const CChangesString = AscDFH.CChangesDrawingsString;
-	const CChangesObject = AscDFH.CChangesDrawingsObject;
-	const CChangesContent = AscDFH.CChangesDrawingsContent;
-
-	AscDFH.changesFactory[AscDFH.historyitem_UserMasterUserId] = CChangesString;
-	AscDFH.changesFactory[AscDFH.historyitem_UserMasterSignInfo] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.historyitem_UserMasterCipherInfo] = CChangesObject;
-	AscDFH.changesFactory[AscDFH.historyitem_UserMasterRole] = CChangesString;
-	AscDFH.changesFactory[AscDFH.historyitem_UserEmail] = CChangesString;
-	AscDFH.changesFactory[AscDFH.historyitem_UserTelephone] = CChangesString;
-	AscDFH.changesFactory[AscDFH.historyitem_UserMasterUser] = CChangesContent;
-
-	AscDFH.drawingsChangesMap[AscDFH.historyitem_UserMasterUserId] = function(oClass, value) {oClass.UserId = value;};
-	AscDFH.drawingsChangesMap[AscDFH.historyitem_UserMasterSignInfo] = function(oClass, value) {oClass.SignInfo = value;};
-	AscDFH.drawingsChangesMap[AscDFH.historyitem_UserMasterCipherInfo] = function(oClass, value) {oClass.CipherInfo = value;};
-	AscDFH.drawingsChangesMap[AscDFH.historyitem_UserMasterRole] = function(oClass, value) {oClass.Role = value;};
-	AscDFH.drawingsChangesMap[AscDFH.historyitem_UserEmail] = function(oClass, value) {oClass.Email = value;};
-	AscDFH.drawingsChangesMap[AscDFH.historyitem_UserTelephone] = function(oClass, value) {oClass.Telephone = value;};
-
-	AscDFH.drawingContentChanges[AscDFH.historyitem_UserMasterUser] = function(oClass) {return oClass.Users;};
-
-
-	function CUser()
+(function(window)
+{
+	/**
+	 * @param {AscOForm.CUserMaster} userMaster
+	 * @constructor
+	 */
+	function CUser(userMaster)
 	{
 		AscFormat.CBaseFormatObject.call(this);
-		this.UserMaster = null;
-		this.Email = null;
-		this.Telephone = null;
+
+		this.Email      = null;
+		this.Telephone  = null;
+		this.UserMaster = userMaster;
 	}
-	InitClass(CUser, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_User);
-	CUser.prototype.setEmail = function (sEmail) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_UserEmail, this.Email, sEmail));
-		this.Email = sEmail;
+	AscFormat.InitClass(CUser, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_User);
+	CUser.prototype.setEmail = function(email)
+	{
+		if (email === this.Email)
+			return;
+
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_User_Email, this.Email, email));
+		this.Email = email;
 	};
-	CUser.prototype.setTelephone = function (sTelephone) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_UserTelephone, this.Telephone, sTelephone));
-		this.Telephone = sTelephone;
+	CUser.prototype.setTelephone = function(telephone)
+	{
+		if (telephone === this.Telephone)
+			return;
+
+		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_User_Telephone, this.Telephone, telephone));
+		this.Telephone = telephone;
 	};
-	CUser.prototype.readChildXml = function (name, reader) {
-		if(CUserMaster.prototype.readChildXml.call(this, name, reader)) {
-			return true;
-		}
+	CUser.prototype.getUserMaster = function()
+	{
+		return this.UserMaster;
+	};
+	CUser.prototype.readChildXml = function(name, reader)
+	{
 		let bRead = false;
-		switch (name) {
-			case "Email": {
+		switch (name)
+		{
+			case "Email":
+			{
 				let oNode = new CT_XmlNode();
 				oNode.fromXml(reader);
 				this.setEmail(oNode.text);
 				bRead = true;
 				break;
 			}
-			case "Telephone": {
+			case "Telephone":
+			{
 				let oNode = new CT_XmlNode();
 				oNode.fromXml(reader);
 				this.setTelephone(oNode.text);
@@ -96,124 +91,16 @@
 		}
 		return bRead;
 	};
-	CUser.prototype.toXml = function (writer) {
+	CUser.prototype.toXml = function(writer)
+	{
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
 		writer.WriteXmlNodeStart("User");
 		writer.WriteXmlAttributesEnd();
-		let oEmailNode = new CT_XmlNode();
-		oEmailNode.text = this.Email;
-		oEmailNode.toXml(writer, "Email");
-
-		let oTelephoneNode = new CT_XmlNode();
-		oTelephoneNode.text = this.Telephone;
-		oTelephoneNode.toXml(writer, "Telephone");
-		this.writeChildren(writer);
+		writer.WriteXmlNodeWithText("Email", this.Email);
+		writer.WriteXmlNodeWithText("Telephone", this.Telephone);
 		writer.WriteXmlNodeEnd("User");
 	};
+	//--------------------------------------------------------export----------------------------------------------------
+	window['AscOForm'].CUser = CUser;
 
-	function CSignInfo() {
-		CBaseFormatObject.call(this);
-		this.PublicKey = null;
-		this.X509 = null;
-		this.ImageValid = null;
-		this.ImageInvalid = null;
-	}
-	InitClass(CSignInfo, CBaseFormatObject, AscDFH.historyitem_type_SignInfo);
-	CSignInfo.prototype.setPublicKey = function (sPublicKey) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_PublicKey, this.PublicKey, sPublicKey));
-		this.PublicKey = sPublicKey;
-	};
-	CSignInfo.prototype.setX509 = function (sX509) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_X509, this.X509, sX509));
-		this.X509 = sX509;
-	};
-	CSignInfo.prototype.setImageValid = function (sImageValid) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_ImageValid, this.ImageValid, sImageValid));
-		this.ImageValid = sImageValid;
-	};
-	CSignInfo.prototype.setImageInvalid = function (sImageInvalid) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_SignInfo_ImageInvalid, this.ImageInvalid, sImageInvalid));
-		this.ImageInvalid = sImageInvalid;
-	};
-	CSignInfo.prototype.readChildXml = function (name, reader) {
-		switch (name) {
-			case "PublicKey": {
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setPublicKey(oNode.text);
-				break;
-			}
-			case "X509": {
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setX509(oNode.text);
-				break;
-			}
-			case "ImageValid": {
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setImageValid(oNode.text);
-				break;
-			}
-			case "ImageInvalid": {
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setImageInvalid(oNode.text);
-				break;
-			}
-		}
-	};
-	CSignInfo.prototype.toXml = function(writer) {
-		writer.WriteXmlNodeStart("SignInfo");
-		writer.WriteXmlAttributesEnd();
-		let oPublicKeyNode = new CT_XmlNode();
-		oPublicKeyNode.text = this.PublicKey;
-		oPublicKeyNode.toXml(writer, "PublicKey");
-
-		let oX509Node = new CT_XmlNode();
-		oX509Node.text = this.X509;
-		oX509Node.toXml(writer, "X509");
-
-		let oImageValidNode = new CT_XmlNode();
-		oImageValidNode.text = this.ImageValid;
-		oImageValidNode.toXml(writer, "ImageValid");
-
-		let oImageInvalidNode = new CT_XmlNode();
-		oImageInvalidNode.text = this.ImageInvalid;
-		oImageInvalidNode.toXml(writer, "ImageInvalid");
-
-		writer.WriteXmlNodeEnd("SignInfo");
-	};
-
-	function CCipherInfo() {
-		CBaseFormatObject.call(this);
-		this.PublicKey = null;
-	}
-	InitClass(CCipherInfo, CBaseFormatObject, AscDFH.historyitem_type_CipherInfo);
-	CCipherInfo.prototype.setPublicKey = function (sPublicKey) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_CipherInfo_PublicKey, this.PublicKey, sPublicKey));
-		this.PublicKey = sPublicKey;
-	};
-	CCipherInfo.prototype.readChildXml = function (name, reader) {
-		switch (name) {
-			case "PublicKey": {
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setPublicKey(oNode.text);
-				break;
-			}
-		}
-	};
-	CCipherInfo.prototype.toXml = function(writer) {
-		writer.WriteXmlNodeStart("CipherInfo");
-		writer.WriteXmlAttributesEnd();
-		let oPublicKeyNode = new CT_XmlNode();
-		oPublicKeyNode.text = this.PublicKey;
-		oPublicKeyNode.toXml(writer, "PublicKey");
-		writer.WriteXmlNodeEnd("CipherInfo");
-	};
-
-	AscWord.CUser = CUser;
-	AscWord.CSignInfo = CSignInfo;
-	AscWord.CCipherInfo = CCipherInfo;
 })(window);
