@@ -34,65 +34,19 @@
 
 (function(window)
 {
-	/**
-	 *
-	 * @constructor
-	 */
-	function CUserMaster()
-	{
-		AscFormat.CBaseFormatObject.call(this);
+	window['AscDFH'].historyitem_OForm_UserMaster_UserId = window['AscDFH'].historyitem_type_OForm_UserMaster | 1;
+	window['AscDFH'].historyitem_OForm_UserMaster_Role   = window['AscDFH'].historyitem_type_OForm_UserMaster | 2;
 
-		this.UserId = null;
-		this.Role   = null;
-	}
-	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
-	CUserMaster.prototype.setUserId = function (userId)
+	window['AscDFH'].changesFactory[AscDFH.historyitem_OForm_UserMaster_UserId] = window['AscDFH'].CChangesDrawingsString;
+	window['AscDFH'].changesFactory[AscDFH.historyitem_OForm_UserMaster_Role]   = window['AscDFH'].CChangesDrawingsString;
+
+	window['AscDFH'].drawingsChangesMap[AscDFH.historyitem_OForm_UserMaster_UserId] = function(object, value)
 	{
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_UserMaster_UserId, this.UserId, userId));
-		this.UserId = userId;
+		object.UserId = value;
 	};
-	CUserMaster.prototype.setRole = function (role)
+	window['AscDFH'].drawingsChangesMap[AscDFH.historyitem_OForm_UserMaster_Role] = function(object, value)
 	{
-		if (role !== this.Role)
-		{
-			AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_UserMaster_Role, this.Role, sRole));
-			this.Role = sRole;
-		}
+		object.Role = value;
 	};
-	CUserMaster.prototype.readChildXml = function(name, reader)
-	{
-		let bRead = false;
-		switch (name)
-		{
-			case "Id":
-			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setUserId(oNode.text);
-				bRead = true;
-				break;
-			}
-			case "Role":
-			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setRole(oNode.text);
-				bRead = true;
-				break;
-			}
-		}
-		return bRead;
-	};
-	CUserMaster.prototype.toXml = function (writer)
-	{
-		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("UserMaster");
-		writer.WriteXmlAttributesEnd();
-		writer.WriteXmlNodeWithText("Id", this.UserId);
-		writer.WriteXmlNodeWithText("Role", this.Role);
-		writer.WriteXmlNodeEnd("UserMaster");
-	};
-	//--------------------------------------------------------export----------------------------------------------------
-	window['AscOForm'].CUserMaster = CUserMaster;
 
 })(window);
