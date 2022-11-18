@@ -30,6 +30,7 @@
  *
  */
 
+var AscOForm;
 
 (function(window, document) {
     window['Asc']['Addons'] = window['Asc']['Addons'] || {};

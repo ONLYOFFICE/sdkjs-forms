@@ -57,100 +57,14 @@
 	AscDFH.drawingContentChanges[AscDFH.historyitem_UserMasterUser] = function(oClass) {return oClass.Users;};
 
 
-
-	function CUserMaster() {
-		CBaseFormatObject.call(this);
-		this.UserId = null;
-		this.SignInfo = null;
-		this.CipherInfo = null;
-		this.Role = null;
-
-		this.Users = [];
-	}
-	InitClass(CUserMaster, CBaseFormatObject, AscDFH.historyitem_type_UserMaster);
-	CUserMaster.prototype.setUserId = function (sUserId) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_UserMasterUserId, this.UserId, sUserId));
-		this.UserId = sUserId;
-	};
-	CUserMaster.prototype.setSignInfo = function (oSignInfo) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_UserMasterSignInfo, this.SignInfo, oSignInfo));
-		this.SignInfo = oSignInfo;
-
-	};
-	CUserMaster.prototype.setCipherInfo = function (oCipherInfo) {
-		AscCommon.History.Add(new CChangesObject(this, AscDFH.historyitem_UserMasterCipherInfo, this.CipherInfo, oCipherInfo));
-		this.CipherInfo = oCipherInfo;
-	};
-	CUserMaster.prototype.setRole = function (sRole) {
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_UserMasterRole, this.Role, sRole));
-		this.Role = sRole;
-	};
-	CUserMaster.prototype.addUser = function (oUser) {
-		AscCommon.History.Add(new CChangesContent(this, AscDFH.historyitem_UserMasterUser, this.Users.length, [oUser], true));
-		this.Users.push(oUser);
-	};
-	CUserMaster.prototype.readChildXml = function (name, reader) {
-		let bRead = false;
-		switch (name) {
-			case "Id": {
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setUserId(oNode.text);
-				bRead = true;
-				break;
-			}
-			case "SignInfo": {
-				let oSignInfo = new CSignInfo();
-				oSignInfo.fromXml(reader);
-				this.setSignInfo(oSignInfo);
-				bRead = true;
-				break;
-			}
-			case "CipherInfo": {
-				let oCipherInfo = new CCipherInfo();
-				oCipherInfo.fromXml(reader);
-				this.setCipherInfo(oCipherInfo);
-				bRead = true;
-				break;
-			}
-			case "Role": {
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setRole(oNode.text);
-				bRead = true;
-				break;
-			}
-		}
-		return bRead;
-	};
-	CUserMaster.prototype.writeChildren = function(writer) {
-		let oIdNode = new CT_XmlNode();
-		oIdNode.text = this.UserId;
-		oIdNode.toXml(writer, "Id");
-		if(this.SignInfo) {
-			this.SignInfo.toXml(writer);
-		}
-		if(this.CipherInfo) {
-			this.CipherInfo.toXml(writer);
-		}
-		let oRoleNode = new CT_XmlNode();
-		oRoleNode.text = this.Role;
-		oRoleNode.toXml(writer, "Role");
-	}
-	CUserMaster.prototype.toXml = function (writer) {
-		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("UserMaster");
-		writer.WriteXmlAttributesEnd();
-		this.writeChildren(writer);
-		writer.WriteXmlNodeEnd("UserMaster");
-	};
-
-	function CUser() {
-		CUserMaster.call(this);
+	function CUser()
+	{
+		AscFormat.CBaseFormatObject.call(this);
+		this.UserMaster = null;
 		this.Email = null;
 		this.Telephone = null;
 	}
-	InitClass(CUser, CUserMaster, AscDFH.historyitem_type_User);
+	InitClass(CUser, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_User);
 	CUser.prototype.setEmail = function (sEmail) {
 		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_UserEmail, this.Email, sEmail));
 		this.Email = sEmail;
@@ -299,7 +213,6 @@
 		writer.WriteXmlNodeEnd("CipherInfo");
 	};
 
-	AscWord.CUserMaster = CUserMaster;
 	AscWord.CUser = CUser;
 	AscWord.CSignInfo = CSignInfo;
 	AscWord.CCipherInfo = CCipherInfo;

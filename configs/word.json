@@ -8,7 +8,8 @@
 	  "apiBuilder.js",
 	  "oform/Main.js",
 	  "oform/Field.js",
-	  "oform/User.js"
+	  "oform/User.js",
+      "oform/UserMaster.js"
     ]
   }
 }
