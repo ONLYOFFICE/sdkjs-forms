@@ -34,19 +34,77 @@
 
 (function(window)
 {
-	window['AscDFH'].historyitem_OForm_User_Email     = window['AscDFH'].historyitem_type_OForm_User | 1;
-	window['AscDFH'].historyitem_OForm_User_Telephone = window['AscDFH'].historyitem_type_OForm_User | 2;
+	window['AscDFH'].historyitem_OForm_User_UserMaster = window['AscDFH'].historyitem_type_OForm_User | 1;
+	window['AscDFH'].historyitem_OForm_User_Email      = window['AscDFH'].historyitem_type_OForm_User | 2;
+	window['AscDFH'].historyitem_OForm_User_Telephone  = window['AscDFH'].historyitem_type_OForm_User | 3;
 
-	window['AscDFH'].changesFactory[AscDFH.historyitem_OForm_User_Email]     = window['AscDFH'].CChangesDrawingsString;
-	window['AscDFH'].changesFactory[AscDFH.historyitem_OForm_User_Telephone] = window['AscDFH'].CChangesDrawingsString;
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormUserUserMaster(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritChange(
+		CChangesOFormUserUserMaster,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_User_UserMaster,
+		function(value)
+		{
+			if (!value)
+			{
+				this.Class.UserMaster = undefined;
+			}
+			else
+			{
+				let userMaster = AscCommon.g_oTableId.Get_ById(value);
+				if (userMaster)
+					this.Class.UserMaster = userMaster;
+			}
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormUserUserMaster = CChangesOFormUserUserMaster;
 
-	window['AscDFH'].drawingsChangesMap[AscDFH.historyitem_OForm_User_Email] = function(oClass, value)
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormUserEmail(Class, Old, New)
 	{
-		oClass.Email = value;
-	};
-	window['AscDFH'].drawingsChangesMap[AscDFH.historyitem_OForm_User_Telephone] = function(oClass, value)
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritChange(
+		CChangesOFormUserEmail,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_User_Email,
+		function(value)
+		{
+			this.Class.Email = value;
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormUserEmail = CChangesOFormUserEmail;
+
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormUserTelephone(Class, Old, New)
 	{
-		oClass.Telephone = value;
-	};
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritChange(
+		CChangesOFormUserTelephone,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_User_Telephone,
+		function(value)
+		{
+			this.Class.Telephone = value;
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormUserTelephone = CChangesOFormUserTelephone;
 
 })(window);
