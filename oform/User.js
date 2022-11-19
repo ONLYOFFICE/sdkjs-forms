@@ -42,17 +42,31 @@
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
-		this.Email      = null;
-		this.Telephone  = null;
-		this.UserMaster = userMaster;
+		this.Email      = undefined;
+		this.Telephone  = undefined;
+		this.UserMaster = undefined;
+
+		if (userMaster)
+			this.setUserMaster(userMaster);
 	}
 	AscFormat.InitClass(CUser, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_User);
+	CUser.prototype.setUserMaster = function(userMaster)
+	{
+		if (this.UserMaster === userMaster)
+			return;
+
+		let oldValue = this.UserMaster ? this.UserMaster.GetId() : undefined;
+		let newValue = userMaster ? userMaster.GetId() : undefined;
+
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserUserMaster(this, oldValue, newValue));
+		this.UserMaster = userMaster;
+	};
 	CUser.prototype.setEmail = function(email)
 	{
 		if (email === this.Email)
 			return;
 
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_User_Email, this.Email, email));
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserEmail(this, this.Email, email));
 		this.Email = email;
 	};
 	CUser.prototype.setTelephone = function(telephone)
@@ -60,7 +74,7 @@
 		if (telephone === this.Telephone)
 			return;
 
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_User_Telephone, this.Telephone, telephone));
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserTelephone(this, this.Telephone, telephone));
 		this.Telephone = telephone;
 	};
 	CUser.prototype.getUserMaster = function()
@@ -101,6 +115,6 @@
 		writer.WriteXmlNodeEnd("User");
 	};
 	//--------------------------------------------------------export----------------------------------------------------
-	window['AscOForm'].CUser = CUser;
+	AscOForm.CUser = CUser;
 
 })(window);

@@ -37,16 +37,44 @@
 	window['AscDFH'].historyitem_OForm_UserMaster_UserId = window['AscDFH'].historyitem_type_OForm_UserMaster | 1;
 	window['AscDFH'].historyitem_OForm_UserMaster_Role   = window['AscDFH'].historyitem_type_OForm_UserMaster | 2;
 
-	window['AscDFH'].changesFactory[AscDFH.historyitem_OForm_UserMaster_UserId] = window['AscDFH'].CChangesDrawingsString;
-	window['AscDFH'].changesFactory[AscDFH.historyitem_OForm_UserMaster_Role]   = window['AscDFH'].CChangesDrawingsString;
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormUserMasterUserId(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritChange(
+		CChangesOFormUserMasterUserId,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_UserMaster_UserId,
+		function(Value)
+		{
+			this.Class.UserId = Value;
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormUserMasterUserId = CChangesOFormUserMasterUserId;
 
-	window['AscDFH'].drawingsChangesMap[AscDFH.historyitem_OForm_UserMaster_UserId] = function(object, value)
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormUserMasterRole(Class, Old, New)
 	{
-		object.UserId = value;
-	};
-	window['AscDFH'].drawingsChangesMap[AscDFH.historyitem_OForm_UserMaster_Role] = function(object, value)
-	{
-		object.Role = value;
-	};
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritChange(
+		CChangesOFormUserMasterRole,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_UserMaster_Role,
+		function(Value)
+		{
+			this.Class.Role = Value;
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormUserMasterRole = CChangesOFormUserMasterRole;
 
 })(window);

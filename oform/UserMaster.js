@@ -42,22 +42,25 @@
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
-		this.UserId = null;
-		this.Role   = null;
+		this.UserId = undefined;
+		this.Role   = undefined;
 	}
 	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
-	CUserMaster.prototype.setUserId = function (userId)
+	CUserMaster.prototype.setUserId = function(userId)
 	{
-		AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_UserMaster_UserId, this.UserId, userId));
+		if (userId === this.UserId)
+			return;
+
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterUserId(this, this.UserId, userId));
 		this.UserId = userId;
 	};
-	CUserMaster.prototype.setRole = function (role)
+	CUserMaster.prototype.setRole = function(role)
 	{
-		if (role !== this.Role)
-		{
-			AscCommon.History.Add(new CChangesString(this, AscDFH.historyitem_OForm_UserMaster_Role, this.Role, sRole));
-			this.Role = sRole;
-		}
+		if (role === this.Role)
+			return;
+
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterRole(this, this.Role, role));
+		this.Role = role;
 	};
 	CUserMaster.prototype.readChildXml = function(name, reader)
 	{
@@ -83,7 +86,7 @@
 		}
 		return bRead;
 	};
-	CUserMaster.prototype.toXml = function (writer)
+	CUserMaster.prototype.toXml = function(writer)
 	{
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
 		writer.WriteXmlNodeStart("UserMaster");
@@ -93,6 +96,6 @@
 		writer.WriteXmlNodeEnd("UserMaster");
 	};
 	//--------------------------------------------------------export----------------------------------------------------
-	window['AscOForm'].CUserMaster = CUserMaster;
+	AscOForm.CUserMaster = CUserMaster;
 
 })(window);
