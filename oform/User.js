@@ -88,17 +88,15 @@
 		{
 			case "Email":
 			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setEmail(oNode.text);
+				let node = CT_XmlNode.fromReader(reader);
+				this.setEmail(node.text);
 				bRead = true;
 				break;
 			}
 			case "Telephone":
 			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setTelephone(oNode.text);
+				let node = CT_XmlNode.fromReader(reader);
+				this.setTelephone(node.text);
 				bRead = true;
 				break;
 			}

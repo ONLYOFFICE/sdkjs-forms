@@ -45,7 +45,7 @@
 	{
 		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
 	}
-	window['AscDFH'].InheritChange(
+	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormUserMasterUserId,
 		window['AscDFH'].CChangesBaseStringProperty,
 		window['AscDFH'].historyitem_OForm_UserMaster_UserId,
@@ -65,7 +65,7 @@
 	{
 		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
 	}
-	window['AscDFH'].InheritChange(
+	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormUserMasterRole,
 		window['AscDFH'].CChangesBaseStringProperty,
 		window['AscDFH'].historyitem_OForm_UserMaster_Role,
