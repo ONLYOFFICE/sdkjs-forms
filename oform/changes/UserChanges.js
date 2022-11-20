@@ -46,7 +46,7 @@
 	{
 		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
 	}
-	window['AscDFH'].InheritChange(
+	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormUserUserMaster,
 		window['AscDFH'].CChangesBaseStringProperty,
 		window['AscDFH'].historyitem_OForm_User_UserMaster,
@@ -75,7 +75,7 @@
 	{
 		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
 	}
-	window['AscDFH'].InheritChange(
+	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormUserEmail,
 		window['AscDFH'].CChangesBaseStringProperty,
 		window['AscDFH'].historyitem_OForm_User_Email,
@@ -95,7 +95,7 @@
 	{
 		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
 	}
-	window['AscDFH'].InheritChange(
+	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormUserTelephone,
 		window['AscDFH'].CChangesBaseStringProperty,
 		window['AscDFH'].historyitem_OForm_User_Telephone,
