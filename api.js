@@ -31,6 +31,7 @@
  */
 
 var AscOForm = {};
+window["AscOForm"] = window.AscOForm = AscOForm;
 
 (function(window, document) {
     window['Asc']['Addons'] = window['Asc']['Addons'] || {};
