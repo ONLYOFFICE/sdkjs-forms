@@ -58,7 +58,7 @@
 		if (!field || -1 !== this.Fields.indexOf(field))
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddField(this, field.GetId()));
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveField(this, field.GetId(), true));
 		this.Fields.push(field);
 	};
 	CFieldGroup.prototype.removeField = function(field)
@@ -70,7 +70,7 @@
 		if (-1 === index)
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupRemoveField(this, field.GetId()));
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveField(this, field.GetId(), false));
 		this.Fields.splice(index, 1);
 	};
 	CFieldGroup.prototype.readChildXml = function(name, reader)

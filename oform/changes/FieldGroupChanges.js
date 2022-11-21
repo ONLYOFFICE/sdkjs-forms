@@ -34,9 +34,8 @@
 
 (function(window)
 {
-	window['AscDFH'].historyitem_OForm_FieldGroup_Weight      = window['AscDFH'].historyitem_type_OForm_FieldGroup | 1;
-	window['AscDFH'].historyitem_OForm_FieldGroup_AddField    = window['AscDFH'].historyitem_type_OForm_FieldGroup | 2;
-	window['AscDFH'].historyitem_OForm_FieldGroup_RemoveField = window['AscDFH'].historyitem_type_OForm_FieldGroup | 3;
+	window['AscDFH'].historyitem_OForm_FieldGroup_Weight         = window['AscDFH'].historyitem_type_OForm_FieldGroup | 1;
+	window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveField = window['AscDFH'].historyitem_type_OForm_FieldGroup | 2;
 
 	/**
 	 * @constructor
@@ -62,13 +61,13 @@
 	 * @constructor
 	 * @extends {window['AscDFH'].CChangesDictionaryBase}
 	 */
-	function CChangesOFormFieldGroupAddField(Class, fieldId)
+	function CChangesOFormFieldGroupAddRemoveField(Class, fieldId, isAdd)
 	{
-		window['AscDFH'].CChangesDictionaryBase.call(this, Class, fieldId);
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, fieldId, isAdd);
 	}
-	InheritUserChange(
-		CChangesOFormFieldGroupAddField,
-		window['AscDFH'].historyitem_OForm_FieldGroup_AddField,
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormFieldGroupAddRemoveField,
+		window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveField,
 		function()
 		{
 			let field = AscCommon.g_oTableId.GetById(this.Key);
@@ -83,33 +82,6 @@
 				this.Class.Fields.splice(index, 1);
 		}
 	);
-	window['AscDFH'].CChangesOFormFieldGroupAddField = CChangesOFormFieldGroupAddField;
-
-	/**
-	 * @constructor
-	 * @extends {window['AscDFH'].CChangesDictionaryBase}
-	 */
-	function CChangesOFormFieldGroupRemoveField(Class, fieldId)
-	{
-		window['AscDFH'].CChangesDictionaryBase.call(this, Class, fieldId);
-	}
-	InheritUserChange(
-		CChangesOFormFieldGroupRemoveField,
-		window['AscDFH'].historyitem_OForm_FieldGroup_RemoveField,
-		function()
-		{
-			let field  = AscCommon.g_oTableId.GetById(this.Key);
-			let index = this.Class.Fields.indexOf(field);
-			if (-1 !== index)
-				this.Class.Fields.splice(index, 1);
-		},
-		function()
-		{
-			let field = AscCommon.g_oTableId.GetById(this.Key);
-			if (-1 === this.Class.Fields.indexOf(field))
-				this.Class.Fields.push(field);
-		}
-	);
-	window['AscDFH'].CChangesOFormFieldGroupRemoveField = CChangesOFormFieldGroupRemoveField;
+	window['AscDFH'].CChangesOFormFieldGroupAddRemoveField = CChangesOFormFieldGroupAddRemoveField;
 
 })(window);

@@ -34,11 +34,9 @@
 
 (function(window)
 {
-	window['AscDFH'].historyitem_OFormFieldMaster_FieldId      = window['AscDFH'].historyitem_type_OForm_FieldMaster | 1;
-	window['AscDFH'].historyitem_OFormFieldMaster_AddUser      = window['AscDFH'].historyitem_type_OForm_FieldMaster | 2;
-	window['AscDFH'].historyitem_OFormFieldMaster_RemoveUser   = window['AscDFH'].historyitem_type_OForm_FieldMaster | 3;
-	window['AscDFH'].historyitem_OFormFieldMaster_AddSigner    = window['AscDFH'].historyitem_type_OForm_FieldMaster | 4;
-	window['AscDFH'].historyitem_OFormFieldMaster_RemoveSigner = window['AscDFH'].historyitem_type_OForm_FieldMaster | 5;
+	window['AscDFH'].historyitem_OFormFieldMaster_FieldId         = window['AscDFH'].historyitem_type_OForm_FieldMaster | 1;
+	window['AscDFH'].historyitem_OFormFieldMaster_AddRemoveUser   = window['AscDFH'].historyitem_type_OForm_FieldMaster | 2;
+	window['AscDFH'].historyitem_OFormFieldMaster_AddRemoveSigner = window['AscDFH'].historyitem_type_OForm_FieldMaster | 3;
 
 	/**
 	 * @constructor
@@ -64,13 +62,13 @@
 	 * @constructor
 	 * @extends {window['AscDFH'].CChangesDictionaryBase}
 	 */
-	function CChangesOFormFieldMasterAddUser(Class, userId)
+	function CChangesOFormFieldMasterAddRemoveUser(Class, userId, isAdd)
 	{
-		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId, isAdd);
 	}
 	window['AscDFH'].InheritDictionaryChange(
-		CChangesOFormFieldMasterAddUser,
-		window['AscDFH'].historyitem_OFormFieldMaster_AddUser,
+		CChangesOFormFieldMasterAddRemoveUser,
+		window['AscDFH'].historyitem_OFormFieldMaster_AddRemoveUser,
 		function()
 		{
 			let user = AscCommon.g_oTableId.GetById(this.Key);
@@ -85,45 +83,18 @@
 				this.Class.Users.splice(index, 1);
 		}
 	);
-	window['AscDFH'].CChangesOFormFieldMasterAddUser = CChangesOFormFieldMasterAddUser;
+	window['AscDFH'].CChangesOFormFieldMasterAddRemoveUser = CChangesOFormFieldMasterAddRemoveUser;
 
 	/**
 	 * @constructor
 	 * @extends {window['AscDFH'].CChangesDictionaryBase}
 	 */
-	function CChangesOFormFieldMasterRemoveUser(Class, userId)
+	function CChangesOFormFieldMasterAddRemoveSigner(Class, userId, isAdd)
 	{
-		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId, isAdd);
 	}
 	window['AscDFH'].InheritDictionaryChange(
-		CChangesOFormFieldMasterRemoveUser,
-		window['AscDFH'].historyitem_OFormFieldMaster_RemoveUser,
-		function()
-		{
-			let user  = AscCommon.g_oTableId.GetById(this.Key);
-			let index = this.Class.Users.indexOf(user);
-			if (-1 !== index)
-				this.Class.Users.splice(index, 1);
-		},
-		function()
-		{
-			let user = AscCommon.g_oTableId.GetById(this.Key);
-			if (-1 === this.Class.Users.indexOf(user))
-				this.Class.Users.push(user);
-		}
-	);
-	window['AscDFH'].CChangesOFormFieldMasterRemoveUser = CChangesOFormFieldMasterRemoveUser;
-
-	/**
-	 * @constructor
-	 * @extends {window['AscDFH'].CChangesDictionaryBase}
-	 */
-	function CChangesOFormFieldMasterAddSigner(Class, userId)
-	{
-		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
-	}
-	window['AscDFH'].InheritDictionaryChange(
-		CChangesOFormFieldMasterAddSigner,
+		CChangesOFormFieldMasterAddRemoveSigner,
 		window['AscDFH'].historyitem_OFormFieldMaster_AddSigner,
 		function()
 		{
@@ -139,33 +110,6 @@
 				this.Class.Signers.splice(index, 1);
 		}
 	);
-	window['AscDFH'].CChangesOFormFieldMasterAddSigner = CChangesOFormFieldMasterAddSigner;
-
-	/**
-	 * @constructor
-	 * @extends {window['AscDFH'].CChangesDictionaryBase}
-	 */
-	function CChangesOFormFieldMasterRemoveSigner(Class, userId)
-	{
-		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
-	}
-	window['AscDFH'].InheritDictionaryChange(
-		CChangesOFormFieldMasterRemoveSigner,
-		window['AscDFH'].historyitem_OFormFieldMaster_RemoveSigner,
-		function()
-		{
-			let user  = AscCommon.g_oTableId.GetById(this.Key);
-			let index = this.Class.Signers.indexOf(user);
-			if (-1 !== index)
-				this.Class.Signers.splice(index, 1);
-		},
-		function()
-		{
-			let user = AscCommon.g_oTableId.GetById(this.Key);
-			if (-1 === this.Class.Signers.indexOf(user))
-				this.Class.Signers.push(user);
-		}
-	);
-	window['AscDFH'].CChangesOFormFieldMasterRemoveSigner = CChangesOFormFieldMasterRemoveSigner;
+	window['AscDFH'].CChangesOFormFieldMasterAddRemoveSigner = CChangesOFormFieldMasterAddRemoveSigner;
 
 })(window);

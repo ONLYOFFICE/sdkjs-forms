@@ -44,14 +44,23 @@
 	{
 		AscDFH.CChangesBase.call(this, Class);
 		this.Key = key;
+		this.Add = isAdd;
 	}
 	CChangesDictionaryBase.prototype = Object.create(AscDFH.CChangesBase.prototype);
 	CChangesDictionaryBase.prototype.constructor = CChangesDictionaryBase;
 	CChangesDictionaryBase.prototype.Redo = function()
 	{
+		if (this.Add)
+			this.private_AddToDictionary();
+		else
+			this.private_RemoveFromDictionary();
 	};
 	CChangesDictionaryBase.prototype.Undo = function()
 	{
+		if (this.Add)
+			this.private_RemoveFromDictionary();
+		else
+			this.private_AddToDictionary();
 	};
 	CChangesDictionaryBase.prototype.WriteToBinary = function(writer)
 	{
@@ -65,17 +74,27 @@
 	{
 		return false;
 	};
+	CChangesDictionaryBase.prototype.CreateReverseChange = function()
+	{
+		return new this.constructor(this.Class, this.Key, !this.Add);
+	};
+	CChangesDictionaryBase.prototype.private_AddToDictionary = function()
+	{
+	};
+	CChangesDictionaryBase.prototype.private_RemoveFromDictionary = function()
+	{
+	};
 	window['AscDFH'].CChangesDictionaryBase = CChangesDictionaryBase;
 
-	function InheritDictionaryChange(changeClass, type, redoFunction, undoFunction)
+	function InheritDictionaryChange(changeClass, type, addFunction, removeFunction)
 	{
 		window['AscDFH'].changesFactory[type] = changeClass;
 
-		changeClass.prototype             = Object.create(CChangesDictionaryBase.prototype);
-		changeClass.prototype.constructor = changeClass;
-		changeClass.prototype.Type        = type;
-		changeClass.prototype.Redo        = redoFunction;
-		changeClass.prototype.Undo        = undoFunction;
+		changeClass.prototype                              = Object.create(CChangesDictionaryBase.prototype);
+		changeClass.prototype.constructor                  = changeClass;
+		changeClass.prototype.Type                         = type;
+		changeClass.prototype.private_AddToDictionary      = addFunction;
+		changeClass.prototype.private_RemoveFromDictionary = removeFunction;
 	}
 	window['AscDFH'].InheritDictionaryChange = InheritDictionaryChange;
 

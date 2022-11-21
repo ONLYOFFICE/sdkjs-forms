@@ -69,7 +69,7 @@
 		if (-1 !== this.Users.indexOf(user))
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddUser(this, user.GetId()));
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveUser(this, user.GetId(), true));
 		this.Users.push(user);
 	};
 	CFieldMaster.prototype.removeUser = function(user)
@@ -78,7 +78,7 @@
 		if (-1 === index)
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterRemoveUser(this, user.GetId()));
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveUser(this, user.GetId(), false));
 		this.Users.splice(index, 1);
 	};
 	CFieldMaster.prototype.addSigner = function(user)
@@ -86,7 +86,7 @@
 		if (-1 !== this.Signers.indexOf(user))
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddSigner(this, user.GetId()));
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveSigner(this, user.GetId(), true));
 		this.Signers.push(user);
 	};
 	CFieldMaster.prototype.removeSigner = function(user)
@@ -95,7 +95,7 @@
 		if (-1 === index)
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterRemoveSigner(this, user.GetId()));
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveSigner(this, user.GetId(), false));
 		this.Signers.splice(index, 1);
 	};
 	CFieldMaster.prototype.readAttrXml = function(name, reader)
