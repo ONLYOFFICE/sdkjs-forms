@@ -34,56 +34,11 @@
 
 (function(window)
 {
-	window['AscDFH'].historyitem_FormFieldMaster_FieldId      = window['AscDFH'].historyitem_type_OForm_FieldMaster | 1;
-	window['AscDFH'].historyitem_FormFieldMaster_AddUser      = window['AscDFH'].historyitem_type_OForm_FieldMaster | 2;
-	window['AscDFH'].historyitem_FormFieldMaster_RemoveUser   = window['AscDFH'].historyitem_type_OForm_FieldMaster | 3;
-	window['AscDFH'].historyitem_FormFieldMaster_AddSigner    = window['AscDFH'].historyitem_type_OForm_FieldMaster | 4;
-	window['AscDFH'].historyitem_FormFieldMaster_RemoveSigner = window['AscDFH'].historyitem_type_OForm_FieldMaster | 5;
-
-
-	/**
-	 * Базовое изменение для работы с FieldMaster.Users и FieldMaster.Signers
-	 * @constructor
-	 * @extends {window['AscDFH'].CChangesBase}
-	 */
-	function CChangeUserBase(Class, user)
-	{
-		AscDFH.CChangesBase.call(this, Class);
-		this.UserId = user.GetId();
-	}
-	CChangeUserBase.prototype = Object.create(AscDFH.CChangesBase.prototype);
-	CChangeUserBase.prototype.constructor = CChangeUserBase;
-	CChangeUserBase.prototype.Redo = function()
-	{
-	};
-	CChangeUserBase.prototype.Undo = function()
-	{
-	};
-	CChangeUserBase.prototype.WriteToBinary = function(writer)
-	{
-		// String : Id комментария
-		writer.WriteString2(this.UserId);
-	};
-	CChangeUserBase.prototype.ReadFromBinary = function(reader)
-	{
-		// String : Id комментария
-		this.UserId = reader.GetString2();
-	};
-	CChangeUserBase.prototype.IsNeedRecalculate = function()
-	{
-		return false;
-	};
-
-	function InheritUserChange(changeClass, type, redoFunction, undoFunction)
-	{
-		window['AscDFH'].changesFactory[type] = changeClass;
-
-		changeClass.prototype             = Object.create(CChangeUserBase.prototype);
-		changeClass.prototype.constructor = changeClass;
-		changeClass.prototype.Type        = type;
-		changeClass.prototype.Redo        = redoFunction;
-		changeClass.prototype.Undo        = undoFunction;
-	}
+	window['AscDFH'].historyitem_OFormFieldMaster_FieldId      = window['AscDFH'].historyitem_type_OForm_FieldMaster | 1;
+	window['AscDFH'].historyitem_OFormFieldMaster_AddUser      = window['AscDFH'].historyitem_type_OForm_FieldMaster | 2;
+	window['AscDFH'].historyitem_OFormFieldMaster_RemoveUser   = window['AscDFH'].historyitem_type_OForm_FieldMaster | 3;
+	window['AscDFH'].historyitem_OFormFieldMaster_AddSigner    = window['AscDFH'].historyitem_type_OForm_FieldMaster | 4;
+	window['AscDFH'].historyitem_OFormFieldMaster_RemoveSigner = window['AscDFH'].historyitem_type_OForm_FieldMaster | 5;
 
 	/**
 	 * @constructor
@@ -96,7 +51,7 @@
 	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormFieldMasterFieldId,
 		window['AscDFH'].CChangesBaseStringProperty,
-		window['AscDFH'].historyitem_FormFieldMaster_FieldId,
+		window['AscDFH'].historyitem_OFormFieldMaster_FieldId,
 		function(value)
 		{
 			this.Class.FieldId = value;
@@ -107,24 +62,24 @@
 
 	/**
 	 * @constructor
-	 * @extends {CChangeUserBase}
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
 	 */
-	function CChangesOFormFieldMasterAddUser(Class, user)
+	function CChangesOFormFieldMasterAddUser(Class, userId)
 	{
-		CChangeUserBase.call(this, Class, user);
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
 	}
-	InheritUserChange(
+	window['AscDFH'].InheritDictionaryChange(
 		CChangesOFormFieldMasterAddUser,
-		window['AscDFH'].historyitem_FormFieldMaster_AddUser,
+		window['AscDFH'].historyitem_OFormFieldMaster_AddUser,
 		function()
 		{
-			let user = AscCommon.g_oTableId.GetById(this.UserId);
+			let user = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.Users.indexOf(user))
 				this.Class.Users.push(user);
 		},
 		function()
 		{
-			let user  = AscCommon.g_oTableId.GetById(this.UserId);
+			let user  = AscCommon.g_oTableId.GetById(this.Key);
 			let index = this.Class.Users.indexOf(user);
 			if (-1 !== index)
 				this.Class.Users.splice(index, 1);
@@ -134,25 +89,25 @@
 
 	/**
 	 * @constructor
-	 * @extends {CChangeUserBase}
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
 	 */
-	function CChangesOFormFieldMasterRemoveUser(Class, user)
+	function CChangesOFormFieldMasterRemoveUser(Class, userId)
 	{
-		CChangeUserBase.call(this, Class, user);
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
 	}
-	InheritUserChange(
+	window['AscDFH'].InheritDictionaryChange(
 		CChangesOFormFieldMasterRemoveUser,
-		window['AscDFH'].historyitem_FormFieldMaster_RemoveUser,
+		window['AscDFH'].historyitem_OFormFieldMaster_RemoveUser,
 		function()
 		{
-			let user  = AscCommon.g_oTableId.GetById(this.UserId);
+			let user  = AscCommon.g_oTableId.GetById(this.Key);
 			let index = this.Class.Users.indexOf(user);
 			if (-1 !== index)
 				this.Class.Users.splice(index, 1);
 		},
 		function()
 		{
-			let user = AscCommon.g_oTableId.GetById(this.UserId);
+			let user = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.Users.indexOf(user))
 				this.Class.Users.push(user);
 		}
@@ -161,24 +116,24 @@
 
 	/**
 	 * @constructor
-	 * @extends {CChangeUserBase}
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
 	 */
-	function CChangesOFormFieldMasterAddSigner(Class, user)
+	function CChangesOFormFieldMasterAddSigner(Class, userId)
 	{
-		CChangeUserBase.call(this, Class, user);
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
 	}
-	InheritUserChange(
+	window['AscDFH'].InheritDictionaryChange(
 		CChangesOFormFieldMasterAddSigner,
-		window['AscDFH'].historyitem_FormFieldMaster_AddSigner,
+		window['AscDFH'].historyitem_OFormFieldMaster_AddSigner,
 		function()
 		{
-			let user = AscCommon.g_oTableId.GetById(this.UserId);
+			let user = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.Signers.indexOf(user))
 				this.Class.Signers.push(user);
 		},
 		function()
 		{
-			let user  = AscCommon.g_oTableId.GetById(this.UserId);
+			let user  = AscCommon.g_oTableId.GetById(this.Key);
 			let index = this.Class.Signers.indexOf(user);
 			if (-1 !== index)
 				this.Class.Signers.splice(index, 1);
@@ -188,25 +143,25 @@
 
 	/**
 	 * @constructor
-	 * @extends {CChangeUserBase}
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
 	 */
-	function CChangesOFormFieldMasterRemoveSigner(Class, user)
+	function CChangesOFormFieldMasterRemoveSigner(Class, userId)
 	{
-		CChangeUserBase.call(this, Class, user);
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId);
 	}
-	InheritUserChange(
+	window['AscDFH'].InheritDictionaryChange(
 		CChangesOFormFieldMasterRemoveSigner,
-		window['AscDFH'].historyitem_FormFieldMaster_RemoveSigner,
+		window['AscDFH'].historyitem_OFormFieldMaster_RemoveSigner,
 		function()
 		{
-			let user  = AscCommon.g_oTableId.GetById(this.UserId);
+			let user  = AscCommon.g_oTableId.GetById(this.Key);
 			let index = this.Class.Signers.indexOf(user);
 			if (-1 !== index)
 				this.Class.Signers.splice(index, 1);
 		},
 		function()
 		{
-			let user = AscCommon.g_oTableId.GetById(this.UserId);
+			let user = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.Signers.indexOf(user))
 				this.Class.Signers.push(user);
 		}
