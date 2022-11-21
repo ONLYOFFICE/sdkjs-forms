@@ -65,10 +65,12 @@
 	CChangesDictionaryBase.prototype.WriteToBinary = function(writer)
 	{
 		writer.WriteString2(this.Key);
+		writer.WriteBool(this.Add);
 	};
 	CChangesDictionaryBase.prototype.ReadFromBinary = function(reader)
 	{
 		this.Key = reader.GetString2();
+		this.Add = reader.GetBool();
 	};
 	CChangesDictionaryBase.prototype.IsNeedRecalculate = function()
 	{
