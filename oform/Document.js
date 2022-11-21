@@ -42,6 +42,7 @@
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
+		// Форматная часть
 		this.Author      = null;
 		this.Date        = null;
 		this.Description = null;
@@ -50,8 +51,10 @@
 		this.DocumentId  = null;
 		this.FieldGroups = [];
 
-		this.Users  = [];
-		this.Fields = [];
+		// Мап всех имеющихся пользователей и полей (ключ class.GetId())
+		this.Users        = {};
+		this.UserMasters  = {};
+		this.FieldMasters = {};
 	}
 	AscFormat.InitClass(CDocument, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
 	CDocument.prototype.setAuthor = function(author)
@@ -62,6 +65,10 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentAuthor(this, this.Author, author));
 		this.Author = author;
 	};
+	CDocument.prototype.getAuthor = function()
+	{
+		return this.Author;
+	};
 	CDocument.prototype.setDate = function(date)
 	{
 		if (this.Date === date)
@@ -69,6 +76,10 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentDate(this, this.Date, date));
 		this.Date = date;
+	};
+	CDocument.prototype.getDate = function()
+	{
+		return this.Date;
 	};
 	CDocument.prototype.setDescription = function(description)
 	{
@@ -78,6 +89,10 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentDescription(this, this.Description, description));
 		this.Description = description;
 	};
+	CDocument.prototype.getDescription = function()
+	{
+		return this.Description;
+	};
 	CDocument.prototype.setType = function(type)
 	{
 		if (this.Type === type)
@@ -85,6 +100,10 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentType(this, this.Type, type));
 		this.Type = type;
+	};
+	CDocument.prototype.getType = function()
+	{
+		return this.Type;
 	};
 	CDocument.prototype.setApplication = function(app)
 	{
@@ -94,6 +113,10 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentApplication(this, this.Application, app));
 		this.Application = app;
 	};
+	CDocument.prototype.getApplication = function()
+	{
+		return this.Application;
+	};
 	CDocument.prototype.setDocumentId = function(documentId)
 	{
 		if (this.DocumentId === documentId)
@@ -101,6 +124,10 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentDocumentId(this, this.DocumentId, documentId));
 		this.DocumentId = documentId;
+	};
+	CDocument.prototype.getDocumentId = function()
+	{
+		return this.DocumentId;
 	};
 	CDocument.prototype.addFieldGroup = function(fieldGroup)
 	{
@@ -121,6 +148,17 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldGroup(this, fieldGroup.GetId(), false));
 		this.FieldGroups.splice(index, 1);
+	};
+	CDocument.prototype.getFieldGroupsCount = function()
+	{
+		return this.FieldGroups.length;
+	};
+	CDocument.prototype.getFieldGroup = function(index)
+	{
+		if (index < 0 || index >= this.FieldGroups.length)
+			return null;
+		
+		return this.FieldGroups[index];
 	};
 	CDocument.prototype.readChildXml = function(name, reader)
 	{
