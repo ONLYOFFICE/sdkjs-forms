@@ -44,7 +44,7 @@
 		this.Weight = null;
 		this.Fields = [];
 	}
-	AscFormat.InitClass(CUser, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
+	AscFormat.InitClass(CFieldGroup, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
 	CFieldGroup.prototype.setWeight = function(value)
 	{
 		if (this.Weight === value)
