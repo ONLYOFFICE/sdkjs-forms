@@ -36,6 +36,7 @@
 {
 	window['AscDFH'].historyitem_OForm_UserMaster_UserId = window['AscDFH'].historyitem_type_OForm_UserMaster | 1;
 	window['AscDFH'].historyitem_OForm_UserMaster_Role   = window['AscDFH'].historyitem_type_OForm_UserMaster | 2;
+	window['AscDFH'].historyitem_OForm_UserMaster_Color  = window['AscDFH'].historyitem_type_OForm_UserMaster | 3;
 
 	/**
 	 * @constructor
@@ -76,5 +77,29 @@
 		false
 	);
 	window['AscDFH'].CChangesOFormUserMasterRole = CChangesOFormUserMasterRole;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseObjectProperty}
+	 */
+	function CChangesOFormUserMasterColor(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseObjectProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormUserMasterColor,
+		window['AscDFH'].CChangesBaseObjectProperty,
+		window['AscDFH'].historyitem_OForm_UserMaster_Color,
+		function(value)
+		{
+			this.Class.Color = value;
+		},
+		false
+	);
+	CChangesOFormUserMasterColor.prototype.private_CreateObject = function()
+	{
+		return new AscWord.CDocumentColor(0, 0, 0);
+	};
+	window['AscDFH'].CChangesOFormUserMasterColor = CChangesOFormUserMasterColor;
 
 })(window);

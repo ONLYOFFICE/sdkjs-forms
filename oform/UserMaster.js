@@ -34,6 +34,8 @@
 
 (function(window)
 {
+	const DEFAULT_COLOR = AscWord.CDocumentColor(128, 128, 128);
+	
 	/**
 	 *
 	 * @constructor
@@ -44,6 +46,9 @@
 
 		this.UserId = undefined;
 		this.Role   = undefined;
+		this.Color  = undefined;
+		
+		this.setUserId(AscCommon.CreateGUID());
 	}
 	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
 	CUserMaster.prototype.setUserId = function(userId)
@@ -54,6 +59,10 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterUserId(this, this.UserId, userId));
 		this.UserId = userId;
 	};
+	CUserMaster.prototype.getUserId = function()
+	{
+		return this.UserId;
+	};
 	CUserMaster.prototype.setRole = function(role)
 	{
 		if (role === this.Role)
@@ -61,6 +70,27 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterRole(this, this.Role, role));
 		this.Role = role;
+	};
+	CUserMaster.prototype.getRole = function()
+	{
+		return this.Role ? this.Role : "";
+	};
+	CUserMaster.prototype.setColor = function(r, g, b)
+	{
+		let newColor = undefined !== r && null !== r ? new AscWord.CDocumentColor(r, g, b) : undefined;
+		let oldColor = this.Color;
+		if ((!newColor && !oldColor) || (oldColor && oldColor.IsEqual(newColor)))
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterColor(this, oldColor, newColor));
+		this.Color = newColor;
+	};
+	CUserMaster.prototype.getColor = function()
+	{
+		if (!this.Color)
+			return DEFAULT_COLOR;
+		
+		return this.Color;
 	};
 	CUserMaster.prototype.readChildXml = function(name, reader)
 	{
