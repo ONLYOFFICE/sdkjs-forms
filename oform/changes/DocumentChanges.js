@@ -46,9 +46,12 @@
 	 * @constructor
 	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
 	 */
-	function CChangesOFormDocumentAuthor(Class, Old, New)
+	function CChangesOFormDocumentAuthor(Class, oldAuthor, newAuthor)
 	{
-		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+		let oldId = oldAuthor ? oldAuthor.GetId() : undefined;
+		let newId = newAuthor ? newAuthor.GetId() : undefined;
+		
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, oldId, newId);
 	}
 	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormDocumentAuthor,
@@ -56,7 +59,16 @@
 		window['AscDFH'].historyitem_OForm_Document_Author,
 		function(value)
 		{
-			this.Class.Author = value;
+			if (undefined === value)
+			{
+				this.Class.Author = undefined;
+			}
+			else
+			{
+				let author = AscCommon.g_oTableId.GetById(value);
+				if (author)
+					this.Class.Author = value;
+			}
 		},
 		false
 	);
