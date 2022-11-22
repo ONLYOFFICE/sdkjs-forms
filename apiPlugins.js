@@ -45,13 +45,11 @@
 
 	/**
      * @typedef {(0 | 1 | 2 | 3)} ContentControlLock
-     * <p>A value that defines if it is possible to delete and/or edit the content control or not:</p>
-     * <ul>
-	 * 	<li><b>0</b> - only deleting</li>
-	 *  <li><b>1</b> - disable deleting or editing</li>
-	 *  <li><b>2</b> - only editing</li>
-	 *  <li><b>3</b> - full access</li>
-	 * </ul>
+     * A value that defines if it is possible to delete and/or edit the content control or not:
+	 * * **0** - only deleting
+	 * * **1** - disable deleting or editing
+	 * * **2** - only editing
+	 * * **3** - full access
      */
 
 	/**
