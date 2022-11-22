@@ -36,10 +36,9 @@
 {
 	/**
 	 * Основной класс для работы с форматом oform
-	 * @param document {AscWord.CDocument}
 	 * @constructor
 	 */
-	function CDocument(document)
+	function CDocument()
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
@@ -56,8 +55,6 @@
 		this.Users        = {};
 		this.UserMasters  = {};
 		this.FieldMasters = {};
-		
-		this.LogicDocument = document;
 	}
 	AscFormat.InitClass(CDocument, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
 	CDocument.prototype.setAuthor = function(author)

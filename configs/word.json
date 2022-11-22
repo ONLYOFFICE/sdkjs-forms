@@ -6,6 +6,7 @@
     ],
     "common": [
       "apiBuilder.js",
+      "oform/OForm.js",
       "oform/Document.js",
       "oform/FieldGroup.js",
       "oform/FieldMaster.js",

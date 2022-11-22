@@ -49,17 +49,17 @@
 	}
 	/**
 	 * Зачитываем структуру в oform-документу
-	 * @param document {AscOForm.CDocument}
+	 * @param OForm {AscOForm.OForm}
 	 */
-	CXmlFormat.prototype.toDocument = function(document)
+	CXmlFormat.prototype.toDocument = function(oform)
 	{
 		// TODO: реализовать
 	};
 	/**
 	 * Записываем xml-структуру по oform-документу
-	 * @param document {AscOForm.CDocument}
+	 * @param OForm {AscOForm.OForm}
 	 */
-	CXmlFormat.prototype.fromDocument = function(document)
+	CXmlFormat.prototype.fromDocument = function(oform)
 	{
 		// TODO: реализовать
 	};
