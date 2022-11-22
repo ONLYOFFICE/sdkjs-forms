@@ -41,6 +41,9 @@
 	window['AscDFH'].historyitem_OForm_Document_Application = window['AscDFH'].historyitem_type_OForm_Document | 5;
 	window['AscDFH'].historyitem_OForm_Document_DocumentId  = window['AscDFH'].historyitem_type_OForm_Document | 6;
 	window['AscDFH'].historyitem_OForm_Document_FieldGroup  = window['AscDFH'].historyitem_type_OForm_Document | 7;
+	window['AscDFH'].historyitem_OForm_Document_User        = window['AscDFH'].historyitem_type_OForm_Document | 8;
+	window['AscDFH'].historyitem_OForm_Document_UserMaster  = window['AscDFH'].historyitem_type_OForm_Document | 9;
+	window['AscDFH'].historyitem_OForm_Document_FieldMaster = window['AscDFH'].historyitem_type_OForm_Document | 10;
 
 	/**
 	 * @constructor
@@ -200,5 +203,86 @@
 		}
 	);
 	window['AscDFH'].CChangesOFormDocumentFieldGroup = CChangesOFormDocumentFieldGroup;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
+	 */
+	function CChangesOFormDocumentUser(Class, userId, isAdd)
+	{
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId, isAdd);
+	}
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormDocumentUser,
+		window['AscDFH'].historyitem_OForm_Document_User,
+		function()
+		{
+			let user = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.Users.indexOf(user))
+				this.Class.Users.push(user);
+		},
+		function()
+		{
+			let user  = AscCommon.g_oTableId.GetById(this.Key);
+			let index = this.Class.Users.indexOf(user);
+			if (-1 !== index)
+				this.Class.Users.splice(index, 1);
+		}
+	);
+	window['AscDFH'].CChangesOFormDocumentUser = CChangesOFormDocumentUser;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
+	 */
+	function CChangesOFormDocumentUserMaster(Class, userMasterId, isAdd)
+	{
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userMasterId, isAdd);
+	}
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormDocumentUserMaster,
+		window['AscDFH'].historyitem_OForm_Document_UserMaster,
+		function()
+		{
+			let user = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.UserMasters.indexOf(user))
+				this.Class.UserMasters.push(user);
+		},
+		function()
+		{
+			let user  = AscCommon.g_oTableId.GetById(this.Key);
+			let index = this.Class.UserMasters.indexOf(user);
+			if (-1 !== index)
+				this.Class.UserMasters.splice(index, 1);
+		}
+	);
+	window['AscDFH'].CChangesOFormDocumentUserMaster = CChangesOFormDocumentUserMaster;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
+	 */
+	function CChangesOFormDocumentFieldMaster(Class, fieldMasterId, isAdd)
+	{
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, fieldMasterId, isAdd);
+	}
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormDocumentFieldMaster,
+		window['AscDFH'].historyitem_OForm_Document_FieldMaster,
+		function()
+		{
+			let field = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.FieldMasters.indexOf(field))
+				this.Class.FieldMasters.push(field);
+		},
+		function()
+		{
+			let field = AscCommon.g_oTableId.GetById(this.Key);
+			let index = this.Class.FieldMasters.indexOf(field);
+			if (-1 !== index)
+				this.Class.FieldMasters.splice(index, 1);
+		}
+	);
+	window['AscDFH'].CChangesOFormDocumentFieldMaster = CChangesOFormDocumentFieldMaster;
 
 })(window);

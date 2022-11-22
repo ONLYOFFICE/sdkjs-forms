@@ -41,18 +41,10 @@
 	 */
 	function OForm(document)
 	{
-		AscFormat.CBaseFormatObject.call(this);
-		
-		this.Document = new AscOForm.CDocument();
-		
-		// Мап всех имеющихся пользователей и полей (ключ class.GetId())
-		this.Users        = {};
-		this.UserMasters  = {};
-		this.FieldMasters = {};
-		
+		this.Document      = new AscOForm.CDocument();
+		this.DefaultUser   = this.Document.getDefaultUser();
 		this.LogicDocument = document;
 	}
-	AscFormat.InitClass(OForm, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_OForm);
 	/**
 	 * @returns {AscWord.CDocument}
 	 */

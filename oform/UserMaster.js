@@ -37,10 +37,10 @@
 	const DEFAULT_COLOR = AscWord.CDocumentColor(128, 128, 128);
 	
 	/**
-	 *
+	 * @param {boolean} [generateId=false]
 	 * @constructor
 	 */
-	function CUserMaster()
+	function CUserMaster(generateId)
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
@@ -48,7 +48,8 @@
 		this.Role   = undefined;
 		this.Color  = undefined;
 		
-		this.setUserId(AscCommon.CreateGUID());
+		if (true === generateId)
+			this.setUserId(AscCommon.CreateGUID());
 	}
 	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
 	CUserMaster.prototype.setUserId = function(userId)
@@ -91,6 +92,12 @@
 			return DEFAULT_COLOR;
 		
 		return this.Color;
+	};
+	CUserMaster.prototype.initDefaultUser = function()
+	{
+		// TODO: Возможно стоит придумать уникальный id общий для дефолтовой роли
+		this.setRole("Anyone");
+		this.setColor(128, 128, 128);
 	};
 	CUserMaster.prototype.readChildXml = function(name, reader)
 	{

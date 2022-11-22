@@ -41,6 +41,9 @@
 	function CDocument()
 	{
 		AscFormat.CBaseFormatObject.call(this);
+		
+		this.DefaultUser = new AscOForm.CUserMaster();
+		this.DefaultUser.initDefaultUser();
 
 		// Форматная часть
 		this.Author      = null;
@@ -51,10 +54,10 @@
 		this.DocumentId  = null;
 		this.FieldGroups = [];
 
-		// Мап всех имеющихся пользователей и полей (ключ class.GetId())
-		this.Users        = {};
-		this.UserMasters  = {};
-		this.FieldMasters = {};
+		// Массивы всех имеющихся пользователей и полей
+		this.Users        = [];
+		this.UserMasters  = [];
+		this.FieldMasters = [];
 	}
 	AscFormat.InitClass(CDocument, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
 	CDocument.prototype.setAuthor = function(author)
@@ -258,6 +261,101 @@
 			this.FieldsGroups[nFG].toXml(writer);
 		}
 		writer.WriteXmlNodeEnd("Document");
+	};
+	/**
+	 * @returns {AscOForm.CUserMaster}
+	 */
+	CDocument.prototype.getDefaultUser = function()
+	{
+		return this.DefaultUser;
+	};
+	CDocument.prototype.addUser = function(user)
+	{
+		if (-1 !== this.Users.indexOf(user))
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentUser(this, user.GetId(), true));
+		this.Users.push(user);
+	};
+	CDocument.prototype.removeUser = function(user)
+	{
+		let index = this.User.indexOf(user);
+		if (-1 === index)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentUser(this, user.GetId(), false));
+		this.Users.splice(index, 1);
+	};
+	CDocument.prototype.getUserCount = function()
+	{
+		return this.Users.length;
+	};
+	/**
+	 * @param index {number}
+	 * @returns {?AscOForm.CUser}
+	 */
+	CDocument.prototype.getUser = function(index)
+	{
+		if (index < 0 || index >= this.Users.length)
+			return null;
+		
+		return this.Users[index];
+	};
+	CDocument.prototype.addUserMaster = function(userMaster)
+	{
+		if (-1 !== this.UserMasters.indexOf(userMaster))
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentUserMaster(this, userMaster.GetId(), true));
+		this.UserMasters.push(userMaster);
+	};
+	CDocument.prototype.removeUserMaster = function(userMaster)
+	{
+		let index = this.UserMasters.indexOf(userMaster);
+		if (-1 === index)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentUserMaster(this, userMaster.GetId(), false));
+		this.UserMasters.splice(index, 1);
+	};
+	CDocument.prototype.getUserMasterCount = function()
+	{
+		return this.UserMasters.length;
+	};
+	CDocument.prototype.getUserMaster = function(index)
+	{
+		if (index < 0 || index >= this.UserMasters.length)
+			return null;
+		
+		return this.UserMasters[index];
+	};
+	CDocument.prototype.addFieldMaster = function(fieldMaster)
+	{
+		if (-1 !== this.FieldMasters.indexOf(fieldMaster))
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldMaster(this, fieldMaster.GetId(), true));
+		this.FieldMasters.push(fieldMaster);
+	};
+	CDocument.prototype.removeFieldMaster = function(fieldMaster)
+	{
+		let index = this.FieldMasters.indexOf(fieldMaster);
+		if (-1 === index)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldMaster(this, fieldMaster.GetId(), false));
+		this.FieldMasters.splice(index, 1);
+	};
+	CDocument.prototype.getFieldMasterCount = function()
+	{
+		return this.FieldMasters.length;
+	};
+	CDocument.prototype.getFieldMaster = function(index)
+	{
+		if (index < 0 || index >= this.FieldMasters.length)
+			return null;
+		
+		return this.FieldMasters[index];
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CDocument = CDocument;

@@ -35,10 +35,10 @@
 (function(window)
 {
 	/**
-	 *
+	 * @param {boolean} [generateId=false]
 	 * @constructor
 	 */
-	function CFieldMaster()
+	function CFieldMaster(generateId)
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
@@ -46,6 +46,9 @@
 		this.Field   = null;
 		this.Users   = [];
 		this.Signers = [];
+		
+		if (true === generateId)
+			this.setFieldId(AscCommon.CreateGUID());
 	}
 	AscFormat.InitClass(CFieldMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldMaster);
 	CFieldMaster.prototype.setLogicField = function(logicField)
