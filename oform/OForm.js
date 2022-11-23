@@ -46,6 +46,7 @@
 		this.Document    = document;
 		
 		// Сейчас у нас роль - это ровно один userMaster и ровно одна группа полей
+		this.Roles = [];
 	}
 	/**
 	 * @returns {AscWord.CDocument}
@@ -63,17 +64,107 @@
 	};
 	OForm.prototype.getAllRoles = function()
 	{
-		let userMasters = this.Format.getAllUserMasters();
-		userMasters.unshift(this.Format.getDefaultUser());
-		return userMasters;
+		return this.Roles;
 	};
-	OForm.prototype.addRole = function(name, ascColor)
+	/**
+	 * @param roleSettings {AscOForm.CRoleSettings}
+	 */
+	OForm.prototype.addRole = function(roleSettings)
 	{
-	
+		if (!this.startAction(AscDFH.historydescription_OForm_AddRole))
+			return false;
+		
+		// TODO: fix me
+		let role;
+		if (roleSettings instanceof AscOForm.CRoleSettings)
+			role = AscOForm.create(roleSettings);
+		else
+			role = new AscOForm.CRole();
+		
+		this.updateRoles();
+		this.endAction();
+		return true;
+	};
+	OForm.prototype.removeRole = function(name)
+	{
+		let roleIndex = this.getRoleIndex(name);
+		if (-1 === roleIndex)
+			return false;
+			
+		if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
+			return false;
+
+		
+		this.updateRoles();
+		this.endAction();
+		return true;
+	};
+	OForm.prototype.getRole = function(name)
+	{
+		let roleIndex = this.getRoleIndex(name);
+		if (-1 === roleIndex)
+			return null;
+		
+		return this.Roles[roleIndex];
+	};
+	OForm.prototype.getRoleIndex = function(name)
+	{
+		for (let index = 0, count = this.Roles.length; index < count; ++index)
+		{
+			if (name === this.Roles[index].getName())
+				return index;
+		}
+		
+		return -1;
+	};
+	OForm.prototype.haveRole = function(name)
+	{
+		return !!(this.getRole(name));
+	};
+	OForm.prototype.getRoleSettings = function(name)
+	{
+		let role = this.getRole(name);
+		if (!role)
+			return null;
+		
+		return role.getSettings();
+	};
+	OForm.prototype.updateRoles = function()
+	{
+		// TODO: Обновить состояние ролей в соответствии с форматом
+		
+	};
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Private area
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	OForm.prototype.startAction = function(description)
+	{
+		let logicDocument = this.getDocument();
+		if (!logicDocument)
+			return false;
+		
+		if (logicDocument.IsSelectionLocked(AscCommon.changestype_Document_Settings, null, false, false, null))
+			return false;
+		
+		logicDocument.StartAction(description);
+		return true;
+	};
+	OForm.prototype.endAction = function()
+	{
+		let logicDocument = this.getDocument();
+		if (!logicDocument)
+			return;
+		
+		logicDocument.UpdateInterface();
+		logicDocument.FinalizeAction();
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.OForm = OForm;
 	//---------------------------------------------interface export-----------------------------------------------------
 	OForm.prototype['asc_getAllRoles'] = OForm.prototype.getAllRoles;
+	OForm.prototype['asc_addRole']     = OForm.prototype.addRole;
+	OForm.prototype['asc_removeRole']  = OForm.prototype.removeRole;
+	OForm.prototype['asc_haveRole']    = OForm.prototype.haveRole;
+	OForm.prototype['asc_getRole']     = OForm.prototype.getRoleSettings;
 	
 })(window);
