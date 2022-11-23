@@ -41,25 +41,39 @@
 	 */
 	function OForm(document)
 	{
-		this.Document      = new AscOForm.CDocument();
-		this.DefaultUser   = this.Document.getDefaultUser();
-		this.LogicDocument = document;
+		this.Format      = new AscOForm.CDocument();
+		this.DefaultUser = this.Format.getDefaultUser();
+		this.Document    = document;
+		
+		// Сейчас у нас роль - это ровно один userMaster и ровно одна группа полей
 	}
 	/**
 	 * @returns {AscWord.CDocument}
 	 */
-	OForm.prototype.getLogicDocument = function()
+	OForm.prototype.getDocument = function()
 	{
 		return this.LogicDocument;
 	};
 	/**
 	 * @returns {AscOForm.CDocument}
 	 */
-	OForm.prototype.getDocument = function()
+	OForm.prototype.getFormat = function()
 	{
 		return this.Document;
 	};
+	OForm.prototype.getAllRoles = function()
+	{
+		let userMasters = this.Format.getAllUserMasters();
+		userMasters.unshift(this.Format.getDefaultUser());
+		return userMasters;
+	};
+	OForm.prototype.addRole = function(name, ascColor)
+	{
+	
+	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.OForm = OForm;
+	//---------------------------------------------interface export-----------------------------------------------------
+	OForm.prototype['asc_getAllRoles'] = OForm.prototype.getAllRoles;
 	
 })(window);

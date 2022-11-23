@@ -329,6 +329,10 @@
 		
 		return this.UserMasters[index];
 	};
+	CDocument.prototype.getAllUserMasters = function()
+	{
+		return this.UserMasters;
+	};
 	CDocument.prototype.addFieldMaster = function(fieldMaster)
 	{
 		if (-1 !== this.FieldMasters.indexOf(fieldMaster))
