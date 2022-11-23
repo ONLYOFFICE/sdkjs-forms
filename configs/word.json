@@ -2,13 +2,21 @@
   "sdk": {
     "min": [
       "api.js",
-	  "apiPlugins.js"
-	],
-    "common": [      
-	  "apiBuilder.js",
-	  "oform/Main.js",
-	  "oform/Field.js",
-	  "oform/User.js"
+      "apiPlugins.js"
+    ],
+    "common": [
+      "apiBuilder.js",
+      "oform/Document.js",
+      "oform/FieldGroup.js",
+      "oform/FieldMaster.js",
+      "oform/User.js",
+      "oform/UserMaster.js",
+      "oform/changes/DictionaryBase.js",
+      "oform/changes/DocumentChanges.js",
+      "oform/changes/FieldGroupChanges.js",
+      "oform/changes/FieldMasterChanges.js",
+      "oform/changes/UserChanges.js",
+      "oform/changes/UserMasterChanges.js"
     ]
   }
 }

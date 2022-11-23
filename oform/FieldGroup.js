@@ -35,84 +35,54 @@
 (function(window)
 {
 	/**
-	 * @param {AscOForm.CUserMaster} userMaster
 	 * @constructor
 	 */
-	function CUser(userMaster)
+	function CFieldGroup()
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
-		this.Email      = undefined;
-		this.Telephone  = undefined;
-		this.UserMaster = undefined;
-
-		if (userMaster)
-			this.setUserMaster(userMaster);
+		this.Weight = null;
+		this.Fields = [];
 	}
-	AscFormat.InitClass(CUser, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_User);
-	CUser.prototype.setUserMaster = function(userMaster)
+	AscFormat.InitClass(CFieldGroup, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
+	CFieldGroup.prototype.setWeight = function(value)
 	{
-		if (this.UserMaster === userMaster)
+		if (this.Weight === value)
 			return;
 
-		let oldValue = this.UserMaster ? this.UserMaster.GetId() : undefined;
-		let newValue = userMaster ? userMaster.GetId() : undefined;
-
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserUserMaster(this, oldValue, newValue));
-		this.UserMaster = userMaster;
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupWeight(this, this.Weight, value));
+		this.Weight = value;
 	};
-	CUser.prototype.setEmail = function(email)
+	CFieldGroup.prototype.addField = function(field)
 	{
-		if (email === this.Email)
+		if (!field || -1 !== this.Fields.indexOf(field))
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserEmail(this, this.Email, email));
-		this.Email = email;
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveField(this, field.GetId(), true));
+		this.Fields.push(field);
 	};
-	CUser.prototype.setTelephone = function(telephone)
+	CFieldGroup.prototype.removeField = function(field)
 	{
-		if (telephone === this.Telephone)
+		if (!field)
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserTelephone(this, this.Telephone, telephone));
-		this.Telephone = telephone;
+		let index = this.Fields.indexOf(field);
+		if (-1 === index)
+			return;
+
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveField(this, field.GetId(), false));
+		this.Fields.splice(index, 1);
 	};
-	CUser.prototype.getUserMaster = function()
+	CFieldGroup.prototype.readChildXml = function(name, reader)
 	{
-		return this.UserMaster;
+		// TODO: implement
+		return false;
 	};
-	CUser.prototype.readChildXml = function(name, reader)
+	CFieldGroup.prototype.toXml = function(writer)
 	{
-		let bRead = false;
-		switch (name)
-		{
-			case "Email":
-			{
-				let node = CT_XmlNode.fromReader(reader);
-				this.setEmail(node.text);
-				bRead = true;
-				break;
-			}
-			case "Telephone":
-			{
-				let node = CT_XmlNode.fromReader(reader);
-				this.setTelephone(node.text);
-				bRead = true;
-				break;
-			}
-		}
-		return bRead;
-	};
-	CUser.prototype.toXml = function(writer)
-	{
-		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("User");
-		writer.WriteXmlAttributesEnd();
-		writer.WriteXmlNodeWithText("Email", this.Email);
-		writer.WriteXmlNodeWithText("Telephone", this.Telephone);
-		writer.WriteXmlNodeEnd("User");
+		// TODO: implement
 	};
 	//--------------------------------------------------------export----------------------------------------------------
-	AscOForm.CUser = CUser;
+	AscOForm.CFieldGroup = CFieldGroup;
 
 })(window);

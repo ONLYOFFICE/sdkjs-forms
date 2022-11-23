@@ -35,84 +35,67 @@
 (function(window)
 {
 	/**
-	 * @param {AscOForm.CUserMaster} userMaster
+	 *
 	 * @constructor
 	 */
-	function CUser(userMaster)
+	function CUserMaster()
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
-		this.Email      = undefined;
-		this.Telephone  = undefined;
-		this.UserMaster = undefined;
-
-		if (userMaster)
-			this.setUserMaster(userMaster);
+		this.UserId = undefined;
+		this.Role   = undefined;
 	}
-	AscFormat.InitClass(CUser, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_User);
-	CUser.prototype.setUserMaster = function(userMaster)
+	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
+	CUserMaster.prototype.setUserId = function(userId)
 	{
-		if (this.UserMaster === userMaster)
+		if (userId === this.UserId)
 			return;
 
-		let oldValue = this.UserMaster ? this.UserMaster.GetId() : undefined;
-		let newValue = userMaster ? userMaster.GetId() : undefined;
-
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserUserMaster(this, oldValue, newValue));
-		this.UserMaster = userMaster;
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterUserId(this, this.UserId, userId));
+		this.UserId = userId;
 	};
-	CUser.prototype.setEmail = function(email)
+	CUserMaster.prototype.setRole = function(role)
 	{
-		if (email === this.Email)
+		if (role === this.Role)
 			return;
 
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserEmail(this, this.Email, email));
-		this.Email = email;
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterRole(this, this.Role, role));
+		this.Role = role;
 	};
-	CUser.prototype.setTelephone = function(telephone)
-	{
-		if (telephone === this.Telephone)
-			return;
-
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserTelephone(this, this.Telephone, telephone));
-		this.Telephone = telephone;
-	};
-	CUser.prototype.getUserMaster = function()
-	{
-		return this.UserMaster;
-	};
-	CUser.prototype.readChildXml = function(name, reader)
+	CUserMaster.prototype.readChildXml = function(name, reader)
 	{
 		let bRead = false;
 		switch (name)
 		{
-			case "Email":
+			case "Id":
 			{
-				let node = CT_XmlNode.fromReader(reader);
-				this.setEmail(node.text);
+				let oNode = new CT_XmlNode();
+				oNode.fromXml(reader);
+				this.setUserId(oNode.text);
 				bRead = true;
 				break;
 			}
-			case "Telephone":
+			case "Role":
 			{
-				let node = CT_XmlNode.fromReader(reader);
-				this.setTelephone(node.text);
+				let oNode = new CT_XmlNode();
+				oNode.fromXml(reader);
+				this.setRole(oNode.text);
 				bRead = true;
 				break;
 			}
 		}
 		return bRead;
 	};
-	CUser.prototype.toXml = function(writer)
+	CUserMaster.prototype.toXml = function(writer)
 	{
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("User");
+		writer.WriteXmlNodeStart("UserMaster");
 		writer.WriteXmlAttributesEnd();
-		writer.WriteXmlNodeWithText("Email", this.Email);
-		writer.WriteXmlNodeWithText("Telephone", this.Telephone);
-		writer.WriteXmlNodeEnd("User");
+		writer.WriteXmlNodeWithText("Id", this.UserId);
+		writer.WriteXmlNodeWithText("Role", this.Role);
+		writer.WriteXmlNodeEnd("UserMaster");
 	};
 	//--------------------------------------------------------export----------------------------------------------------
-	AscOForm.CUser = CUser;
+	AscOForm.CUserMaster = CUserMaster;
 
 })(window);
