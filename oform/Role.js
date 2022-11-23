@@ -76,10 +76,31 @@
 	{
 		return this.Name;
 	};
-	
-	
-	
-	
+	CRoleSettings.prototype.setName = function(name)
+	{
+		this.Name = name;
+	};
+	CRoleSettings.prototype.setColor = function(r, g, b)
+	{
+		this.Color = new AscWord.CDocumentColor(r, g, b);
+	};
+	CRoleSettings.prototype.getColor = function()
+	{
+		// TODO: Надо отдавать в интерфейс цвет AscColor
+		return this.Color;
+	};
+	CRoleSettings.prototype.haveColor = function()
+	{
+		return (!!this.Color);
+	};
+	CRoleSettings.prototype.setIndex = function(index)
+	{
+		this.Index = index;
+	};
+	CRoleSettings.prototype.getIndex = function()
+	{
+		return this.Index;
+	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CRole = CRole;
 	AscOForm.CRoleSettings = CRoleSettings;

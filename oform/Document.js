@@ -36,11 +36,14 @@
 {
 	/**
 	 * Основной класс для работы с форматом oform
+	 * @param oform {AscOForm.OForm}
 	 * @constructor
 	 */
-	function CDocument()
+	function CDocument(oform)
 	{
 		AscFormat.CBaseFormatObject.call(this);
+		
+		this.OForm = oform;
 		
 		this.DefaultUser = new AscOForm.CUserMaster();
 		this.DefaultUser.initDefaultUser();
@@ -139,6 +142,7 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldGroup(this, fieldGroup.GetId(), true));
 		this.FieldGroups.push(fieldGroup);
+		this.onChangeFieldGroups();
 	};
 	CDocument.prototype.removeFieldGroup = function(fieldGroup)
 	{
@@ -151,6 +155,7 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldGroup(this, fieldGroup.GetId(), false));
 		this.FieldGroups.splice(index, 1);
+		this.onChangeFieldGroups();
 	};
 	CDocument.prototype.getFieldGroupsCount = function()
 	{
@@ -361,6 +366,14 @@
 		
 		return this.FieldMasters[index];
 	};
+	CDocument.prototype.onChangeFieldGroups = function()
+	{
+		if (!this.OForm)
+			return;
+		
+		this.OForm.onChangeRoles();
+	};
+	
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CDocument = CDocument;
 

@@ -41,12 +41,13 @@
 	 */
 	function OForm(document)
 	{
-		this.Format      = new AscOForm.CDocument();
+		this.Format      = new AscOForm.CDocument(this);
 		this.DefaultUser = this.Format.getDefaultUser();
 		this.Document    = document;
 		
 		// Сейчас у нас роль - это ровно один userMaster и ровно одна группа полей
 		this.Roles = [];
+		this.NeedUpdateRoles = true;
 	}
 	/**
 	 * @returns {AscWord.CDocument}
@@ -64,6 +65,7 @@
 	};
 	OForm.prototype.getAllRoles = function()
 	{
+		this.updateRoles();
 		return this.Roles;
 	};
 	/**
@@ -74,7 +76,14 @@
 		if (!this.startAction(AscDFH.historydescription_OForm_AddRole))
 			return false;
 		
-		// TODO: fix me
+		let userMaster = new AscOForm.CUserMaster(true);
+		userMaster.setRole(name);
+		
+		let fieldGroup = new AscOForm.CFieldGroup();
+		fieldGroup.setWeight(weight);
+		
+		return new CRole(fieldGroup, userMaster);
+		
 		let role;
 		if (roleSettings instanceof AscOForm.CRoleSettings)
 			role = AscOForm.create(roleSettings);
@@ -109,6 +118,8 @@
 	};
 	OForm.prototype.getRoleIndex = function(name)
 	{
+		this.updateRoles();
+		
 		for (let index = 0, count = this.Roles.length; index < count; ++index)
 		{
 			if (name === this.Roles[index].getName())
@@ -129,10 +140,19 @@
 		
 		return role.getSettings();
 	};
+	OForm.prototype.onChangeRoles = function()
+	{
+		this.NeedUpdateRoles = true;
+	};
 	OForm.prototype.updateRoles = function()
 	{
+		if (!this.NeedUpdateRoles)
+			return;
+			
 		// TODO: Обновить состояние ролей в соответствии с форматом
 		
+		
+		this.NeedUpdateRoles = false;
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area

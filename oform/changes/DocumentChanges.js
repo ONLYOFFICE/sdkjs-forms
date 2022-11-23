@@ -192,14 +192,20 @@
 		{
 			let fieldGroup = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.FieldGroups.indexOf(fieldGroup))
+			{
 				this.Class.FieldGroups.push(fieldGroup);
+				this.Class.onChangeFieldGroups();
+			}
 		},
 		function()
 		{
 			let fieldGroup = AscCommon.g_oTableId.GetById(this.Key);
 			let index      = this.Class.FieldGroups.indexOf(fieldGroup);
 			if (-1 !== index)
+			{
 				this.Class.FieldGroups.splice(index, 1);
+				this.Class.onChangeFieldGroups();
+			}
 		}
 	);
 	window['AscDFH'].CChangesOFormDocumentFieldGroup = CChangesOFormDocumentFieldGroup;
