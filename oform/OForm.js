@@ -73,7 +73,12 @@
 	 */
 	OForm.prototype.addRole = function(roleSettings)
 	{
-		let name = roleSettings instanceof AscOForm.CRoleSettings ? roleSettings.getName() : roleSettings;
+		let name = "";
+		if ("string" === typeof roleSettings)
+			name = roleSettings;
+		else if (roleSettings instanceof AscOForm.CRoleSettings)
+			name = roleSettings.getName();
+		
 		if (this.haveRole(name))
 			return false;
 		
