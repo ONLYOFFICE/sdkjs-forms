@@ -99,6 +99,40 @@
 		this.setRole("Anyone");
 		this.setColor(128, 128, 128);
 	};
+	CUserMaster.prototype.compare = function(user)
+	{
+		if (this.Role < user.Role)
+			return -1;
+		else if (this.Role > user.Role)
+			return 1;
+		
+		if (this.UserId < user.UserId)
+			return -1;
+		else if (this.UserId > user.UserId)
+			return 1;
+		
+		if (!this.Color && !user.Color)
+			return 0;
+		else if (!this.Color && user.Color)
+			return -1;
+		else if (this.Color && !user.Color)
+			return 1;
+		
+		if (color.r < otherColor.r)
+			return -1;
+		else if (color.r > otherColor.r)
+			return 1;
+		else if (color.g < otherColor.g)
+			return -1;
+		else if (color.g > otherColor.g)
+			return 1;
+		else if (color.b < otherColor.b)
+			return -1;
+		else if (color.b > otherColor.b)
+			return 1;
+		
+		return 0;
+	};
 	CUserMaster.prototype.readChildXml = function(name, reader)
 	{
 		let bRead = false;

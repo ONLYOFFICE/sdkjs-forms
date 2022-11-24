@@ -46,20 +46,24 @@
 		this.FieldGroup = fieldGroup;
 		this.UserMaster = userMaster;
 	}
-	CRole.create = function(name, weight)
-	{
-		let userMaster = new AscOForm.CUserMaster(true);
-		userMaster.setRole(name);
-		
-		let fieldGroup = new AscOForm.CFieldGroup();
-		fieldGroup.setWeight(weight);
-		
-		return new CRole(fieldGroup, userMaster);
-	};
 	CRole.prototype.getSettings = function()
 	{
-		// TODO: Fix me
+		let r = new CRoleSettings();
+		r.setName(this.UserMaster.getRole());
+		r.setColor(this.UserMaster.getColor());
 		return new CRoleSettings();
+	};
+	CRole.prototype.getRole = function()
+	{
+		return this.UserMaster.getName();
+	};
+	CRole.prototype.getUserMaster = function()
+	{
+		return this.UserMaster;
+	};
+	CRole.prototype.getWeight = function()
+	{
+		return this.FieldGroup.getWeight();
 	};
 	
 	/**
@@ -80,11 +84,22 @@
 	{
 		this.Name = name;
 	};
-	CRoleSettings.prototype.setColor = function(r, g, b)
+	CRoleSettings.prototype.setColor = function(color)
 	{
-		this.Color = new AscWord.CDocumentColor(r, g, b);
+		this.Color = color ? color.Copy() : null;
 	};
 	CRoleSettings.prototype.getColor = function()
+	{
+		return this.Color;
+	};
+	CRoleSettings.prototype.setAscColor = function(r, g, b)
+	{
+		if (undefined === r || null === r)
+			this.Color = null;
+		else
+			this.Color = new AscWord.CDocumentColor(r, g, b);
+	}
+	CRoleSettings.prototype.getAscColor = function()
 	{
 		// TODO: Надо отдавать в интерфейс цвет AscColor
 		return this.Color;
@@ -102,9 +117,13 @@
 		return this.Index;
 	};
 	//--------------------------------------------------------export----------------------------------------------------
-	AscOForm.CRole = CRole;
+	AscOForm.CRole         = CRole;
 	AscOForm.CRoleSettings = CRoleSettings;
 	//---------------------------------------------interface export-----------------------------------------------------
-	window['AscCommon']["CRoleSettings"] = CRoleSettings;
-	
+	CRole.prototype['asc_getSettings']      = CRole.prototype.getSettings;
+	window['AscCommon']["CRoleSettings"]    = CRoleSettings;
+	CRoleSettings.prototype["asc_getName"]  = CRoleSettings.prototype.getName;
+	CRoleSettings.prototype["asc_putName"]  = CRoleSettings.prototype.setName;
+	CRoleSettings.prototype["asc_getColor"] = CRoleSettings.prototype.getAscColor;
+	CRoleSettings.prototype["asc_putColor"] = CRoleSettings.prototype.setAscColor;
 })(window);

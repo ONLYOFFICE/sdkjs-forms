@@ -84,6 +84,17 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveUser(this, user.GetId(), false));
 		this.Users.splice(index, 1);
 	};
+	CFieldMaster.prototype.getUserCount = function()
+	{
+		return this.Users.length;
+	};
+	CFieldMaster.prototype.getUser = function(index)
+	{
+		if (index < 0 || index >= this.Users.length)
+			return null;
+		
+		return this.Users[index];
+	};
 	CFieldMaster.prototype.addSigner = function(user)
 	{
 		if (-1 !== this.Signers.indexOf(user))

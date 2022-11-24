@@ -73,38 +73,43 @@
 	 */
 	OForm.prototype.addRole = function(roleSettings)
 	{
+		let name = roleSettings instanceof AscOForm.CRoleSettings ? roleSettings.getName() : roleSettings;
+		if (this.haveRole(name))
+			return false;
+		
 		if (!this.startAction(AscDFH.historydescription_OForm_AddRole))
 			return false;
 		
 		let userMaster = new AscOForm.CUserMaster(true);
 		userMaster.setRole(name);
 		
+		let color = roleSettings.getColor();
+		if (color)
+			userMaster.setColor(color.r, color.g, color.b);
+		
 		let fieldGroup = new AscOForm.CFieldGroup();
-		fieldGroup.setWeight(weight);
+		fieldGroup.setWeight(this.Format.getMaxWeight() + 1);
+		fieldGroup.addUser(userMaster);
 		
-		return new CRole(fieldGroup, userMaster);
+		this.Format.addFieldGroup(fieldGroup);
+		this.Format.addUserMaster(userMaster);
 		
-		let role;
-		if (roleSettings instanceof AscOForm.CRoleSettings)
-			role = AscOForm.create(roleSettings);
-		else
-			role = new AscOForm.CRole();
-		
-		this.updateRoles();
 		this.endAction();
 		return true;
 	};
-	OForm.prototype.removeRole = function(name)
+	OForm.prototype.removeRole = function(name, delegateName)
 	{
 		let roleIndex = this.getRoleIndex(name);
 		if (-1 === roleIndex)
 			return false;
+		
+		let delegateIndex = this.getRoleIndex(delegateName);
 			
 		if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
 			return false;
-
 		
-		this.updateRoles();
+		
+		
 		this.endAction();
 		return true;
 	};
@@ -140,6 +145,19 @@
 		
 		return role.getSettings();
 	};
+	OForm.prototype.getDefaultRole = function()
+	{
+		this.updateRoles();
+		
+		let defaultUser = this.Format.getDefaultUser();
+		for (let index = 0, count = this.Roles.length; index < count; ++index)
+		{
+			if (defaultUser === this.Roles[index].getUserMaster())
+				return this.Roles[index];
+		}
+		
+		return null;
+	};
 	OForm.prototype.onChangeRoles = function()
 	{
 		this.NeedUpdateRoles = true;
@@ -148,8 +166,49 @@
 	{
 		if (!this.NeedUpdateRoles)
 			return;
+		
+		this.Roles = [];
+		for (let fgIndex = 0, fgCount = this.Format.getFieldGroupsCount(); fgIndex < fgCount; ++fgIndex)
+		{
+			let fieldGroup = this.Format.getFieldGroup(fgIndex);
+			let user = fieldGroup.getFirstUser();
+			if (!user)
+			{
+				// TODO: Разобраться с такими группами
+			}
 			
-		// TODO: Обновить состояние ролей в соответствии с форматом
+			let haveRole = false;
+			for (let roleIndex = 0, roleCount = this.Roles.length; roleIndex < roleCount; ++roleIndex)
+			{
+				if (this.Roles[roleIndex].getUserMaster() === user)
+				{
+					haveRole = true;
+					break;
+				}
+			}
+			
+			if (haveRole)
+			{
+				// TODO: Разобраться с такими ситуациями
+			}
+			
+			let weight       = fieldGroup.getWeight();
+			let newRoleIndex = this.Roles.length;
+			for (let roleIndex = 0, roleCount = this.Roles.length; roleIndex < roleCount; ++roleIndex)
+			{
+				if (weight < this.Roles[roleIndex].getWeight())
+				{
+					newRoleIndex = roleIndex;
+					break
+				}
+			}
+			
+			let newRole = new CRole(fieldGroup, user);
+			if (newRoleIndex === this.Roles.length)
+				this.Roles.push(newRole);
+			else
+				this.Roles.splice(newRoleIndex, 0, newRole);
+		}
 		
 		
 		this.NeedUpdateRoles = false;
@@ -174,6 +233,8 @@
 		let logicDocument = this.getDocument();
 		if (!logicDocument)
 			return;
+		
+		this.updateRoles();
 		
 		logicDocument.UpdateInterface();
 		logicDocument.FinalizeAction();

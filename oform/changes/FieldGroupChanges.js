@@ -36,6 +36,7 @@
 {
 	window['AscDFH'].historyitem_OForm_FieldGroup_Weight         = window['AscDFH'].historyitem_type_OForm_FieldGroup | 1;
 	window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveField = window['AscDFH'].historyitem_type_OForm_FieldGroup | 2;
+	window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveUser  = window['AscDFH'].historyitem_type_OForm_FieldGroup | 3;
 
 	/**
 	 * @constructor
@@ -83,5 +84,32 @@
 		}
 	);
 	window['AscDFH'].CChangesOFormFieldGroupAddRemoveField = CChangesOFormFieldGroupAddRemoveField;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
+	 */
+	function CChangesOFormFieldGroupAddRemoveUser(Class, userMasterId, isAdd)
+	{
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userMasterId, isAdd);
+	}
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormFieldGroupAddRemoveField,
+		window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveUser,
+		function()
+		{
+			let userMaster = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.Users.indexOf(userMaster))
+				this.Class.Users.push(userMaster);
+		},
+		function()
+		{
+			let userMaster = AscCommon.g_oTableId.GetById(this.Key);
+			let index      = this.Class.Fields.indexOf(userMaster);
+			if (-1 !== index)
+				this.Class.Users.splice(index, 1);
+		}
+	);
+	window['AscDFH'].CChangesOFormFieldGroupAddRemoveUser = CChangesOFormFieldGroupAddRemoveUser;
 
 })(window);

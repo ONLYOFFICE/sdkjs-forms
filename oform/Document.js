@@ -366,6 +366,18 @@
 		
 		return this.FieldMasters[index];
 	};
+	CDocument.prototype.getMaxWeight = function()
+	{
+		let max = -1;
+		for (let index = 0, count = this.FieldGroups.length; index < count; ++index)
+		{
+			let curWeight = this.FieldGroups[index].getWeight();
+			if (max > curWeight)
+				max = curWeight;
+		}
+		
+		return max;
+	};
 	CDocument.prototype.onChangeFieldGroups = function()
 	{
 		if (!this.OForm)

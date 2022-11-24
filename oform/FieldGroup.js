@@ -43,6 +43,7 @@
 
 		this.Weight = null;
 		this.Fields = [];
+		this.Users  = [];
 	}
 	AscFormat.InitClass(CFieldGroup, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
 	CFieldGroup.prototype.setWeight = function(value)
@@ -52,6 +53,10 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupWeight(this, this.Weight, value));
 		this.Weight = value;
+	};
+	CFieldGroup.prototype.getWeight = function()
+	{
+		return this.Weight;
 	};
 	CFieldGroup.prototype.addField = function(field)
 	{
@@ -72,6 +77,51 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveField(this, field.GetId(), false));
 		this.Fields.splice(index, 1);
+	};
+	CFieldGroup.prototype.addUser = function(user)
+	{
+		if (!user || -1 !== this.Users.indexOf(user))
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveUser(this, user.GetId(), true));
+		this.Users.push(user);
+	};
+	CFieldGroup.prototype.removeUser = function(user)
+	{
+		if (!user)
+			return;
+		
+		let index = this.Users.indexOf(user);
+		if (-1 === index)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveUser(this, user.GetId(), false));
+		this.Users.splice(index, 1);
+	};
+	CFieldGroup.prototype.getFirstUser = function()
+	{
+		let user = null;
+		for (let index = 0, userCount = this.Users.length; index < userCount; ++index)
+		{
+			let curUser = this.Users[index];
+			if (!user || user.compare(curUser) < 0)
+				user = curUser;
+		}
+		
+		if (!user)
+		{
+			for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
+			{
+				let fieldMaster = this.Fields[fieldIndex];
+				for (let userIndex = 0, userCount = fieldMaster.getUserCount(); userIndex < userCount; ++userIndex)
+				{
+					let curUser = fieldMaster.getUser(userIndex);
+					if (!user || user.compare(curUser) < 0)
+						user = curUser;
+				}
+			}
+		}
+		return user;
 	};
 	CFieldGroup.prototype.readChildXml = function(name, reader)
 	{
