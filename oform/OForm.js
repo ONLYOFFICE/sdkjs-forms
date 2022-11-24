@@ -54,7 +54,7 @@
 	 */
 	OForm.prototype.getDocument = function()
 	{
-		return this.LogicDocument;
+		return this.Document;
 	};
 	/**
 	 * @returns {AscOForm.CDocument}
@@ -75,9 +75,16 @@
 	{
 		let name = "";
 		if ("string" === typeof roleSettings)
+		{
 			name = roleSettings;
-		else if (roleSettings instanceof AscOForm.CRoleSettings)
+			roleSettings = new AscOForm.CRoleSettings();
+			roleSettings.setName(name);
+		}
+
+		if (roleSettings instanceof AscOForm.CRoleSettings)
 			name = roleSettings.getName();
+		else
+			return false;
 		
 		if (this.haveRole(name))
 			return false;
@@ -208,7 +215,7 @@
 				}
 			}
 			
-			let newRole = new CRole(fieldGroup, user);
+			let newRole = new AscOForm.CRole(fieldGroup, user);
 			if (newRoleIndex === this.Roles.length)
 				this.Roles.push(newRole);
 			else

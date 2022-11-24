@@ -94,7 +94,7 @@
 		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userMasterId, isAdd);
 	}
 	window['AscDFH'].InheritDictionaryChange(
-		CChangesOFormFieldGroupAddRemoveField,
+		CChangesOFormFieldGroupAddRemoveUser,
 		window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveUser,
 		function()
 		{
