@@ -139,7 +139,7 @@
 		
 		for (let index = 0, count = this.Roles.length; index < count; ++index)
 		{
-			if (name === this.Roles[index].getName())
+			if (name === this.Roles[index].getRole())
 				return index;
 		}
 		
@@ -178,6 +178,8 @@
 	{
 		if (!this.NeedUpdateRoles)
 			return;
+
+		this.NeedUpdateRoles = false;
 		
 		this.Roles = [];
 		for (let fgIndex = 0, fgCount = this.Format.getFieldGroupsCount(); fgIndex < fgCount; ++fgIndex)
@@ -221,9 +223,41 @@
 			else
 				this.Roles.splice(newRoleIndex, 0, newRole);
 		}
+
+		this.onUpdateRoles();
+	};
+	OForm.prototype.correctFieldGroups = function()
+	{
+		// Проверяем есть ли хоть одна группа с заданной ролью (где указан userMaster)
+		for (let fgIndex = 0, fgCount = this.Format.getFieldGroupsCount(); fgIndex < fgCount; ++fgIndex)
+		{
+			let fieldGroup = this.Format.getFieldGroup(fgIndex);
+			let user = fieldGroup.getFirstUser();
+			if (!user)
+				continue;
+			
+			return;
+		}
 		
-		
-		this.NeedUpdateRoles = false;
+		// Нельзя, чтобы групп не было вообще
+		let defaultGroup = new AscOForm.CFieldGroup();
+		this.Format.addFieldGroup(defaultGroup);
+		defaultGroup.addUser(this.Format.getDefaultUser());
+	};
+	OForm.prototype.onEndLoad = function()
+	{
+		this.NeedUpdateRoles = true;
+		this.correctFieldGroups();
+		this.updateRoles();
+	};
+	OForm.prototype.onUpdateRoles = function()
+	{
+		let logicDocument = this.getDocument();
+		let api;
+		if (!logicDocument || !(api = logicDocument.GetApi()))
+			return;
+
+		api.sendEvent("asc_onUpdateOFormRoles", this.Roles);
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
@@ -246,6 +280,7 @@
 		if (!logicDocument)
 			return;
 		
+		this.correctFieldGroups();
 		this.updateRoles();
 		
 		logicDocument.UpdateInterface();

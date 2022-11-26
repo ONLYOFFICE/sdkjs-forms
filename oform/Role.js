@@ -55,7 +55,7 @@
 	};
 	CRole.prototype.getRole = function()
 	{
-		return this.UserMaster.getName();
+		return this.UserMaster.getRole();
 	};
 	CRole.prototype.getUserMaster = function()
 	{
