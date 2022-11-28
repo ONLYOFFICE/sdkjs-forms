@@ -51,7 +51,7 @@
 		let r = new CRoleSettings();
 		r.setName(this.UserMaster.getRole());
 		r.setColor(this.UserMaster.getColor());
-		return new CRoleSettings();
+		return r;
 	};
 	CRole.prototype.getRole = function()
 	{
@@ -97,17 +97,19 @@
 	{
 		return this.Color;
 	};
-	CRoleSettings.prototype.setAscColor = function(r, g, b)
+	CRoleSettings.prototype.setAscColor = function(ascColor)
 	{
-		if (undefined === r || null === r)
+		if (undefined === ascColor || null === ascColor)
 			this.Color = null;
 		else
-			this.Color = new AscWord.CDocumentColor(r, g, b);
+			this.Color = new AscWord.CDocumentColor(ascColor.get_r(), ascColor.get_g(), ascColor.get_b());
 	}
 	CRoleSettings.prototype.getAscColor = function()
 	{
-		// TODO: Надо отдавать в интерфейс цвет AscColor
-		return this.Color;
+		if (!this.Color)
+			return null;
+		
+		return new Asc.asc_CColor(this.Color.r, this.Color.g, this.Color.b);
 	};
 	CRoleSettings.prototype.haveColor = function()
 	{
