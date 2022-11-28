@@ -366,6 +366,18 @@
 		
 		return this.FieldMasters[index];
 	};
+	CDocument.prototype.getMinWeight = function()
+	{
+		let min = -1;
+		for (let index = 0, count = this.FieldGroups.length; index < count; ++index)
+		{
+			let curWeight = this.FieldGroups[index].getWeight();
+			if (-1 === min || min > curWeight)
+				min = curWeight;
+		}
+		
+		return min;
+	};
 	CDocument.prototype.getMaxWeight = function()
 	{
 		let max = -1;

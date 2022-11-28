@@ -65,6 +65,11 @@
 	{
 		return this.FieldGroup.getWeight();
 	};
+	CRole.prototype.setWeight = function(weight)
+	{
+		if (this.FieldGroup)
+			this.FieldGroup.setWeight(weight);
+	};
 	
 	/**
 	 * Класс для задания настроек роли из интерфейса

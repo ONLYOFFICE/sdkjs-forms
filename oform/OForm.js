@@ -125,6 +125,122 @@
 		this.endAction();
 		return true;
 	};
+	OForm.prototype.moveUpRole = function(name)
+	{
+		let role = this.getRole(name);
+		if (!role)
+			return false;
+		
+		let weight = role.getWeight();
+		let sameWeightRoles = this.getRolesByWeight(weight);
+		
+		if (weight === this.Format.getMinWeight() && sameWeightRoles.length <= 1)
+			return false;
+		
+		if (!this.startAction(AscDFH.historydescription_OForm_ChangeRoleOrder))
+			return false;
+		
+		if (sameWeightRoles.length > 1)
+		{
+			for (let index = 0, count = this.Roles.length; index < count; ++index)
+			{
+				let curRole   = this.Roles[index];
+				let curWeight = curRole.getWeight();
+				if (role !== curRole && curWeight >= weight)
+				{
+					curRole.setWeight(curWeight + 1);
+				}
+			}
+		}
+		
+		let prevWeight = -1;
+		for (let index = 0, count = this.Roles.length; index < count; ++index)
+		{
+			let curRole   = this.Roles[index];
+			let curWeight = curRole.getWeight();
+			if (curWeight < weight)
+			{
+				if (-1 === prevWeight || prevWeight < curWeight)
+					prevWeight = curWeight;
+			}
+		}
+		
+		if (-1 !== prevWeight)
+		{
+			let prevRoles = this.getRolesByWeight(prevWeight);
+			
+			role.setWeight(prevWeight);
+			for (let index = 0, count = prevRoles.length; index < count; ++index)
+			{
+				prevRoles[index].setWeight(weight);
+			}
+		}
+		
+		this.endAction();
+		return true;
+	};
+	OForm.prototype.moveDownRole = function(name)
+	{
+		let role = this.getRole(name);
+		if (!role)
+			return false;
+		
+		let weight = role.getWeight();
+		let sameWeightRoles = this.getRolesByWeight(weight);
+		
+		if (weight === this.Format.getMaxWeight() && sameWeightRoles.length <= 1)
+			return false;
+		
+		if (!this.startAction(AscDFH.historydescription_OForm_ChangeRoleOrder))
+			return false;
+		
+		if (sameWeightRoles.length > 1)
+		{
+			weight++;
+			if (this.getRolesByWeight(weight + 1).length)
+			{
+				for (let index = 0, count = this.Roles.length; index < count; ++index)
+				{
+					let curRole   = this.Roles[index];
+					let curWeight = curRole.getWeight();
+					if (curWeight > weight)
+					{
+						curRole.setWeight(curWeight + 1);
+					}
+				}
+			}
+		}
+		
+		let nextWeight = -1;
+		for (let index = 0, count = this.Roles.length; index < count; ++index)
+		{
+			let curRole   = this.Roles[index];
+			let curWeight = curRole.getWeight();
+			if (curWeight > weight)
+			{
+				if (-1 === nextWeight || nextWeight > curWeight)
+					nextWeight = curWeight;
+			}
+		}
+		
+		if (-1 !== nextWeight)
+		{
+			let nextRoles = this.getRolesByWeight(nextWeight);
+			
+			role.setWeight(nextWeight);
+			for (let index = 0, count = nextRoles.length; index < count; ++index)
+			{
+				nextRoles[index].setWeight(weight);
+			}
+		}
+		else if (weight !== role.getWeight())
+		{
+			role.setWeight(weight);
+		}
+		
+		this.endAction();
+		return true;
+	};
 	OForm.prototype.getRole = function(name)
 	{
 		let roleIndex = this.getRoleIndex(name);
@@ -144,6 +260,19 @@
 		}
 		
 		return -1;
+	};
+	OForm.prototype.getRolesByWeight = function(weight)
+	{
+		this.updateRoles();
+		
+		let roles = [];
+		for (let index = 0, count = this.Roles.length; index < count; ++index)
+		{
+			if (this.Roles[index].getWeight() === weight)
+				roles.push(this.Roles[index]);
+		}
+		
+		return roles;
 	};
 	OForm.prototype.haveRole = function(name)
 	{
@@ -210,10 +339,11 @@
 			let newRoleIndex = this.Roles.length;
 			for (let roleIndex = 0, roleCount = this.Roles.length; roleIndex < roleCount; ++roleIndex)
 			{
-				if (weight < this.Roles[roleIndex].getWeight())
+				let curWeight = this.Roles[roleIndex].getWeight();
+				if (weight < curWeight || (weight === curWeight && user.compare(this.Roles[roleIndex].getUserMaster()) < 0))
 				{
 					newRoleIndex = roleIndex;
-					break
+					break;
 				}
 			}
 			
@@ -290,10 +420,12 @@
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.OForm = OForm;
 	//---------------------------------------------interface export-----------------------------------------------------
-	OForm.prototype['asc_getAllRoles'] = OForm.prototype.getAllRoles;
-	OForm.prototype['asc_addRole']     = OForm.prototype.addRole;
-	OForm.prototype['asc_removeRole']  = OForm.prototype.removeRole;
-	OForm.prototype['asc_haveRole']    = OForm.prototype.haveRole;
-	OForm.prototype['asc_getRole']     = OForm.prototype.getRoleSettings;
+	OForm.prototype['asc_getAllRoles']  = OForm.prototype.getAllRoles;
+	OForm.prototype['asc_addRole']      = OForm.prototype.addRole;
+	OForm.prototype['asc_removeRole']   = OForm.prototype.removeRole;
+	OForm.prototype['asc_moveUpRole']   = OForm.prototype.moveUpRole;
+	OForm.prototype['asc_moveDownRole'] = OForm.prototype.moveDownRole;
+	OForm.prototype['asc_haveRole']     = OForm.prototype.haveRole;
+	OForm.prototype['asc_getRole']      = OForm.prototype.getRoleSettings;
 	
 })(window);
