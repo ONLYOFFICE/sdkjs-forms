@@ -193,6 +193,7 @@
 			let fieldGroup = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.FieldGroups.indexOf(fieldGroup))
 			{
+				fieldGroup.setParent(this.Class);
 				this.Class.FieldGroups.push(fieldGroup);
 				this.Class.onChangeFieldGroups();
 			}
@@ -203,6 +204,7 @@
 			let index      = this.Class.FieldGroups.indexOf(fieldGroup);
 			if (-1 !== index)
 			{
+				fieldGroup.setParent(null);
 				this.Class.FieldGroups.splice(index, 1);
 				this.Class.onChangeFieldGroups();
 			}

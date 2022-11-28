@@ -44,8 +44,14 @@
 		this.Weight = null;
 		this.Fields = [];
 		this.Users  = [];
+		
+		this.Parent = null;
 	}
 	AscFormat.InitClass(CFieldGroup, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
+	CFieldGroup.prototype.setParent = function(parent)
+	{
+		this.Parent = parent;
+	};
 	CFieldGroup.prototype.setWeight = function(value)
 	{
 		if (this.Weight === value)
@@ -53,6 +59,7 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupWeight(this, this.Weight, value));
 		this.Weight = value;
+		this.onChange();
 	};
 	CFieldGroup.prototype.getWeight = function()
 	{
@@ -65,6 +72,7 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveField(this, field.GetId(), true));
 		this.Fields.push(field);
+		this.onChange();
 	};
 	CFieldGroup.prototype.removeField = function(field)
 	{
@@ -77,6 +85,7 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveField(this, field.GetId(), false));
 		this.Fields.splice(index, 1);
+		this.onChange();
 	};
 	CFieldGroup.prototype.addUser = function(user)
 	{
@@ -85,6 +94,7 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveUser(this, user.GetId(), true));
 		this.Users.push(user);
+		this.onChange();
 	};
 	CFieldGroup.prototype.removeUser = function(user)
 	{
@@ -97,6 +107,14 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveUser(this, user.GetId(), false));
 		this.Users.splice(index, 1);
+		this.onChange();
+	};
+	CFieldGroup.prototype.onChange = function()
+	{
+		if (!this.Parent)
+			return;
+		
+		this.Parent.onChangeFieldGroups();
 	};
 	CFieldGroup.prototype.getFirstUser = function()
 	{

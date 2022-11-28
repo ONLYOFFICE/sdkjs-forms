@@ -142,6 +142,7 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldGroup(this, fieldGroup.GetId(), true));
 		this.FieldGroups.push(fieldGroup);
+		fieldGroup.setParent(this);
 		this.onChangeFieldGroups();
 	};
 	CDocument.prototype.removeFieldGroup = function(fieldGroup)
@@ -153,6 +154,7 @@
 		if (-1 === index)
 			return;
 		
+		fieldGroup.setParent(null);
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldGroup(this, fieldGroup.GetId(), false));
 		this.FieldGroups.splice(index, 1);
 		this.onChangeFieldGroups();

@@ -53,6 +53,7 @@
 		function(value)
 		{
 			this.Class.Weight = value;
+			this.Class.onChange();
 		},
 		false
 	);
@@ -74,6 +75,8 @@
 			let field = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.Fields.indexOf(field))
 				this.Class.Fields.push(field);
+			
+			this.Class.onChange();
 		},
 		function()
 		{
@@ -81,6 +84,8 @@
 			let index = this.Class.Fields.indexOf(field);
 			if (-1 !== index)
 				this.Class.Fields.splice(index, 1);
+			
+			this.Class.onChange();
 		}
 	);
 	window['AscDFH'].CChangesOFormFieldGroupAddRemoveField = CChangesOFormFieldGroupAddRemoveField;
@@ -101,6 +106,8 @@
 			let userMaster = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.Users.indexOf(userMaster))
 				this.Class.Users.push(userMaster);
+			
+			this.Class.onChange();
 		},
 		function()
 		{
@@ -108,6 +115,8 @@
 			let index      = this.Class.Fields.indexOf(userMaster);
 			if (-1 !== index)
 				this.Class.Users.splice(index, 1);
+			
+			this.Class.onChange();
 		}
 	);
 	window['AscDFH'].CChangesOFormFieldGroupAddRemoveUser = CChangesOFormFieldGroupAddRemoveUser;
