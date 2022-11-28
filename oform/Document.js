@@ -372,7 +372,7 @@
 		for (let index = 0, count = this.FieldGroups.length; index < count; ++index)
 		{
 			let curWeight = this.FieldGroups[index].getWeight();
-			if (max > curWeight)
+			if (max < curWeight)
 				max = curWeight;
 		}
 		

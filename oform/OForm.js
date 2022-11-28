@@ -241,6 +241,7 @@
 		
 		// Нельзя, чтобы групп не было вообще
 		let defaultGroup = new AscOForm.CFieldGroup();
+		defaultGroup.setWeight(this.Format.getMaxWeight() + 1);
 		this.Format.addFieldGroup(defaultGroup);
 		defaultGroup.addUser(this.Format.getDefaultUser());
 	};
