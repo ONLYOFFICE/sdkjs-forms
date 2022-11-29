@@ -252,16 +252,22 @@
 		window['AscDFH'].historyitem_OForm_Document_UserMaster,
 		function()
 		{
-			let user = AscCommon.g_oTableId.GetById(this.Key);
-			if (-1 === this.Class.UserMasters.indexOf(user))
-				this.Class.UserMasters.push(user);
+			let userMaster = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.UserMasters.indexOf(userMaster))
+			{
+				userMaster.setParent(this.Class);
+				this.Class.UserMasters.push(userMaster);
+			}
 		},
 		function()
 		{
-			let user  = AscCommon.g_oTableId.GetById(this.Key);
-			let index = this.Class.UserMasters.indexOf(user);
+			let userMaster = AscCommon.g_oTableId.GetById(this.Key);
+			let index      = this.Class.UserMasters.indexOf(userMaster);
 			if (-1 !== index)
+			{
+				userMaster.setParent(null);
 				this.Class.UserMasters.splice(index, 1);
+			}
 		}
 	);
 	window['AscDFH'].CChangesOFormDocumentUserMaster = CChangesOFormDocumentUserMaster;

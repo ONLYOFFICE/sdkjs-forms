@@ -53,6 +53,7 @@
 		function(Value)
 		{
 			this.Class.UserId = Value;
+			this.Class.onChange();
 		},
 		false
 	);
@@ -73,6 +74,7 @@
 		function(Value)
 		{
 			this.Class.Role = Value;
+			this.Class.onChange();
 		},
 		false
 	);
@@ -93,6 +95,7 @@
 		function(value)
 		{
 			this.Class.Color = value;
+			this.Class.onChange();
 		},
 		false
 	);

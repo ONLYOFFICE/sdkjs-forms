@@ -315,6 +315,7 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentUserMaster(this, userMaster.GetId(), true));
 		this.UserMasters.push(userMaster);
+		userMaster.setParent(this);
 	};
 	CDocument.prototype.removeUserMaster = function(userMaster)
 	{
@@ -322,6 +323,7 @@
 		if (-1 === index)
 			return;
 		
+		userMaster.setParent(null);
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentUserMaster(this, userMaster.GetId(), false));
 		this.UserMasters.splice(index, 1);
 	};
@@ -393,6 +395,20 @@
 		return max;
 	};
 	CDocument.prototype.onChangeFieldGroups = function()
+	{
+		if (!this.OForm)
+			return;
+		
+		this.OForm.onChangeRoles();
+	};
+	CDocument.prototype.onChangeFieldGroup = function(fieldGroup)
+	{
+		if (!this.OForm)
+			return;
+		
+		this.OForm.onChangeRoles();
+	};
+	CDocument.prototype.onChangeUserMaster = function(userMaster)
 	{
 		if (!this.OForm)
 			return;

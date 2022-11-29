@@ -50,8 +50,14 @@
 		
 		if (true === generateId)
 			this.setUserId(AscCommon.CreateGUID());
+		
+		this.Parent = null;
 	}
 	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
+	CUserMaster.prototype.setParent = function(parent)
+	{
+		this.Parent = parent;
+	};
 	CUserMaster.prototype.setUserId = function(userId)
 	{
 		if (userId === this.UserId)
@@ -59,6 +65,7 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterUserId(this, this.UserId, userId));
 		this.UserId = userId;
+		this.onChange();
 	};
 	CUserMaster.prototype.getUserId = function()
 	{
@@ -73,6 +80,7 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterRole(this, this.Role, role));
 		this.Role = role;
+		this.onChange();
 	};
 	CUserMaster.prototype.getRole = function()
 	{
@@ -87,6 +95,7 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterColor(this, oldColor, newColor));
 		this.Color = newColor;
+		this.onChange();
 	};
 	CUserMaster.prototype.getColor = function()
 	{
@@ -134,6 +143,13 @@
 			return 1;
 		
 		return 0;
+	};
+	CUserMaster.prototype.onChange = function()
+	{
+		if (!this.Parent)
+			return;
+		
+		this.Parent.onChangeUserMaster(this);
 	};
 	CUserMaster.prototype.readChildXml = function(name, reader)
 	{

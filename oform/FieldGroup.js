@@ -114,7 +114,7 @@
 		if (!this.Parent)
 			return;
 		
-		this.Parent.onChangeFieldGroups();
+		this.Parent.onChangeFieldGroup(this);
 	};
 	CFieldGroup.prototype.getFirstUser = function()
 	{
