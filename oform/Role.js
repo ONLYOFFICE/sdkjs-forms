@@ -123,14 +123,19 @@
 	{
 		return this.Index;
 	};
+	CRoleSettings.prototype.getFieldCount = function()
+	{
+		return 0;
+	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CRole         = CRole;
 	AscOForm.CRoleSettings = CRoleSettings;
 	//---------------------------------------------interface export-----------------------------------------------------
-	CRole.prototype['asc_getSettings']      = CRole.prototype.getSettings;
-	window['AscCommon']["CRoleSettings"]    = CRoleSettings;
-	CRoleSettings.prototype["asc_getName"]  = CRoleSettings.prototype.getName;
-	CRoleSettings.prototype["asc_putName"]  = CRoleSettings.prototype.setName;
-	CRoleSettings.prototype["asc_getColor"] = CRoleSettings.prototype.getAscColor;
-	CRoleSettings.prototype["asc_putColor"] = CRoleSettings.prototype.setAscColor;
+	CRole.prototype['asc_getSettings']           = CRole.prototype.getSettings;
+	window['AscCommon']["CRoleSettings"]         = CRoleSettings;
+	CRoleSettings.prototype["asc_getName"]       = CRoleSettings.prototype.getName;
+	CRoleSettings.prototype["asc_putName"]       = CRoleSettings.prototype.setName;
+	CRoleSettings.prototype["asc_getColor"]      = CRoleSettings.prototype.getAscColor;
+	CRoleSettings.prototype["asc_putColor"]      = CRoleSettings.prototype.setAscColor;
+	CRoleSettings.prototype["asc_getFieldCount"] = CRoleSettings.prototype.getFieldCount;
 })(window);
