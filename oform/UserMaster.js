@@ -68,6 +68,8 @@
 	{
 		if (role === this.Role)
 			return;
+		
+		role = null === role ? undefined : role;
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterRole(this, this.Role, role));
 		this.Role = role;

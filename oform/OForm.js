@@ -125,6 +125,35 @@
 		this.endAction();
 		return true;
 	};
+	OForm.prototype.editRole = function(name, roleSettings)
+	{
+		let role = this.getRole(name);
+		if (!role)
+			return false;
+		
+		let newName = roleSettings.getName();
+		if (undefined !== newName
+			&& null !== newName
+			&& name !== newName
+			&& this.haveRole(newName))
+			return false;
+		
+		if (!this.startAction(AscDFH.historyitem_OForm_EditRole))
+			return false;
+		
+		let userMaster = role.getUserMaster();
+		if (undefined !== roleSettings.getName())
+			userMaster.setRole(roleSettings.getName());
+		
+		let color = roleSettings.getColor();
+		if (null === color)
+			userMaster.setColor(color);
+		else if (undefined !== color)
+			userMaster.setColor(color.r, color.g, color.b);
+		
+		this.endAction();
+		return true;
+	};
 	OForm.prototype.moveUpRole = function(name)
 	{
 		let role = this.getRole(name);
@@ -423,6 +452,7 @@
 	OForm.prototype['asc_getAllRoles']  = OForm.prototype.getAllRoles;
 	OForm.prototype['asc_addRole']      = OForm.prototype.addRole;
 	OForm.prototype['asc_removeRole']   = OForm.prototype.removeRole;
+	OForm.prototype['asc_editRole']     = OForm.prototype.editRole;
 	OForm.prototype['asc_moveUpRole']   = OForm.prototype.moveUpRole;
 	OForm.prototype['asc_moveDownRole'] = OForm.prototype.moveDownRole;
 	OForm.prototype['asc_haveRole']     = OForm.prototype.haveRole;
