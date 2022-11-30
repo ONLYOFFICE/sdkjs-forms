@@ -272,7 +272,7 @@
 	/**
 	 * @returns {AscOForm.CUserMaster}
 	 */
-	CDocument.prototype.getDefaultUser = function()
+	CDocument.prototype.getDefaultUserMaster = function()
 	{
 		return this.DefaultUser;
 	};
@@ -393,6 +393,18 @@
 		}
 		
 		return max;
+	};
+	CDocument.prototype.getAllFieldsByUserMaster = function(userMaster)
+	{
+		let fields = [];
+		for (let index = 0, count = this.FieldMasters.length; index < count; ++index)
+		{
+			let fieldMaster = this.FieldMasters[index];
+			if (fieldMaster.checkUser(userMaster))
+				fields.push(fieldMaster);
+		}
+		
+		return fields;
 	};
 	CDocument.prototype.onChangeFieldGroups = function()
 	{

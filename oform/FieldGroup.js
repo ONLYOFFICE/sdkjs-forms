@@ -109,12 +109,42 @@
 		this.Users.splice(index, 1);
 		this.onChange();
 	};
+	CFieldGroup.prototype.clear = function()
+	{
+		while (this.Users.length)
+		{
+			this.removeUser(this.Users[this.Users.length - 1]);
+		}
+		
+		while (this.Fields.length)
+		{
+			this.removeField(this.Fields[this.Fields.length - 1]);
+		}
+	};
 	CFieldGroup.prototype.onChange = function()
 	{
 		if (!this.Parent)
 			return;
 		
 		this.Parent.onChangeFieldGroup(this);
+	};
+	CFieldGroup.prototype.getAllFields = function()
+	{
+		let fields = this.Fields.slice();
+		if (this.Users.length && this.Parent)
+		{
+			for (let index = 0, count = this.Users.length; index < count; ++index)
+			{
+				let userFields = this.Parent.getAllFieldsByUserMaster(this.Users[index]);
+				for (let fieldIndex = 0, fieldCount = userFields.length; fieldIndex < fieldCount; ++fieldIndex)
+				{
+					if (-1 === fields.indexOf(userFields[fieldIndex]))
+						fields.push(userFields[fieldIndex]);
+				}
+			}
+		}
+		
+		return fields;
 	};
 	CFieldGroup.prototype.getFirstUser = function()
 	{

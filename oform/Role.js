@@ -49,8 +49,16 @@
 	CRole.prototype.getSettings = function()
 	{
 		let r = new CRoleSettings();
-		r.setName(this.UserMaster.getRole());
-		r.setColor(this.UserMaster.getColor());
+		
+		if (this.UserMaster)
+		{
+			r.setName(this.UserMaster.getRole());
+			r.setColor(this.UserMaster.getColor());
+		}
+
+		if (this.FieldGroup)
+			r.setFieldCount(this.FieldGroup.getAllFields().length)
+
 		return r;
 	};
 	CRole.prototype.getRole = function()
@@ -70,6 +78,10 @@
 		if (this.FieldGroup)
 			this.FieldGroup.setWeight(weight);
 	};
+	CRole.prototype.getFieldGroup = function()
+	{
+		return this.FieldGroup;
+	};
 	
 	/**
 	 * Класс для задания настроек роли из интерфейса
@@ -77,9 +89,9 @@
 	 */
 	function CRoleSettings()
 	{
-		this.Name  = "";
-		this.Color = null;
-		this.Index = 0;
+		this.Name       = "";
+		this.Color      = null;
+		this.FieldCount = 0;
 	}
 	CRoleSettings.prototype.getName = function()
 	{
@@ -115,17 +127,13 @@
 	{
 		return (!!this.Color);
 	};
-	CRoleSettings.prototype.setIndex = function(index)
+	CRoleSettings.prototype.setFieldCount = function(count)
 	{
-		this.Index = index;
-	};
-	CRoleSettings.prototype.getIndex = function()
-	{
-		return this.Index;
+		this.FieldCount = count;
 	};
 	CRoleSettings.prototype.getFieldCount = function()
 	{
-		return 0;
+		return this.FieldCount;
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CRole         = CRole;

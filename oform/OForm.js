@@ -42,7 +42,7 @@
 	function OForm(document)
 	{
 		this.Format      = new AscOForm.CDocument(this);
-		this.DefaultUser = this.Format.getDefaultUser();
+		this.DefaultUser = this.Format.getDefaultUserMaster();
 		this.Document    = document;
 		
 		// Сейчас у нас роль - это ровно один userMaster и ровно одна группа полей
@@ -111,16 +111,72 @@
 	};
 	OForm.prototype.removeRole = function(name, delegateName)
 	{
+		this.updateRoles();
+		
 		let roleIndex = this.getRoleIndex(name);
 		if (-1 === roleIndex)
 			return false;
 		
+		let userMaster = this.Roles[roleIndex].getUserMaster();
+		let fieldGroup = this.Roles[roleIndex].getFieldGroup();
+		
+		let fields = fieldGroup.getAllFields();
+		
+		
 		let delegateIndex = this.getRoleIndex(delegateName);
+		
+		// На самом деле можно убрать эту проверку, но тогда мы просто удалим группу по умолчнию и заново её добавим
+		if (this.Roles.length <= 1
+			&& this.Roles[roleIndex].getUserMaster() === this.Format.getDefaultUserMaster()
+			&& -1 === delegateIndex)
+			return false;
 			
 		if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
 			return false;
 		
+		fieldGroup.clear();
+		this.Format.removeFieldGroup(fieldGroup);
+		this.Format.removeUserMaster(userMaster);
 		
+		if (fields.length > 0)
+		{
+			// TODO: При удалении все поля переназначить на заданную роль
+			let delegateUserMaster, delegateFieldGroup;
+			if (-1 === delegateIndex || delegateIndex === roleIndex)
+			{
+				let defaultRole = this.getDefaultRole();
+				if (defaultRole)
+				{
+					delegateUserMaster = defaultRole.getUserMaster();
+					delegateFieldGroup = defaultRole.getFieldGroup();
+				}
+				else
+				{
+					let defaultGroup = new AscOForm.CFieldGroup();
+					defaultGroup.setWeight(this.Format.getMaxWeight() + 1);
+					this.Format.addFieldGroup(defaultGroup);
+					defaultGroup.addUser(this.Format.getDefaultUserMaster());
+					
+					delegateUserMaster = this.Format.getDefaultUserMaster();
+					delegateFieldGroup = defaultGroup;
+				}
+			}
+			else
+			{
+				delegateUserMaster = this.Roles[delegateIndex].getUserMaster();
+				delegateFieldGroup = this.Roles[delegateIndex].getFieldGroup();
+			}
+			
+			for (let index = 0, count = fields.length; index < count; ++index)
+			{
+				let fieldMaster = fields[index];
+				fieldMaster.removeUser(userMaster);
+				fieldMaster.addUser(delegateUserMaster);
+			}
+			
+			delegateFieldGroup.addUser(delegateUserMaster);
+			this.Format.addFieldGroup(delegateFieldGroup);
+		}
 		
 		this.endAction();
 		return true;
@@ -319,7 +375,7 @@
 	{
 		this.updateRoles();
 		
-		let defaultUser = this.Format.getDefaultUser();
+		let defaultUser = this.Format.getDefaultUserMaster();
 		for (let index = 0, count = this.Roles.length; index < count; ++index)
 		{
 			if (defaultUser === this.Roles[index].getUserMaster())
@@ -402,7 +458,7 @@
 		let defaultGroup = new AscOForm.CFieldGroup();
 		defaultGroup.setWeight(this.Format.getMaxWeight() + 1);
 		this.Format.addFieldGroup(defaultGroup);
-		defaultGroup.addUser(this.Format.getDefaultUser());
+		defaultGroup.addUser(this.Format.getDefaultUserMaster());
 	};
 	OForm.prototype.onEndLoad = function()
 	{

@@ -112,6 +112,16 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveSigner(this, user.GetId(), false));
 		this.Signers.splice(index, 1);
 	};
+	CFieldMaster.prototype.checkUser = function(user)
+	{
+		for (let index = 0, count = this.Users.length; index < count; ++index)
+		{
+			if (this.Users[index] === user)
+				return true;
+		}
+		
+		return false;
+	};
 	CFieldMaster.prototype.readAttrXml = function(name, reader)
 	{
 		switch (name)
