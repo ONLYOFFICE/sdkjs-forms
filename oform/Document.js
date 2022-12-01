@@ -342,6 +342,16 @@
 	{
 		return this.UserMasters;
 	};
+	CDocument.prototype.createFieldMaster = function(id)
+	{
+		let fieldMaster = new AscOForm.CFieldMaster(!id);
+		
+		if (id)
+			fieldMaster.setFieldId(id);
+		
+		this.addFieldMaster(fieldMaster);
+		return fieldMaster;
+	};
 	CDocument.prototype.addFieldMaster = function(fieldMaster)
 	{
 		if (-1 !== this.FieldMasters.indexOf(fieldMaster))

@@ -61,7 +61,7 @@
 	 */
 	OForm.prototype.getFormat = function()
 	{
-		return this.Document;
+		return this.Format;
 	};
 	OForm.prototype.getAllRoles = function()
 	{

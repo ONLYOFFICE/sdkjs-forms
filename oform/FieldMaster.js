@@ -93,7 +93,7 @@
 	};
 	CFieldMaster.prototype.removeUser = function(user)
 	{
-		let index = this.User.indexOf(user);
+		let index = this.Users.indexOf(user);
 		if (-1 === index)
 			return;
 
