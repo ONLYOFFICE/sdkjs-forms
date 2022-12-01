@@ -55,6 +55,22 @@
 	{
 		this.Field = logicField;
 	};
+	CFieldMaster.prototype.clone = function()
+	{
+		let fm = new CFieldMaster(true);
+		
+		for (let index = 0, count = this.Users.length; index < count; ++index)
+		{
+			fm.addUser(this.Users[index]);
+		}
+		
+		for (let index = 0, count = this.Signers.length; index < count; ++index)
+		{
+			fm.addSigner(this.Signers[index]);
+		}
+		
+		return fm;
+	};
 	CFieldMaster.prototype.setFieldId = function(fieldId)
 	{
 		if (fieldId === this.FieldId)

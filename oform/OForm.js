@@ -140,7 +140,6 @@
 		
 		if (fields.length > 0)
 		{
-			// TODO: При удалении все поля переназначить на заданную роль
 			let delegateUserMaster, delegateFieldGroup;
 			if (-1 === delegateIndex || delegateIndex === roleIndex)
 			{
