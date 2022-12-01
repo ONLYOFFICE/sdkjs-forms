@@ -436,7 +436,12 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (formPr.GetFixed())
 		{
 			logicDocument.Recalculate(true);
-			form.ConvertFormToFixed();
+			let drawing = form.ConvertFormToFixed();
+			
+			let drawingPr = new Asc.asc_CImgProperty();
+			drawingPr.asc_putWrappingStyle(Asc.c_oAscWrapStyle2.Square);
+			drawing.Set_Props(drawingPr);
+			
 			form.MoveCursorToContentControl(false);
 		}
 	}
