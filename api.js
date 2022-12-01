@@ -84,7 +84,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 
 			if (oFormPr)
 			{
-				oCC.SetFormPr(oFormPr);
+				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
 				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
 			}
@@ -274,7 +274,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 
 			if (oCC && oFormPr)
 			{
-				oCC.SetFormPr(oFormPr);
+				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
 				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
 			}
@@ -331,7 +331,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 
 				if (formPr)
 				{
-					oCC.SetFormPr(formPr);
+					private_ApplyFormPr(oCC, formPr, oLogicDocument);
 					oCC.UpdatePlaceHolderTextPrForForm();
 					private_CheckFormKey(oCC, oLogicDocument);
 				}
@@ -425,6 +425,20 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		key = keyGenerator.GetNewKey(form);
 		formPr.SetKey(key);
 		form.SetFormPr(formPr);
+	}
+	function private_ApplyFormPr(form, formPr, logicDocument)
+	{
+		if (!form || !formPr)
+			return;
+		
+		form.SetFormPr(formPr);
+		
+		if (formPr.GetFixed())
+		{
+			logicDocument.Recalculate(true);
+			form.ConvertFormToFixed();
+			form.MoveCursorToContentControl(false);
+		}
 	}
 
 })(window, window.document);
