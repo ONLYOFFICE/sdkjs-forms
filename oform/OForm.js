@@ -480,6 +480,7 @@
 		this.Format.removeUnusedFieldMasters();
 		this.Format.correctFieldMasters(this.getDocument());
 		this.correctFieldGroups();
+		this.updateRoles();
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
