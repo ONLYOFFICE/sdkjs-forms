@@ -104,6 +104,13 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveUser(this, user.GetId(), false));
 		this.Users.splice(index, 1);
 	};
+	CFieldMaster.prototype.clearUsers = function()
+	{
+		while (this.Users.length)
+		{
+			this.removeUser(this.Users[this.Users.length - 1]);
+		}
+	};
 	CFieldMaster.prototype.getUserCount = function()
 	{
 		return this.Users.length;
@@ -144,7 +151,6 @@
 	};
 	CFieldMaster.prototype.isUseInDocument = function()
 	{
-		return true;
 		return (this.Field
 			&& this.Field.IsUseInDocument()
 			&& this === this.Field.GetFieldMaster());
