@@ -479,6 +479,15 @@
 				this.removeFieldMasterByIndex(fieldIndex);
 		}
 	};
+	CDocument.prototype.removeUnusedFieldMasters = function()
+	{
+		for (let fieldIndex = this.FieldMasters.length - 1; fieldIndex >= 0; --fieldIndex)
+		{
+			let fieldMaster = this.FieldMasters[fieldIndex];
+			if (!fieldMaster.isUseInDocument())
+				this.removeFieldMasterByIndex(fieldIndex);
+		}
+	};
 	
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CDocument = CDocument;
