@@ -478,6 +478,8 @@
 	OForm.prototype.onEndAction = function()
 	{
 		this.Format.removeUnusedFieldMasters();
+		this.Format.correctFieldMasters(this.getDocument());
+		this.correctFieldGroups();
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
@@ -500,9 +502,7 @@
 		if (!logicDocument)
 			return;
 		
-		this.Format.correctFieldMasters(this.getDocument());
-		this.correctFieldGroups();
-		this.updateRoles();
+		this.onEndAction();
 		
 		logicDocument.UpdateInterface();
 		logicDocument.FinalizeAction();

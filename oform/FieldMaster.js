@@ -62,18 +62,22 @@
 	CFieldMaster.prototype.clone = function()
 	{
 		let fm = new CFieldMaster(true);
-		
+		this.copyTo(fm);
+		return fm;
+	};
+	CFieldMaster.prototype.copyTo = function(fm)
+	{
+		fm.clearUsers();
 		for (let index = 0, count = this.Users.length; index < count; ++index)
 		{
 			fm.addUser(this.Users[index]);
 		}
 		
+		fm.clearSigners();
 		for (let index = 0, count = this.Signers.length; index < count; ++index)
 		{
 			fm.addSigner(this.Signers[index]);
 		}
-		
-		return fm;
 	};
 	CFieldMaster.prototype.setFieldId = function(fieldId)
 	{
@@ -138,6 +142,13 @@
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveSigner(this, user.GetId(), false));
 		this.Signers.splice(index, 1);
+	};
+	CFieldMaster.prototype.clearSigners = function()
+	{
+		while (this.Signers.length)
+		{
+			this.removeSigner(this.Signers[this.Signers.length - 1]);
+		}
 	};
 	CFieldMaster.prototype.checkUser = function(user)
 	{
