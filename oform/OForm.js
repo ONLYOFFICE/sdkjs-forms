@@ -462,6 +462,7 @@
 	OForm.prototype.onEndLoad = function()
 	{
 		this.NeedUpdateRoles = true;
+		this.Format.correctFieldMasters(this.getDocument());
 		this.correctFieldGroups();
 		this.updateRoles();
 	};
@@ -495,6 +496,7 @@
 		if (!logicDocument)
 			return;
 		
+		this.Format.correctFieldMasters(this.getDocument());
 		this.correctFieldGroups();
 		this.updateRoles();
 		

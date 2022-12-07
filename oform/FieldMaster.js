@@ -55,6 +55,10 @@
 	{
 		this.Field = logicField;
 	};
+	CFieldMaster.prototype.getLogicField = function()
+	{
+		return this.Field;
+	};
 	CFieldMaster.prototype.clone = function()
 	{
 		let fm = new CFieldMaster(true);
@@ -137,6 +141,13 @@
 		}
 		
 		return false;
+	};
+	CFieldMaster.prototype.isUseInDocument = function()
+	{
+		return true;
+		return (this.Field
+			&& this.Field.IsUseInDocument()
+			&& this === this.Field.GetFieldMaster());
 	};
 	CFieldMaster.prototype.readAttrXml = function(name, reader)
 	{

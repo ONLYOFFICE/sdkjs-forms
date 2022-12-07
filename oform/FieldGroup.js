@@ -130,7 +130,13 @@
 	};
 	CFieldGroup.prototype.getAllFields = function()
 	{
-		let fields = this.Fields.slice();
+		let fields = [];
+		for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
+		{
+			if (this.Fields[index].isUseInDocument())
+				fields.push(this.Fields[index]);
+		}
+		
 		if (this.Users.length && this.Parent)
 		{
 			for (let index = 0, count = this.Users.length; index < count; ++index)
@@ -138,7 +144,7 @@
 				let userFields = this.Parent.getAllFieldsByUserMaster(this.Users[index]);
 				for (let fieldIndex = 0, fieldCount = userFields.length; fieldIndex < fieldCount; ++fieldIndex)
 				{
-					if (-1 === fields.indexOf(userFields[fieldIndex]))
+					if (-1 === fields.indexOf(userFields[fieldIndex]) && userFields[fieldIndex].isUseInDocument())
 						fields.push(userFields[fieldIndex]);
 				}
 			}

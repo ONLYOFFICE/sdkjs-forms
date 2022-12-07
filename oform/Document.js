@@ -369,6 +369,15 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldMaster(this, fieldMaster.GetId(), false));
 		this.FieldMasters.splice(index, 1);
 	};
+	CDocument.prototype.removeFieldMasterByIndex = function(index)
+	{
+		if (index < 0 || index >= this.FieldMasters.length)
+			return;
+		
+		let fieldMaster = this.FieldMasters[index];
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFieldMaster(this, fieldMaster.GetId(), false));
+		this.FieldMasters.splice(index, 1);
+	};
 	CDocument.prototype.getFieldMasterCount = function()
 	{
 		return this.FieldMasters.length;
@@ -436,6 +445,39 @@
 			return;
 		
 		this.OForm.onChangeRoles();
+	};
+	CDocument.prototype.correctFieldMasters = function(logicDocument)
+	{
+		if (!logicDocument)
+			return;
+		
+		let formManager = logicDocument.GetFormsManager();
+		let allForms    = formManager.GetAllForms();
+		
+		for (let index = 0, count = allForms.length; index < count; ++index)
+		{
+			let form = allForms[index];
+			let fieldMaster = form.GetFieldMaster();
+			if (!fieldMaster)
+			{
+				// TODO: Мы не можем здесь генерировать id, т.к. данная функция вызывается на открытии
+				// и тогда у разных клиентов будут разные id. Поэтому, пока лучше вообще такие поля будут без id
+				fieldMaster = new AscOForm.CFieldMaster(false);
+				this.addFieldMaster(fieldMaster);
+				fieldMaster.addUser(this.getDefaultUserMaster());
+				form.SetFieldMaster(fieldMaster);
+			}
+			fieldMaster.setLogicField(form);
+		}
+		
+		for (let fieldIndex = this.FieldMasters.length - 1; fieldIndex >= 0; --fieldIndex)
+		{
+			let fieldMaster = this.FieldMasters[fieldIndex];
+			
+			let form = fieldMaster.getLogicField();
+			if (!form || form.GetFieldMaster() !== fieldMaster)
+				this.removeFieldMasterByIndex(fieldIndex);
+		}
 	};
 	
 	//--------------------------------------------------------export----------------------------------------------------
