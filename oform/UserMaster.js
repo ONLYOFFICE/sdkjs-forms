@@ -34,8 +34,6 @@
 
 (function(window)
 {
-	const DEFAULT_COLOR = AscWord.CDocumentColor(128, 128, 128);
-	
 	/**
 	 * @param {boolean} [generateId=false]
 	 * @constructor
@@ -99,10 +97,7 @@
 	};
 	CUserMaster.prototype.getColor = function()
 	{
-		if (!this.Color)
-			return DEFAULT_COLOR;
-		
-		return this.Color;
+		return this.Color ? this.Color : null;
 	};
 	CUserMaster.prototype.initDefaultUser = function()
 	{

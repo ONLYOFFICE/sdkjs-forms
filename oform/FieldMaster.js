@@ -126,6 +126,18 @@
 		
 		return this.Users[index];
 	};
+	CFieldMaster.prototype.getFirstUser = function()
+	{
+		let user = null;
+		for (let userIndex = 0, userCount = this.getUserCount(); userIndex < userCount; ++userIndex)
+		{
+			let curUser = this.getUser(userIndex);
+			if (!user || user.compare(curUser) < 0)
+				user = curUser;
+		}
+		
+		return user;
+	};
 	CFieldMaster.prototype.addSigner = function(user)
 	{
 		if (-1 !== this.Signers.indexOf(user))

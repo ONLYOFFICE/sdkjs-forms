@@ -44,6 +44,7 @@
 		this.Format      = new AscOForm.CDocument(this);
 		this.DefaultUser = this.Format.getDefaultUserMaster();
 		this.Document    = document;
+		this.CurrentUser = null;
 		
 		// Сейчас у нас роль - это ровно один userMaster и ровно одна группа полей
 		this.Roles = [];
@@ -62,6 +63,22 @@
 	OForm.prototype.getFormat = function()
 	{
 		return this.Format;
+	};
+	OForm.prototype.setCurrentRole = function(roleName)
+	{
+		let role = this.getRole(roleName);
+		if (!role)
+			return;
+			
+		this.CurrentUser = role.getUserMaster();
+	};
+	OForm.prototype.clearCurrentRole = function()
+	{
+		this.CurrentUser = null;
+	};
+	OForm.prototype.getCurrentUserMaster = function()
+	{
+		return this.CurrentUser;
 	};
 	OForm.prototype.getAllRoles = function()
 	{
@@ -472,7 +489,7 @@
 		let api;
 		if (!logicDocument || !(api = logicDocument.GetApi()))
 			return;
-
+		
 		api.sendEvent("asc_onUpdateOFormRoles", this.Roles);
 	};
 	OForm.prototype.onEndAction = function()

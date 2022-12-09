@@ -166,13 +166,9 @@
 		{
 			for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
 			{
-				let fieldMaster = this.Fields[fieldIndex];
-				for (let userIndex = 0, userCount = fieldMaster.getUserCount(); userIndex < userCount; ++userIndex)
-				{
-					let curUser = fieldMaster.getUser(userIndex);
-					if (!user || user.compare(curUser) < 0)
-						user = curUser;
-				}
+				let curUser = this.Fields[fieldIndex].getFirstUser();
+				if (!user || user.compare(curUser) < 0)
+					user = curUser;
 			}
 		}
 		return user;
