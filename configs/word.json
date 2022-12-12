@@ -8,19 +8,19 @@
       "apiBuilder.js",
       "oform/OForm.js",
       "oform/Role.js",
-      "oform/Document.js",
-      "oform/FieldGroup.js",
-      "oform/FieldMaster.js",
-      "oform/User.js",
-      "oform/UserMaster.js",
       "oform/XmlFile.js",
       "oform/XmlFormat.js",
-      "oform/changes/DictionaryBase.js",
-      "oform/changes/DocumentChanges.js",
-      "oform/changes/FieldGroupChanges.js",
-      "oform/changes/FieldMasterChanges.js",
-      "oform/changes/UserChanges.js",
-      "oform/changes/UserMasterChanges.js"
+      "oform/format/Document.js",
+      "oform/format/FieldGroup.js",
+      "oform/format/FieldMaster.js",
+      "oform/format/User.js",
+      "oform/format/UserMaster.js",
+      "oform/format/changes/DictionaryBase.js",
+      "oform/format/changes/DocumentChanges.js",
+      "oform/format/changes/FieldGroupChanges.js",
+      "oform/format/changes/FieldMasterChanges.js",
+      "oform/format/changes/UserChanges.js",
+      "oform/format/changes/UserMasterChanges.js"
     ]
   }
 }
