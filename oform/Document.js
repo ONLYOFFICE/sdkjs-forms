@@ -47,6 +47,7 @@
 		
 		this.DefaultUser = new AscOForm.CUserMaster();
 		this.DefaultUser.initDefaultUser();
+		this.DefaultUser.setParent(this);
 
 		// Форматная часть
 		this.Author      = null;
@@ -445,6 +446,7 @@
 			return;
 		
 		this.OForm.onChangeRoles();
+		this.OForm.onChangeRoleColor();
 	};
 	CDocument.prototype.correctFieldMasters = function(logicDocument)
 	{

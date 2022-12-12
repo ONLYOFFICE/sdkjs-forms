@@ -49,6 +49,7 @@
 		// Сейчас у нас роль - это ровно один userMaster и ровно одна группа полей
 		this.Roles = [];
 		this.NeedUpdateRoles = true;
+		this.NeedRedraw      = true;
 	}
 	/**
 	 * @returns {AscWord.CDocument}
@@ -404,6 +405,18 @@
 	{
 		this.NeedUpdateRoles = true;
 	};
+	OForm.prototype.onChangeRoleColor = function()
+	{
+		this.NeedRedraw = true;
+	};
+	OForm.prototype.checkRedraw = function()
+	{
+		if (!this.NeedRedraw)
+			return;
+		
+		this.NeedRedraw = false;
+		this.Document.Redraw();
+	};
 	OForm.prototype.updateRoles = function()
 	{
 		if (!this.NeedUpdateRoles)
@@ -498,6 +511,7 @@
 		this.Format.correctFieldMasters(this.getDocument());
 		this.correctFieldGroups();
 		this.updateRoles();
+		this.checkRedraw();
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
