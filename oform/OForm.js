@@ -195,6 +195,7 @@
 			this.Format.addFieldGroup(delegateFieldGroup);
 		}
 		
+		this.NeedRedraw = true;
 		this.endAction();
 		return true;
 	};
