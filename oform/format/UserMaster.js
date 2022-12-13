@@ -149,30 +149,6 @@
 		
 		this.Parent.onChangeUserMaster(this);
 	};
-	CUserMaster.prototype.readChildXml = function(name, reader)
-	{
-		let bRead = false;
-		switch (name)
-		{
-			case "Id":
-			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setUserId(oNode.text);
-				bRead = true;
-				break;
-			}
-			case "Role":
-			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setRole(oNode.text);
-				bRead = true;
-				break;
-			}
-		}
-		return bRead;
-	};
 	CUserMaster.prototype.toXml = function(writer)
 	{
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
