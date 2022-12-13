@@ -107,15 +107,13 @@
 	};
 	CUserMaster.prototype.compare = function(user)
 	{
-		if (this.Role < user.Role)
-			return -1;
-		else if (this.Role > user.Role)
-			return 1;
+		let res = AscCommon.CompareStrings(this.Role, user.Role);
+		if (0 !== res)
+			return res;
 		
-		if (this.UserId < user.UserId)
-			return -1;
-		else if (this.UserId > user.UserId)
-			return 1;
+		res = AscCommon.CompareStrings(this.UserId, user.UserId);
+		if (0 !== res)
+			return res;
 		
 		if (!this.Color && !user.Color)
 			return 0;
@@ -138,6 +136,10 @@
 			return 1;
 		
 		return 0;
+	};
+	CUserMaster.prototype.isEqual = function(user)
+	{
+		return (0 === this.compare(user));
 	};
 	CUserMaster.prototype.onChange = function()
 	{
@@ -173,11 +175,57 @@
 	CUserMaster.prototype.toXml = function(writer)
 	{
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("UserMaster");
+		writer.WriteXmlNodeStart("userMaster");
 		writer.WriteXmlAttributesEnd();
-		writer.WriteXmlNodeWithText("Id", this.UserId);
-		writer.WriteXmlNodeWithText("Role", this.Role);
-		writer.WriteXmlNodeEnd("UserMaster");
+		
+		if (this.UserId)
+			writer.WriteXmlNodeWithText("id", this.UserId);
+		
+		if (this.Role)
+			writer.WriteXmlNodeWithText("role", this.Role);
+		
+		if (this.Color)
+		{
+			writer.WriteXmlNodeWithText
+			// TODO: fix me
+		}
+		
+		writer.WriteXmlNodeEnd("userMaster");
+	};
+	CUserMaster.fromXml = function(reader)
+	{
+		if (!reader.ReadNextNode())
+			return null;
+		
+		let um = new CUserMaster();
+		
+		let name = reader.GetNameNoNS();
+		if ("userMaster" === name)
+		{
+			let depth = reader.GetDepth();
+			while (reader.ReadNextSiblingNode(depth))
+			{
+				name = reader.GetNameNoNS();
+				switch(reader.GetNameNoNS())
+				{
+					case "id":
+						um.setUserId(reader.GetTextDecodeXml());
+						break;
+					case "role":
+						um.setRole(reader.GetTextDecodeXml());
+						break;
+					case "color":
+						
+						break;
+				}
+			}
+		}
+		else
+		{
+			return null;
+		}
+		
+		return um;
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CUserMaster = CUserMaster;
