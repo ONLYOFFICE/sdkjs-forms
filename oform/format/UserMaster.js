@@ -122,17 +122,18 @@
 		else if (this.Color && !user.Color)
 			return 1;
 		
-		if (color.r < otherColor.r)
+		
+		if (this.Color.r < user.Color.r)
 			return -1;
-		else if (color.r > otherColor.r)
+		else if (this.Color.r > user.Color.r)
 			return 1;
-		else if (color.g < otherColor.g)
+		else if (this.Color.g < user.Color.g)
 			return -1;
-		else if (color.g > otherColor.g)
+		else if (this.Color.g > user.Color.g)
 			return 1;
-		else if (color.b < otherColor.b)
+		else if (this.Color.b < user.Color.b)
 			return -1;
-		else if (color.b > otherColor.b)
+		else if (this.Color.b > user.Color.b)
 			return 1;
 		
 		return 0;
@@ -186,8 +187,9 @@
 		
 		if (this.Color)
 		{
-			writer.WriteXmlNodeWithText
-			// TODO: fix me
+			writer.WriteXmlNodeStart("color");
+			writer.WriteXmlNullableAttributeStringEncode("val", this.Color.ToHexColor());
+			writer.WriteXmlAttributesEnd(true);
 		}
 		
 		writer.WriteXmlNodeEnd("userMaster");
@@ -215,7 +217,16 @@
 						um.setRole(reader.GetTextDecodeXml());
 						break;
 					case "color":
-						
+						while (reader.MoveToNextAttribute())
+						{
+							if ("val" === reader.GetNameNoNS())
+							{
+								let color = new AscWord.CDocumentColor();
+								color.SetFromHexColor(reader.GetValueDecodeXml());
+								um.setColor(color.r, color.g, color.b);
+							}
+						}
+						reader.ReadTillEnd();
 						break;
 				}
 			}
