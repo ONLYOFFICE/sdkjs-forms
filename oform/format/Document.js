@@ -171,104 +171,61 @@
 		
 		return this.FieldGroups[index];
 	};
-	CDocument.prototype.readChildXml = function(name, reader)
+	CDocument.prototype.fromXml = function()
 	{
-		// TODO: fix me
-		switch (name)
+		// TODO: Author, Date
+		if (!reader.ReadNextNode() || "document" !== reader.GetNameNoNS())
+			return false;
+		
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
 		{
-			case "Author":
+			switch(reader.GetNameNoNS())
 			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				let sAuthor = oNode.attributes["id"];
-				if (sAuthor)
-				{
-					this.setAuthor(sAuthor);
-				}
-				break;
-			}
-			case "Date":
-			{
-				let oDate = new CFormDate();
-				oDate.fromXml(reader);
-				this.setDate(oDate);
-				break;
-			}
-			case "Description":
-			{
-				
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setDescription(oNode.text);
-				break;
-			}
-			case "Type":
-			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setType(oNode.text);
-				break;
-			}
-			case "Application":
-			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setApplication(oNode.text);
-				break;
-			}
-			case "Id":
-			{
-				let oNode = new CT_XmlNode();
-				oNode.fromXml(reader);
-				this.setDocumentId(oNode.text);
-				break;
-			}
-			case "FieldsGroup":
-			{
-				let oFieldsGroup = new CFieldsGroup();
-				oFieldsGroup.fromXml(reader);
-				this.addFieldsGroups(oFieldsGroup);
-				break;
+				case "author":
+					break;
+				case "date":
+					break;
+				case "description":
+					this.setDescription(reader.GetValueDecodeXml());
+					break;
+				case "type":
+					this.setType(reader.GetValueDecodeXml());
+					break;
+				case "application":
+					this.setApplication(reader.GetValueDecodeXml());
+					break;
+				case "id":
+					this.setDocumentId(reader.GetValueDecodeXml());
+					break;
+				case "fieldGroup":
+					this.addFieldMaster(AscOForm.CFieldGroup.fromXml(reader));
+					break;
 			}
 		}
+		
+		return true;
 	};
 	CDocument.prototype.toXml = function(writer)
 	{
-		// TODO: fix me
-		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("Document");
-		writer.WriteXmlAttributeString("xmlns:r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+		writer.WriteXmlHeader();
+		writer.WriteXmlNodeStart("document");
+		writer.WriteXmlRelationshipsNS();
 		writer.WriteXmlAttributesEnd();
-		if (this.Author)
-		{
-			let oNode              = new CT_XmlNode();
-			oNode.attributes["id"] = this.Author;
-			oNode.toXml(writer, "Author");
-		}
-		if (this.Date)
-		{
-			this.Date.toXml(writer);
-		}
-		let oDescriptionNode  = new CT_XmlNode();
-		oDescriptionNode.text = this.Description;
-		oDescriptionNode.toXml(writer, "Description");
 		
-		let oTypeNode  = new CT_XmlNode();
-		oTypeNode.text = this.Type;
-		oTypeNode.toXml(writer, "Type");
+		// TODO: Author, Date
 		
-		let oAppNode  = new CT_XmlNode();
-		oAppNode.text = this.Application;
-		oAppNode.toXml(writer, "Application");
+		writer.WriteXmlNodeWithText("description", this.getDescription());
+		writer.WriteXmlNodeWithText("type", this.getType());
+		writer.WriteXmlNodeWithText("application", this.getApplication());
+		writer.WriteXmlNodeWithText("id", this.getDocumentId());
 		
-		let oIdNode  = new CT_XmlNode();
-		oIdNode.text = this.DocumentId;
-		oIdNode.toXml(writer, "Id");
-		for (let nFG = 0; nFG < this.FieldsGroups.length; ++nFG)
+		for (let fgIndex = 0, fgCount = this.FieldGroups.length; fgIndex < fgCount; ++fgIndex)
 		{
-			this.FieldsGroups[nFG].toXml(writer);
+			this.FieldsGroups[fgIndex].toXml(writer);
 		}
-		writer.WriteXmlNodeEnd("Document");
+		
+		writer.WriteXmlNodeEnd("document");
 	};
 	/**
 	 * @returns {AscOForm.CUserMaster}

@@ -189,11 +189,6 @@
 		}
 		return user;
 	};
-	CFieldGroup.prototype.readChildXml = function(name, reader)
-	{
-		// TODO: implement
-		return false;
-	};
 	CFieldGroup.prototype.toXml = function(writer, xmlFormat)
 	{
 		writer.WriteXmlNodeStart("fieldGroup");

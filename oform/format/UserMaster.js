@@ -151,7 +151,7 @@
 	};
 	CUserMaster.prototype.toXml = function(writer)
 	{
-		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
+		writer.WriteXmlHeader();
 		writer.WriteXmlNodeStart("userMaster");
 		writer.WriteXmlAttributesEnd();
 		

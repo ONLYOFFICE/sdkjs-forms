@@ -34,8 +34,6 @@
 
 (function(window)
 {
-	AscCommonWord.g_sXmlHeader = AscCommonWord.g_sXmlHeader || '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
-	
 	/**
 	 * Класс представляющий отдельный файл в xml-структуре вместе со своими рельсами
 	 * @param name {string}
