@@ -87,6 +87,14 @@
 		this.Fields.splice(index, 1);
 		this.onChange();
 	};
+	CFieldGroup.prototype.getFieldCount = function()
+	{
+		return this.Fields.length;
+	};
+	CFieldGroup.prototype.getField = function(index)
+	{
+		return (index >= 0 && index < this.Fields.length ? this.Fields[index] : null);
+	};
 	CFieldGroup.prototype.addUser = function(user)
 	{
 		if (!user || -1 !== this.Users.indexOf(user))
@@ -108,6 +116,14 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupAddRemoveUser(this, user.GetId(), false));
 		this.Users.splice(index, 1);
 		this.onChange();
+	};
+	CFieldGroup.prototype.getUserCount = function()
+	{
+		return this.Users.length;
+	};
+	CFieldGroup.prototype.getUser = function(index)
+	{
+		return (index >= 0 && index < this.Users.length ? this.Users[index] : null);
 	};
 	CFieldGroup.prototype.clear = function()
 	{
@@ -178,9 +194,47 @@
 		// TODO: implement
 		return false;
 	};
-	CFieldGroup.prototype.toXml = function(writer)
+	CFieldGroup.prototype.toXml = function(writer, xmlFormat)
 	{
-		// TODO: implement
+		writer.WriteXmlNodeStart("fieldGroup");
+		writer.WriteXmlNullableAttributeInt("weight", this.getWeight());
+		writer.WriteXmlAttributesEnd();
+		
+		for (let userIndex = 0, userCount = this.Users.length; userIndex < userCount; ++userIndex)
+		{
+		
+		}
+		
+		for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
+		{
+		
+		}
+		
+		writer.WriteXmlNodeEnd("fieldGroup");
+	};
+	CFieldGroup.fromXml = function(reader)
+	{
+		let fG = new CFieldGroup();
+		
+		while (reader.MoveToNextAttribute())
+		{
+			if ("weight" === reader.GetNameNoNS())
+				fG.setWeight(reader.GetValueInt());
+		}
+		
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
+		{
+			switch(reader.GetNameNoNS())
+			{
+				case "user":
+					break;
+				case "field":
+					break;
+			}
+		}
+		
+		return fG;
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CFieldGroup = CFieldGroup;
