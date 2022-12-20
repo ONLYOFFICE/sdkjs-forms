@@ -43,7 +43,8 @@
 	{
 		AscCommon.openXml.OpenXmlPackage.apply(this, arguments);
 	}
-	AscCommon.ExtendPrototype(XmlPackage, AscCommon.openXml.OpenXmlPackage);
+	XmlPackage.prototype = Object.create(AscCommon.openXml.OpenXmlPackage.prototype);
+	XmlPackage.prototype.constructor = XmlPackage;
 	XmlPackage.prototype.openFromZip = function()
 	{
 		let zip = this.zip;
