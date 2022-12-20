@@ -37,16 +37,16 @@
 	/**
 	 * Класс для работы с форматом oform в xml
 	 * @constructor
+	 * @extends {AscCommon.openXml.OpenXmlPackage}
 	 */
-	function XmlPackage(zip)
+	function XmlPackage(zip, writer)
 	{
-		this.zip   = zip;
-		this.parts = {};
-		
-		this.openFromZip(zip);
+		AscCommon.openXml.OpenXmlPackage.apply(this, arguments);
 	}
-	XmlPackage.prototype.openFromZip = function(zip)
+	AscCommon.ExtendPrototype(XmlPackage, AscCommon.openXml.OpenXmlPackage);
+	XmlPackage.prototype.openFromZip = function()
 	{
+		let zip = this.zip;
 		let pkg = this;
 		zip.files.forEach(function(path)
 		{
@@ -63,11 +63,10 @@
 			}
 		});
 	};
-	XmlPackage.prototype.getContentType = function(path)
+	XmlPackage.prototype.getMainPart = function()
 	{
-		return 0;
+		return this.parts["/main.xml"];
 	};
-	
 	
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.XmlPackage = XmlPackage;
@@ -86,9 +85,17 @@
 		let jsZlib = new AscCommon.ZLib();
 		if (jsZlib.open(new Uint8Array(pointer.data)))
 		{
-			let pkg = new XmlPackage(jsZlib);
-			console.log(pkg);
+			let xmlPkg = new XmlPackage(jsZlib);
+
+			let logicDocument = editor.WordControl.m_oLogicDocument;
+			let oform = logicDocument.GetOFormDocument();
+			let oformDocument = oform.getFormat();
+			
+			oformDocument.fromPkg(xmlPkg)
+			
+			console.log(oform);
 		}
+		
 	}
 	
 })(window);
