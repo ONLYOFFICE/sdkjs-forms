@@ -217,14 +217,41 @@
 				fG.setWeight(reader.GetValueInt());
 		}
 		
+		let xmlContext = reader.GetContext();
 		let depth = reader.GetDepth();
 		while (reader.ReadNextSiblingNode(depth))
 		{
 			switch(reader.GetNameNoNS())
 			{
 				case "user":
+					
+					while (reader.MoveToNextAttribute())
+					{
+						if ("r:id" === reader.GetName())
+						{
+							let rId = reader.GetValueDecodeXml();
+							let rel = reader.rels.getRelationship(rId);
+							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+							if (userMaster)
+								this.addUserMaster(userMaster);
+						}
+					}
+					
 					break;
 				case "field":
+					
+					while (reader.MoveToNextAttribute())
+					{
+						if ("r:id" === reader.GetName())
+						{
+							let rId = reader.GetValueDecodeXml();
+							let rel = reader.rels.getRelationship(rId);
+							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+							if (userMaster)
+								this.addUserMaster(userMaster);
+						}
+					}
+					
 					break;
 			}
 		}

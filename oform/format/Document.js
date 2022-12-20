@@ -64,6 +64,13 @@
 		this.FieldMasters = [];
 	}
 	AscFormat.InitClass(CDocument, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
+	CDocument.prototype.clear = function()
+	{
+		// TODO: fields?
+		this.clearUsers();
+		this.clearUserMasters();
+		this.clearFieldGroups();
+	};
 	CDocument.prototype.setAuthor = function(author)
 	{
 		if (this.Author === author)
@@ -160,6 +167,13 @@
 		this.FieldGroups.splice(index, 1);
 		this.onChangeFieldGroups();
 	};
+	CDocument.prototype.clearFieldGroups = function()
+	{
+		while (this.FieldGroups.length)
+		{
+			this.removeFieldGroup(this.FieldGroups[0]);
+		}
+	};
 	CDocument.prototype.getFieldGroupsCount = function()
 	{
 		return this.FieldGroups.length;
@@ -173,10 +187,18 @@
 	};
 	CDocument.prototype.fromPkg = function(xmlPkg)
 	{
-	
+		let mainPart    = xmlPkg.getMainPart();
+		let mainContent = mainPart ? mainPart.getDocumentContent() : null;
+		if (mainContent)
+		{
+			let reader = new AscCommon.StaxParser(mainContent, mainPart, xmlPkg.getContext());
+			this.fromXml(reader);
+		}
 	};
-	CDocument.prototype.fromXml = function()
+	CDocument.prototype.fromXml = function(reader)
 	{
+		this.clear();
+		
 		// TODO: Author, Date
 		if (!reader.ReadNextNode() || "document" !== reader.GetNameNoNS())
 			return false;
@@ -191,19 +213,19 @@
 				case "date":
 					break;
 				case "description":
-					this.setDescription(reader.GetValueDecodeXml());
+					this.setDescription(reader.GetTextDecodeXml());
 					break;
 				case "type":
-					this.setType(reader.GetValueDecodeXml());
+					this.setType(reader.GetTextDecodeXml());
 					break;
 				case "application":
-					this.setApplication(reader.GetValueDecodeXml());
+					this.setApplication(reader.GetTextDecodeXml());
 					break;
 				case "id":
-					this.setDocumentId(reader.GetValueDecodeXml());
+					this.setDocumentId(reader.GetTextDecodeXml());
 					break;
 				case "fieldGroup":
-					this.addFieldMaster(AscOForm.CFieldGroup.fromXml(reader));
+					this.addFieldGroup(AscOForm.CFieldGroup.fromXml(reader));
 					break;
 			}
 		}
@@ -270,6 +292,13 @@
 		
 		return this.Users[index];
 	};
+	CDocument.prototype.clearUsers = function()
+	{
+		while (this.Users.length)
+		{
+			this.removeUser(this.Users[0]);
+		}
+	};
 	CDocument.prototype.addUserMaster = function(userMaster)
 	{
 		if (-1 !== this.UserMasters.indexOf(userMaster))
@@ -303,6 +332,13 @@
 	CDocument.prototype.getAllUserMasters = function()
 	{
 		return this.UserMasters;
+	};
+	CDocument.prototype.clearUserMasters = function()
+	{
+		while (this.UserMasters.length)
+		{
+			this.removeUserMaster(this.UserMasters[0]);
+		}
 	};
 	CDocument.prototype.createFieldMaster = function(id)
 	{
