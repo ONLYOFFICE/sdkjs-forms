@@ -171,6 +171,10 @@
 		
 		return this.FieldGroups[index];
 	};
+	CDocument.prototype.fromPkg = function(xmlPkg)
+	{
+	
+	};
 	CDocument.prototype.fromXml = function()
 	{
 		// TODO: Author, Date
