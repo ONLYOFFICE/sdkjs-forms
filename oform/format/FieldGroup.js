@@ -233,7 +233,7 @@
 							let rel = reader.rels.getRelationship(rId);
 							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
 							if (userMaster)
-								this.addUserMaster(userMaster);
+								fG.addUserMaster(userMaster);
 						}
 					}
 					
@@ -246,9 +246,9 @@
 						{
 							let rId = reader.GetValueDecodeXml();
 							let rel = reader.rels.getRelationship(rId);
-							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
-							if (userMaster)
-								this.addUserMaster(userMaster);
+							let fieldMaster = xmlContext.getFieldMaster(rel.getFullPath());
+							if (fieldMaster)
+								fG.addField(fieldMaster);
 						}
 					}
 					
