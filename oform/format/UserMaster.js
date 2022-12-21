@@ -152,7 +152,7 @@
 	CUserMaster.prototype.toXml = function(writer)
 	{
 		writer.WriteXmlHeader();
-		writer.WriteXmlNodeStart("userMaster");
+		writer.WriteXmlNodeStart("user");
 		writer.WriteXmlAttributesEnd();
 		
 		if (this.UserId)
@@ -168,48 +168,43 @@
 			writer.WriteXmlAttributesEnd(true);
 		}
 		
-		writer.WriteXmlNodeEnd("userMaster");
+		writer.WriteXmlNodeEnd("user");
 	};
 	CUserMaster.fromXml = function(reader)
 	{
 		if (!reader.ReadNextNode())
 			return null;
 		
-		let um = new CUserMaster();
-		
 		let name = reader.GetNameNoNS();
-		if ("userMaster" === name)
-		{
-			let depth = reader.GetDepth();
-			while (reader.ReadNextSiblingNode(depth))
-			{
-				name = reader.GetNameNoNS();
-				switch(reader.GetNameNoNS())
-				{
-					case "id":
-						um.setUserId(reader.GetTextDecodeXml());
-						break;
-					case "role":
-						um.setRole(reader.GetTextDecodeXml());
-						break;
-					case "color":
-						while (reader.MoveToNextAttribute())
-						{
-							if ("val" === reader.GetNameNoNS())
-							{
-								let color = new AscWord.CDocumentColor();
-								color.SetFromHexColor(reader.GetValueDecodeXml());
-								um.setColor(color.r, color.g, color.b);
-							}
-						}
-						reader.ReadTillEnd();
-						break;
-				}
-			}
-		}
-		else
-		{
+		if ("user" !== reader.GetNameNoNS())
 			return null;
+		
+		let um = new CUserMaster();
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
+		{
+			name = reader.GetNameNoNS();
+			switch(reader.GetNameNoNS())
+			{
+				case "id":
+					um.setUserId(reader.GetTextDecodeXml());
+					break;
+				case "role":
+					um.setRole(reader.GetTextDecodeXml());
+					break;
+				case "color":
+					while (reader.MoveToNextAttribute())
+					{
+						if ("val" === reader.GetNameNoNS())
+						{
+							let color = new AscWord.CDocumentColor();
+							color.SetFromHexColor(reader.GetValueDecodeXml());
+							um.setColor(color.r, color.g, color.b);
+						}
+					}
+					reader.ReadTillEnd();
+					break;
+			}
 		}
 		
 		return um;
