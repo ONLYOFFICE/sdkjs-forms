@@ -44,20 +44,21 @@
 		
 		this.pathToUser        = {};
 		this.pathToUserMaster  = {};
+		this.pathToField       = {};
 		this.pathToFieldMaster = {};
 	}
 	XmlContext.prototype.getUser = function(path)
 	{
-		let rel = reader.rels.getRelationship(context.InitOpenManager.legacyDrawingId);
-		let oRelPart = reader.rels.pkg.getPartByUri(oRel.getFullPath());
-		
-		path = this.getFullPath(path, part);
 		let user = this.pathToUser[path];
-		if (!user)
-		{
-			this.pkg.getPartByUri(path);
-		}
+		if (user)
+			return user;
 		
+		let reader = this.getXmlReader(path);
+		if (!reader)
+			return null;
+		
+		user = AscOForm.CUser.fromXml(reader);
+		this.pathToUser[path] = user;
 		return user;
 	};
 	XmlContext.prototype.getUserMaster = function(path)
@@ -66,23 +67,60 @@
 		if (userMaster)
 			return userMaster;
 		
-		let part = this.pkg.getPartByUri(path);
-		let partContent = part ? part.getDocumentContent() : null;
-		if (!partContent)
+		let reader = this.getXmlReader(path);
+		if (!reader)
 			return null;
 		
-		let reader = new AscCommon.StaxParser(partContent, part, this);
-		return AscOForm.CUserMaster.fromXml(reader);
+		userMaster = AscOForm.CUserMaster.fromXml(reader);
+		this.pathToUserMaster[path] = userMaster;
+		return userMaster;
+	};
+	XmlContext.prototype.getField = function(path)
+	{
+		let field = this.pathToField[path];
+		if (field)
+			return field;
+		
+		let reader = this.getXmlReader(path);
+		if (!reader)
+			return null;
+		
+		return null;
+
+		// TODO: implement
+		// field = AscOForm.CField.fromXml(reader);
+		// this.pathToField[path] = field;
+		// return field;
 	};
 	XmlContext.prototype.getFieldMaster = function(path)
 	{
-	
+		let fieldMaster = this.pathToFieldMaster[path];
+		if (fieldMaster)
+			return fieldMaster;
+		
+		let reader = this.getXmlReader(path);
+		if (!reader)
+			return null;
+		
+		fieldMaster = AscOForm.CFieldMaster.fromXml(reader);
+		this.pathToFieldMaster[path] = fieldMaster;
+		return fieldMaster;
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	
+	XmlContext.prototype.getXmlReader = function(path)
+	{
+		let part = this.pkg.getPartByUri(path);
+		if (!part)
+			return null;
+		
+		let partContent = part.getDocumentContent();
+		if (!partContent)
+			return null;
+		
+		return new AscCommon.StaxParser(partContent, part, this);
+	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.XmlContext = XmlContext;
 	
