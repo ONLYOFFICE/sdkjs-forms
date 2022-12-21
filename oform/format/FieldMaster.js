@@ -178,48 +178,6 @@
 			&& this.Field.IsUseInDocument()
 			&& this === this.Field.GetFieldMaster());
 	};
-	CFieldMaster.prototype.readAttrXml = function(name, reader)
-	{
-		switch (name)
-		{
-			case "id":
-			{
-				this.setFieldId(reader.GetValue());
-				break;
-			}
-		}
-	};
-	CFieldMaster.prototype.readChildXml = function(name, reader)
-	{
-		let oThis = this;
-		switch (name)
-		{
-			case "Users":
-			{
-				let oUsersNode = new CT_XmlNode(function(reader, name)
-				{
-					if (name === "User")
-					{
-						let oUserNode = new CT_XmlNode();
-						oUserNode.fromXml(reader);
-						let sId  = oUserNode.attributes["id"];
-						let oRel = reader.rels.getRelationshipById(sId);
-						reader.context.addFieldMasterRelation(oThis, oRel.targetFullName)
-					}
-					return true;
-				});
-				oUsersNode.fromXml(reader);
-				break;
-			}
-			case "SignRequest":
-			{
-				let oSignRequest = new CSignRequest();
-				oSignRequest.fromXml(reader);
-				this.setSignRequest(oSignRequest);
-				break;
-			}
-		}
-	};
 	CFieldMaster.prototype.toXml = function(writer)
 	{
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
@@ -271,6 +229,75 @@
 			}
 		}
 	};
+	CFieldMaster.fromXml = function(reader)
+	{
+		if (!reader.ReadNextNode())
+			return null;
+		
+		if ("field" !== reader.GetNameNoNS())
+			return null;
+		
+		let fieldMaster = new CFieldMaster();
+		
+		while (reader.MoveToNextAttribute())
+		{
+			if ("id" === reader.GetNameNoNS())
+				fieldMaster.setFieldId(reader.GetValueDecodeXml());
+		}
+		
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
+		{
+			switch(reader.GetNameNoNS())
+			{
+				case "users":
+				{
+					let users = readUsersFromXml(reader);
+					for (let index = 0, count = users.length; index < count; ++index)
+					{
+						fieldMaster.addUser(users[index]);
+					}
+					break;
+				}
+				case "signRequest":
+				{
+					let users = readUsersFromXml(reader);
+					for (let index = 0, count = users.length; index < count; ++index)
+					{
+						fieldMaster.addSigner(users[index]);
+					}
+					break;
+				}
+			}
+		}
+		
+		return fieldMaster;
+	};
+	
+	function readUsersFromXml(reader)
+	{
+		let xmlContext = reader.GetContext();
+		let users = [];
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
+		{
+			if ("user" === reader.GetNameNoNS())
+			{
+				while (reader.MoveToNextAttribute())
+				{
+					if ("r:id" === reader.GetName())
+					{
+						let rId = reader.GetValueDecodeXml();
+						let rel = reader.rels.getRelationship(rId);
+						let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+						if (userMaster)
+							users.push(userMaster);
+					}
+				}
+			}
+		}
+		return users;
+	}
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CFieldMaster = CFieldMaster;
 
