@@ -106,11 +106,25 @@
 	CUser.prototype.toXml = function(writer)
 	{
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("User");
+		writer.WriteXmlNodeStart("user");
 		writer.WriteXmlAttributesEnd();
-		writer.WriteXmlNodeWithText("Email", this.Email);
-		writer.WriteXmlNodeWithText("Telephone", this.Telephone);
-		writer.WriteXmlNodeEnd("User");
+		
+		if (this.Email)
+			writer.WriteXmlNodeWithText("email", this.Email);
+		if (this.Telephone)
+			writer.WriteXmlNodeWithText("telephone", this.Telephone);
+		
+		// TODO: color
+		
+		writer.WriteXmlNodeEnd("user");
+	};
+	CUser.fromXml = function(reader)
+	{
+		let user = new CUser();
+		
+		
+		
+		return user;
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CUser = CUser;

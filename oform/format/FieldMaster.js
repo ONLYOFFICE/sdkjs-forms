@@ -35,10 +35,10 @@
 (function(window)
 {
 	/**
-	 *
+	 * @param {boolean} [generateId=false]
 	 * @constructor
 	 */
-	function CFieldMaster()
+	function CFieldMaster(generateId)
 	{
 		AscFormat.CBaseFormatObject.call(this);
 
@@ -46,11 +46,38 @@
 		this.Field   = null;
 		this.Users   = [];
 		this.Signers = [];
+		
+		if (true === generateId)
+			this.setFieldId(AscCommon.CreateGUID());
 	}
 	AscFormat.InitClass(CFieldMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldMaster);
 	CFieldMaster.prototype.setLogicField = function(logicField)
 	{
 		this.Field = logicField;
+	};
+	CFieldMaster.prototype.getLogicField = function()
+	{
+		return this.Field;
+	};
+	CFieldMaster.prototype.clone = function()
+	{
+		let fm = new CFieldMaster(true);
+		this.copyTo(fm);
+		return fm;
+	};
+	CFieldMaster.prototype.copyTo = function(fm)
+	{
+		fm.clearUsers();
+		for (let index = 0, count = this.Users.length; index < count; ++index)
+		{
+			fm.addUser(this.Users[index]);
+		}
+		
+		fm.clearSigners();
+		for (let index = 0, count = this.Signers.length; index < count; ++index)
+		{
+			fm.addSigner(this.Signers[index]);
+		}
 	};
 	CFieldMaster.prototype.setFieldId = function(fieldId)
 	{
@@ -74,12 +101,42 @@
 	};
 	CFieldMaster.prototype.removeUser = function(user)
 	{
-		let index = this.User.indexOf(user);
+		let index = this.Users.indexOf(user);
 		if (-1 === index)
 			return;
 
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveUser(this, user.GetId(), false));
 		this.Users.splice(index, 1);
+	};
+	CFieldMaster.prototype.clearUsers = function()
+	{
+		while (this.Users.length)
+		{
+			this.removeUser(this.Users[this.Users.length - 1]);
+		}
+	};
+	CFieldMaster.prototype.getUserCount = function()
+	{
+		return this.Users.length;
+	};
+	CFieldMaster.prototype.getUser = function(index)
+	{
+		if (index < 0 || index >= this.Users.length)
+			return null;
+		
+		return this.Users[index];
+	};
+	CFieldMaster.prototype.getFirstUser = function()
+	{
+		let user = null;
+		for (let userIndex = 0, userCount = this.getUserCount(); userIndex < userCount; ++userIndex)
+		{
+			let curUser = this.getUser(userIndex);
+			if (!user || user.compare(curUser) < 0)
+				user = curUser;
+		}
+		
+		return user;
 	};
 	CFieldMaster.prototype.addSigner = function(user)
 	{
@@ -98,47 +155,28 @@
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldMasterAddRemoveSigner(this, user.GetId(), false));
 		this.Signers.splice(index, 1);
 	};
-	CFieldMaster.prototype.readAttrXml = function(name, reader)
+	CFieldMaster.prototype.clearSigners = function()
 	{
-		switch (name)
+		while (this.Signers.length)
 		{
-			case "id":
-			{
-				this.setFieldId(reader.GetValue());
-				break;
-			}
+			this.removeSigner(this.Signers[this.Signers.length - 1]);
 		}
 	};
-	CFieldMaster.prototype.readChildXml = function(name, reader)
+	CFieldMaster.prototype.checkUser = function(user)
 	{
-		let oThis = this;
-		switch (name)
+		for (let index = 0, count = this.Users.length; index < count; ++index)
 		{
-			case "Users":
-			{
-				let oUsersNode = new CT_XmlNode(function(reader, name)
-				{
-					if (name === "User")
-					{
-						let oUserNode = new CT_XmlNode();
-						oUserNode.fromXml(reader);
-						let sId  = oUserNode.attributes["id"];
-						let oRel = reader.rels.getRelationshipById(sId);
-						reader.context.addFieldMasterRelation(oThis, oRel.targetFullName)
-					}
-					return true;
-				});
-				oUsersNode.fromXml(reader);
-				break;
-			}
-			case "SignRequest":
-			{
-				let oSignRequest = new CSignRequest();
-				oSignRequest.fromXml(reader);
-				this.setSignRequest(oSignRequest);
-				break;
-			}
+			if (this.Users[index] === user)
+				return true;
 		}
+		
+		return false;
+	};
+	CFieldMaster.prototype.isUseInDocument = function()
+	{
+		return (this.Field
+			&& this.Field.IsUseInDocument()
+			&& this === this.Field.GetFieldMaster());
 	};
 	CFieldMaster.prototype.toXml = function(writer)
 	{
@@ -191,6 +229,75 @@
 			}
 		}
 	};
+	CFieldMaster.fromXml = function(reader)
+	{
+		if (!reader.ReadNextNode())
+			return null;
+		
+		if ("field" !== reader.GetNameNoNS())
+			return null;
+		
+		let fieldMaster = new CFieldMaster();
+		
+		while (reader.MoveToNextAttribute())
+		{
+			if ("id" === reader.GetNameNoNS())
+				fieldMaster.setFieldId(reader.GetValueDecodeXml());
+		}
+		
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
+		{
+			switch(reader.GetNameNoNS())
+			{
+				case "users":
+				{
+					let users = readUsersFromXml(reader);
+					for (let index = 0, count = users.length; index < count; ++index)
+					{
+						fieldMaster.addUser(users[index]);
+					}
+					break;
+				}
+				case "signRequest":
+				{
+					let users = readUsersFromXml(reader);
+					for (let index = 0, count = users.length; index < count; ++index)
+					{
+						fieldMaster.addSigner(users[index]);
+					}
+					break;
+				}
+			}
+		}
+		
+		return fieldMaster;
+	};
+	
+	function readUsersFromXml(reader)
+	{
+		let xmlContext = reader.GetContext();
+		let users = [];
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
+		{
+			if ("user" === reader.GetNameNoNS())
+			{
+				while (reader.MoveToNextAttribute())
+				{
+					if ("r:id" === reader.GetName())
+					{
+						let rId = reader.GetValueDecodeXml();
+						let rel = reader.rels.getRelationship(rId);
+						let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+						if (userMaster)
+							users.push(userMaster);
+					}
+				}
+			}
+		}
+		return users;
+	}
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CFieldMaster = CFieldMaster;
 
