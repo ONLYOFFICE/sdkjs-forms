@@ -42,7 +42,6 @@
 	function OForm(document)
 	{
 		this.Format      = new AscOForm.CDocument(this);
-		this.DefaultUser = this.Format.getDefaultUserMaster();
 		this.Document    = document;
 		this.CurrentUser = null;
 		

@@ -44,6 +44,7 @@
 	window['AscDFH'].historyitem_OForm_Document_User        = window['AscDFH'].historyitem_type_OForm_Document | 8;
 	window['AscDFH'].historyitem_OForm_Document_UserMaster  = window['AscDFH'].historyitem_type_OForm_Document | 9;
 	window['AscDFH'].historyitem_OForm_Document_FieldMaster = window['AscDFH'].historyitem_type_OForm_Document | 10;
+	window['AscDFH'].historyitem_OForm_Document_DefaultUser = window['AscDFH'].historyitem_type_OForm_Document | 11;
 
 	/**
 	 * @constructor
@@ -298,5 +299,31 @@
 		}
 	);
 	window['AscDFH'].CChangesOFormDocumentFieldMaster = CChangesOFormDocumentFieldMaster;
+
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormDocumentDefaultUser(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormDocumentDefaultUser,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_Document_DefaultUser,
+		function(value)
+		{
+			let document = this.Class;
+			let userMaster = AscCommon.g_oTableId.GetById(value);
+			if (userMaster)
+			{
+				userMaster.setParent(document);
+				document.DefaultUser = userMaster;
+			}
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormDocumentDefaultUser = CChangesOFormDocumentDefaultUser;
 
 })(window);

@@ -71,6 +71,14 @@
 		this.clearUserMasters();
 		this.clearFieldGroups();
 	};
+	CDocument.prototype.setDefaultUser = function(userMaster)
+	{
+		if (!userMaster || userMaster === this.DefaultUser)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentDefaultUser(this, this.DefaultUser.GetId(), userMaster.GetId()));
+		this.DefaultUser = userMaster;
+	};
 	CDocument.prototype.setAuthor = function(author)
 	{
 		if (this.Author === author)
@@ -227,6 +235,22 @@
 				case "fieldGroup":
 					this.addFieldGroup(AscOForm.CFieldGroup.fromXml(reader));
 					break;
+				case "defaultUser":
+				{
+					while (reader.MoveToNextAttribute())
+					{
+						if ("r:id" === reader.GetName())
+						{
+							let xmlContext = reader.GetContext();
+							let rId = reader.GetValueDecodeXml();
+							let rel = reader.rels.getRelationship(rId);
+							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+							if (userMaster)
+								this.setDefaultUser(userMaster);
+						}
+					}
+					break;
+				}
 			}
 		}
 		
