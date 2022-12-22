@@ -149,8 +149,8 @@
 		let fields = [];
 		for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
 		{
-			if (this.Fields[index].isUseInDocument())
-				fields.push(this.Fields[index]);
+			if (this.Fields[fieldIndex].isUseInDocument())
+				fields.push(this.Fields[fieldIndex]);
 		}
 		
 		if (this.Users.length && this.Parent)

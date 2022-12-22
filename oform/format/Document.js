@@ -195,13 +195,28 @@
 	};
 	CDocument.prototype.fromPkg = function(xmlPkg)
 	{
+		let xmlContext  = xmlPkg.getContext();
 		let mainPart    = xmlPkg.getMainPart();
 		let mainContent = mainPart ? mainPart.getDocumentContent() : null;
 		if (mainContent)
 		{
-			let reader = new AscCommon.StaxParser(mainContent, mainPart, xmlPkg.getContext());
+			let reader = new AscCommon.StaxParser(mainContent, mainPart, xmlContext);
 			this.fromXml(reader);
 		}
+		
+		let document = this;
+		xmlContext.getAllUsers().forEach(function(user)
+		{
+			document.addUser(user)
+		});
+		xmlContext.getAllUserMasters().forEach(function(userMaster)
+		{
+			document.addUserMaster(userMaster);
+		});
+		xmlContext.getAllFieldMasters().forEach(function(fieldMaster)
+		{
+			document.addFieldMaster(fieldMaster);
+		});
 	};
 	CDocument.prototype.fromXml = function(reader)
 	{
@@ -294,7 +309,7 @@
 	};
 	CDocument.prototype.removeUser = function(user)
 	{
-		let index = this.User.indexOf(user);
+		let index = this.Users.indexOf(user);
 		if (-1 === index)
 			return;
 		

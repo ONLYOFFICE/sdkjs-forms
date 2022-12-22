@@ -34,6 +34,11 @@
 
 (function(window)
 {
+	const PATH_USERS         = "/users/";
+	const PATH_USER_MASTERS  = "/userMasters/";
+	const PATH_FIELDS        = "/fields/";
+	const PATH_FIELD_MASTERS = "/fieldMasters/";
+	
 	/**
 	 * Класс для работы с ссылками внутри xml структуры
 	 * @constructor
@@ -106,6 +111,24 @@
 		this.pathToFieldMaster[path] = fieldMaster;
 		return fieldMaster;
 	};
+	XmlContext.prototype.getAllUsers = function()
+	{
+		return this.getAllByMapAndPath(this.pathToUser, PATH_USERS, AscOForm.CUser.fromXml);
+	};
+	XmlContext.prototype.getAllUserMasters = function()
+	{
+		return this.getAllByMapAndPath(this.pathToUserMaster, PATH_USER_MASTERS, AscOForm.CUserMaster.fromXml);
+	};
+	XmlContext.prototype.getAllFields = function()
+	{
+		// TODO: Implement
+		return [];
+		//return this.getAllByMapAndPath(this.pathToField, PATH_FIELDS, AscOForm.CField.fromXml);
+	};
+	XmlContext.prototype.getAllFieldMasters = function()
+	{
+		return this.getAllByMapAndPath(this.pathToFieldMaster, PATH_FIELD_MASTERS, AscOForm.CFieldMaster.fromXml);
+	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +144,32 @@
 		
 		return new AscCommon.StaxParser(partContent, part, this);
 	};
+	XmlContext.prototype.getAllByMapAndPath = function(map, path, fromXml)
+	{
+		let result = [];
+		for (let key in map)
+		{
+			result.push(map[key]);
+		}
+		
+		for (let uri in this.pkg.parts)
+		{
+			if (uri.startsWith(path)
+				&& uri.endsWith(".xml")
+				&& !map[uri])
+			{
+				let reader = this.getXmlReader(uri);
+				if (!reader)
+					return;
+				
+				let element = fromXml(reader);
+				if (element)
+					result.push(element);
+			}
+		}
+		
+		return result;
+	}
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.XmlContext = XmlContext;
 	
