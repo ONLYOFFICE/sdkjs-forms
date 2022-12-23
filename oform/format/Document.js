@@ -234,9 +234,9 @@
 			if (!xmlContext.haveUserPart(user))
 			{
 				xmlWriter.Seek(0);
-				let part = main.addPartWithoutRels(AscCommon.openXml.Types.oformUser);
+				let part = xmlPkg.addPart(AscCommon.openXml.Types.oformUser);
 				if (part)
-					part.setDataXml(user, xmlWriter);
+					part.part.setDataXml(user, xmlWriter);
 			}
 		});
 		
@@ -245,9 +245,9 @@
 			if (!xmlContext.haveUserMasterPart(userMaster))
 			{
 				xmlWriter.Seek(0);
-				let part = main.addPartWithoutRels(AscCommon.openXml.Types.oformUserMaster);
+				let part = xmlPkg.addPart(AscCommon.openXml.Types.oformUserMaster);
 				if (part)
-					part.setDataXml(userMaster, xmlWriter);
+					part.part.setDataXml(userMaster, xmlWriter);
 			}
 		});
 		
@@ -256,9 +256,9 @@
 			if (!xmlContext.haveFieldMasterPart(fieldMaster))
 			{
 				xmlWriter.Seek(0);
-				let part = main.addPartWithoutRels(AscCommon.openXml.Types.oformFieldMaster);
+				let part = xmlPkg.addPart(AscCommon.openXml.Types.oformFieldMaster);
 				if (part)
-					part.setDataXml(fieldMaster, xmlWriter);
+					part.part.setDataXml(fieldMaster, xmlWriter);
 			}
 		});
 	};

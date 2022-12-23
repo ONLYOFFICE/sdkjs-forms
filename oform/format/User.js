@@ -81,31 +81,9 @@
 	{
 		return this.UserMaster;
 	};
-	CUser.prototype.readChildXml = function(name, reader)
-	{
-		let bRead = false;
-		switch (name)
-		{
-			case "Email":
-			{
-				let node = CT_XmlNode.fromReader(reader);
-				this.setEmail(node.text);
-				bRead = true;
-				break;
-			}
-			case "Telephone":
-			{
-				let node = CT_XmlNode.fromReader(reader);
-				this.setTelephone(node.text);
-				bRead = true;
-				break;
-			}
-		}
-		return bRead;
-	};
 	CUser.prototype.toXml = function(writer)
 	{
-		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
+		writer.WriteXmlHeader();
 		writer.WriteXmlNodeStart("user");
 		writer.WriteXmlAttributesEnd();
 		
@@ -113,8 +91,6 @@
 			writer.WriteXmlNodeWithText("email", this.Email);
 		if (this.Telephone)
 			writer.WriteXmlNodeWithText("telephone", this.Telephone);
-		
-		// TODO: color
 		
 		writer.WriteXmlNodeEnd("user");
 	};

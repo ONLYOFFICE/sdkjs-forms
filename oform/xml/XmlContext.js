@@ -190,9 +190,41 @@
 	XmlWriterContext.prototype.clearCurrentPartDataMaps = function()
 	{
 	};
-	XmlWriterContext.prototype.getUserPart = function(user, part)
+	XmlWriterContext.prototype.getRId = function(part)
 	{
-		return this.getPart(this.userToPart, user, AscCommon.openXml.Types.oformUser);
+		if (!this.part)
+			return "";
+		
+		let target = part.uri;
+		let base   = this.part.uri;
+		
+		if (target.startsWith('/'))
+			target = target.substring(1);
+		if (base.startsWith('/'))
+			base = base.substring(1);
+		
+		let baseSplit   = base.split('/');
+		let targetSplit = target.split('/');
+		
+		while (baseSplit.length && targetSplit.length && baseSplit[0] === targetSplit[0])
+		{
+			baseSplit.shift();
+			targetSplit.shift()
+		}
+		
+		let relative = "";
+		for (let index = 0, count = baseSplit.length - 1; index < count; ++index)
+		{
+			relative += "../";
+		}
+		
+		relative += targetSplit.join('/');
+		
+		return this.part.addRelationship(null, relative);
+	};
+	XmlWriterContext.prototype.getUserPart = function(user)
+	{
+		return this.getPartFromPkg(this.userToPart, user, AscCommon.openXml.Types.oformUser);
 	};
 	XmlWriterContext.prototype.haveUserPart = function(user)
 	{
@@ -200,7 +232,7 @@
 	};
 	XmlWriterContext.prototype.getUserMasterPart = function(userMaster)
 	{
-		return this.getPart(this.userMasterToPart, userMaster, AscCommon.openXml.Types.oformUserMaster);
+		return this.getPartFromPkg(this.userMasterToPart, userMaster, AscCommon.openXml.Types.oformUserMaster);
 	};
 	XmlWriterContext.prototype.haveUserMasterPart = function(userMaster)
 	{
@@ -208,7 +240,7 @@
 	};
 	XmlWriterContext.prototype.getFieldPart = function(field)
 	{
-		return this.getPart(this.fieldToPart, field, AscCommon.openXml.Types.oformField);
+		return this.getPartFromPkg(this.fieldToPart, field, AscCommon.openXml.Types.oformField);
 	};
 	XmlWriterContext.prototype.haveFieldPart = function(field)
 	{
@@ -216,7 +248,7 @@
 	};
 	XmlWriterContext.prototype.getFieldMasterPart = function(fieldMaster)
 	{
-		return this.getPart(this.fieldMasterToPart, fieldMaster, AscCommon.openXml.Types.oformFieldMaster);
+		return this.getPartFromPkg(this.fieldMasterToPart, fieldMaster, AscCommon.openXml.Types.oformFieldMaster);
 	};
 	XmlWriterContext.prototype.haveFieldMasterPart = function(fieldMaster)
 	{
@@ -225,18 +257,18 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	XmlWriterContext.prototype.getPart = function(map, object, contentType, curPart)
+	XmlWriterContext.prototype.getPartFromPkg = function(map, object, contentType)
 	{
 		let objectId = object.GetId();
 		if (map[objectId])
 			return map[objectId];
 		
-		let part = curPart.addPart(contentType);
+		let part = this.pkg.addPart(contentType).part;
 		
 		let xmlWriter = new AscCommon.CMemory();
 		xmlWriter.context = this;
 		
-		part.part.setDataXml(object, xmlWriter);
+		part.setDataXml(object, xmlWriter);
 		
 		map[objectId] = part;
 		return part;

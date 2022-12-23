@@ -204,19 +204,19 @@
 				continue;
 
 			writer.WriteXmlNodeStart("user");
-			writer.WriteXmlNullableAttributeString("r:id", part.rId);
+			writer.WriteXmlNullableAttributeString("r:id", context.getRId(part));
 			writer.WriteXmlAttributesEnd(true);
 		}
 		
 		for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
 		{
-			// let part = context.getFieldMasterPart(this.Fields[fieldIndex]);
-			// if (!part)
-			// 	continue;
-			//
-			// writer.WriteXmlNodeStart("field");
-			// writer.WriteXmlNullableAttributeString("r:id", part.rId);
-			// writer.WriteXmlAttributesEnd(true);
+			let part = context.getFieldMasterPart(this.Fields[fieldIndex]);
+			if (!part)
+				continue;
+
+			writer.WriteXmlNodeStart("field");
+			writer.WriteXmlNullableAttributeString("r:id", context.getRId(part));
+			writer.WriteXmlAttributesEnd(true);
 		}
 		
 		writer.WriteXmlNodeEnd("fieldGroup");
