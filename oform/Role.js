@@ -114,7 +114,7 @@
 		if (undefined === ascColor || null === ascColor)
 			this.Color = null;
 		else
-			this.Color = new AscWord.CDocumentColor(ascColor.get_r(), ascColor.get_g(), ascColor.get_b());
+			this.Color = new AscWord.CDocumentColor(ascColor.asc_getR(), ascColor.asc_getG(), ascColor.asc_getB());
 	}
 	CRoleSettings.prototype.getAscColor = function()
 	{
