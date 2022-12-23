@@ -106,10 +106,15 @@
 	}
 	AscOForm.TestWrite = function()
 	{
-		let jsZlibToSave = new AscCommon.ZLib();
-		jsZlibToSave.create();
-		model.toZip(jsZlibToSave, context);
+		let jsZlib = new AscCommon.ZLib();
+		jsZlib.create();
 		
+		let logicDocument = editor.WordControl.m_oLogicDocument;
+		let oform = logicDocument.GetOFormDocument();
+		
+		oform.toZip(jsZlib);
+		
+		console.log(jsZlib);
 	}
 	
 })(window);
