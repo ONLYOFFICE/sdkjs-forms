@@ -220,11 +220,47 @@
 	};
 	CDocument.prototype.toPkg = function(xmlPkg)
 	{
-		let xmlWriter = xmlPkg.getXmlWriter();
-		let main = xmlPkg.addPart(AscCommon.openXml.Types.oformMain);
+		// TODO: default.xml
+		
+		let xmlContext = xmlPkg.getContext();
+		let xmlWriter  = xmlPkg.getXmlWriter();
+		let main = xmlPkg.addPart(AscCommon.openXml.Types.oformMain).part;
 		
 		xmlWriter.Seek(0);
-		main.part.setDataXml(this, xmlWriter);
+		main.setDataXml(this, xmlWriter);
+		
+		this.Users.forEach(function(user)
+		{
+			if (!xmlContext.haveUserPart(user))
+			{
+				xmlWriter.Seek(0);
+				let part = main.addPartWithoutRels(AscCommon.openXml.Types.oformUser);
+				if (part)
+					part.setDataXml(user, xmlWriter);
+			}
+		});
+		
+		this.UserMasters.forEach(function(userMaster)
+		{
+			if (!xmlContext.haveUserMasterPart(userMaster))
+			{
+				xmlWriter.Seek(0);
+				let part = main.addPartWithoutRels(AscCommon.openXml.Types.oformUserMaster);
+				if (part)
+					part.setDataXml(userMaster, xmlWriter);
+			}
+		});
+		
+		this.FieldMasters.forEach(function(fieldMaster)
+		{
+			if (!xmlContext.haveFieldMasterPart(fieldMaster))
+			{
+				xmlWriter.Seek(0);
+				let part = main.addPartWithoutRels(AscCommon.openXml.Types.oformFieldMaster);
+				if (part)
+					part.setDataXml(fieldMaster, xmlWriter);
+			}
+		});
 	};
 	CDocument.prototype.fromXml = function(reader)
 	{

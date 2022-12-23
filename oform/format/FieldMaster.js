@@ -180,6 +180,7 @@
 	};
 	CFieldMaster.prototype.toXml = function(writer)
 	{
+		return;
 		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
 		writer.WriteXmlNodeStart("FieldMaster");
 		writer.WriteXmlAttributeString("xmlns:r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");

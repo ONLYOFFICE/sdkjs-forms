@@ -189,20 +189,34 @@
 		}
 		return user;
 	};
-	CFieldGroup.prototype.toXml = function(writer, xmlFormat)
+	CFieldGroup.prototype.toXml = function(writer)
 	{
+		let context = writer.context;
+		
 		writer.WriteXmlNodeStart("fieldGroup");
 		writer.WriteXmlNullableAttributeInt("weight", this.getWeight());
 		writer.WriteXmlAttributesEnd();
 		
 		for (let userIndex = 0, userCount = this.Users.length; userIndex < userCount; ++userIndex)
 		{
-		
+			let part = context.getUserMasterPart(this.Users[userIndex]);
+			if (!part)
+				continue;
+
+			writer.WriteXmlNodeStart("user");
+			writer.WriteXmlNullableAttributeString("r:id", part.rId);
+			writer.WriteXmlAttributesEnd(true);
 		}
 		
 		for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
 		{
-		
+			// let part = context.getFieldMasterPart(this.Fields[fieldIndex]);
+			// if (!part)
+			// 	continue;
+			//
+			// writer.WriteXmlNodeStart("field");
+			// writer.WriteXmlNullableAttributeString("r:id", part.rId);
+			// writer.WriteXmlAttributesEnd(true);
 		}
 		
 		writer.WriteXmlNodeEnd("fieldGroup");

@@ -182,11 +182,65 @@
 	{
 		this.pkg = pkg;
 		
-		this.userToPath        = {};
-		this.userMasterToPath  = {};
-		this.fieldToPath       = {};
-		this.fieldMasterToPath = {};
+		this.userToPart        = {};
+		this.userMasterToPart  = {};
+		this.fieldToPart       = {};
+		this.fieldMasterToPart = {};
 	}
+	XmlWriterContext.prototype.clearCurrentPartDataMaps = function()
+	{
+	};
+	XmlWriterContext.prototype.getUserPart = function(user, part)
+	{
+		return this.getPart(this.userToPart, user, AscCommon.openXml.Types.oformUser);
+	};
+	XmlWriterContext.prototype.haveUserPart = function(user)
+	{
+		return !!this.userToPart[user.GetId()];
+	};
+	XmlWriterContext.prototype.getUserMasterPart = function(userMaster)
+	{
+		return this.getPart(this.userMasterToPart, userMaster, AscCommon.openXml.Types.oformUserMaster);
+	};
+	XmlWriterContext.prototype.haveUserMasterPart = function(userMaster)
+	{
+		return !!this.userMasterToPart[userMaster.GetId()];
+	};
+	XmlWriterContext.prototype.getFieldPart = function(field)
+	{
+		return this.getPart(this.fieldToPart, field, AscCommon.openXml.Types.oformField);
+	};
+	XmlWriterContext.prototype.haveFieldPart = function(field)
+	{
+		return !!this.fieldToPart[field.GetId()];
+	};
+	XmlWriterContext.prototype.getFieldMasterPart = function(fieldMaster)
+	{
+		return this.getPart(this.fieldMasterToPart, fieldMaster, AscCommon.openXml.Types.oformFieldMaster);
+	};
+	XmlWriterContext.prototype.haveFieldMasterPart = function(fieldMaster)
+	{
+		return !!this.fieldMasterToPart[fieldMaster];
+	};
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Private area
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	XmlWriterContext.prototype.getPart = function(map, object, contentType, curPart)
+	{
+		let objectId = object.GetId();
+		if (map[objectId])
+			return map[objectId];
+		
+		let part = curPart.addPart(contentType);
+		
+		let xmlWriter = new AscCommon.CMemory();
+		xmlWriter.context = this;
+		
+		part.part.setDataXml(object, xmlWriter);
+		
+		map[objectId] = part;
+		return part;
+	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.XmlWriterContext = XmlWriterContext;
 	
