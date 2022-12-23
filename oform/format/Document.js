@@ -218,6 +218,10 @@
 			document.addFieldMaster(fieldMaster);
 		});
 	};
+	CDocument.prototype.toPkg = function(xmlPkg)
+	{
+	
+	};
 	CDocument.prototype.fromXml = function(reader)
 	{
 		this.clear();

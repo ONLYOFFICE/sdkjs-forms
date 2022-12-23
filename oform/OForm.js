@@ -64,6 +64,20 @@
 	{
 		return this.Format;
 	};
+	OForm.prototype.fromZip = function(zip)
+	{
+		let xmlPkg = new AscOForm.XmlPackage(zip);
+		xmlPkg.setContext(new AscOForm.XmlReaderContext(xmlPkg));
+		this.Format.fromPkg(xmlPkg);
+	};
+	OForm.prototype.toZip = function(zip)
+	{
+		let writer = new AscCommon.CMemory();
+		let xmlPkg = new AscOForm.XmlPackage(zip, writer);
+		xmlPkg.setContext(new AscOForm.XmlWriterContext(xmlPkg));
+		writer.context = xmlPkg.getContext();
+		this.Format.toPkg(xmlPkg);
+	};
 	OForm.prototype.setCurrentRole = function(roleName)
 	{
 		let role = this.getRole(roleName);

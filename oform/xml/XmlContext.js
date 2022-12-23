@@ -40,10 +40,10 @@
 	const PATH_FIELD_MASTERS = "/fieldMasters/";
 	
 	/**
-	 * Класс для работы с ссылками внутри xml структуры
+	 * Класс для работы с ссылками внутри xml структуры во время чтения
 	 * @constructor
 	 */
-	function XmlContext(pkg)
+	function XmlReaderContext(pkg)
 	{
 		this.pkg = pkg;
 		
@@ -52,7 +52,7 @@
 		this.pathToField       = {};
 		this.pathToFieldMaster = {};
 	}
-	XmlContext.prototype.getUser = function(path)
+	XmlReaderContext.prototype.getUser = function(path)
 	{
 		let user = this.pathToUser[path];
 		if (user)
@@ -66,7 +66,7 @@
 		this.pathToUser[path] = user;
 		return user;
 	};
-	XmlContext.prototype.getUserMaster = function(path)
+	XmlReaderContext.prototype.getUserMaster = function(path)
 	{
 		let userMaster = this.pathToUserMaster[path];
 		if (userMaster)
@@ -80,7 +80,7 @@
 		this.pathToUserMaster[path] = userMaster;
 		return userMaster;
 	};
-	XmlContext.prototype.getField = function(path)
+	XmlReaderContext.prototype.getField = function(path)
 	{
 		let field = this.pathToField[path];
 		if (field)
@@ -97,7 +97,7 @@
 		// this.pathToField[path] = field;
 		// return field;
 	};
-	XmlContext.prototype.getFieldMaster = function(path)
+	XmlReaderContext.prototype.getFieldMaster = function(path)
 	{
 		let fieldMaster = this.pathToFieldMaster[path];
 		if (fieldMaster)
@@ -111,28 +111,28 @@
 		this.pathToFieldMaster[path] = fieldMaster;
 		return fieldMaster;
 	};
-	XmlContext.prototype.getAllUsers = function()
+	XmlReaderContext.prototype.getAllUsers = function()
 	{
 		return this.getAllByMapAndPath(this.pathToUser, PATH_USERS, AscOForm.CUser.fromXml);
 	};
-	XmlContext.prototype.getAllUserMasters = function()
+	XmlReaderContext.prototype.getAllUserMasters = function()
 	{
 		return this.getAllByMapAndPath(this.pathToUserMaster, PATH_USER_MASTERS, AscOForm.CUserMaster.fromXml);
 	};
-	XmlContext.prototype.getAllFields = function()
+	XmlReaderContext.prototype.getAllFields = function()
 	{
 		// TODO: Implement
 		return [];
 		//return this.getAllByMapAndPath(this.pathToField, PATH_FIELDS, AscOForm.CField.fromXml);
 	};
-	XmlContext.prototype.getAllFieldMasters = function()
+	XmlReaderContext.prototype.getAllFieldMasters = function()
 	{
 		return this.getAllByMapAndPath(this.pathToFieldMaster, PATH_FIELD_MASTERS, AscOForm.CFieldMaster.fromXml);
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	XmlContext.prototype.getXmlReader = function(path)
+	XmlReaderContext.prototype.getXmlReader = function(path)
 	{
 		let part = this.pkg.getPartByUri(path);
 		if (!part)
@@ -144,7 +144,7 @@
 		
 		return new AscCommon.StaxParser(partContent, part, this);
 	};
-	XmlContext.prototype.getAllByMapAndPath = function(map, path, fromXml)
+	XmlReaderContext.prototype.getAllByMapAndPath = function(map, path, fromXml)
 	{
 		let result = [];
 		for (let key in map)
@@ -171,6 +171,23 @@
 		return result;
 	}
 	//--------------------------------------------------------export----------------------------------------------------
-	AscOForm.XmlContext = XmlContext;
+	AscOForm.XmlReaderContext = XmlReaderContext;
+	
+	
+	/**
+	 * Класс для работы с ссылками внутри xml структуры во время записи
+	 * @constructor
+	 */
+	function XmlWriterContext(pkg)
+	{
+		this.pkg = pkg;
+		
+		this.userToPath        = {};
+		this.userMasterToPath  = {};
+		this.fieldToPath       = {};
+		this.fieldMasterToPath = {};
+	}
+	//--------------------------------------------------------export----------------------------------------------------
+	AscOForm.XmlWriterContext = XmlWriterContext;
 	
 })(window);
