@@ -77,6 +77,15 @@
 		xmlPkg.setContext(new AscOForm.XmlWriterContext(xmlPkg));
 		writer.context = xmlPkg.getContext();
 		this.Format.toPkg(xmlPkg);
+		
+		// Наш XmlPackage работает в общей папке, а нам нужно запихнуть в zip подпапку oform
+		zip.getPaths().forEach(function(path)
+		{
+			let fileData = zip.getFile(path);
+			zip.removeFile(path);
+			if (path.startsWith("oform/"))
+				zip.addFile(path.substr(6), fileData);
+		});
 	};
 	OForm.prototype.setCurrentRole = function(roleName)
 	{
