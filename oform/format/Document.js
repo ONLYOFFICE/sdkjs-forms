@@ -220,7 +220,11 @@
 	};
 	CDocument.prototype.toPkg = function(xmlPkg)
 	{
-	
+		let xmlWriter = xmlPkg.getXmlWriter();
+		let main = xmlPkg.addPart(AscCommon.openXml.Types.oformMain);
+		
+		xmlWriter.Seek(0);
+		main.part.setDataXml(this, xmlWriter);
 	};
 	CDocument.prototype.fromXml = function(reader)
 	{
@@ -291,7 +295,7 @@
 		
 		for (let fgIndex = 0, fgCount = this.FieldGroups.length; fgIndex < fgCount; ++fgIndex)
 		{
-			this.FieldsGroups[fgIndex].toXml(writer);
+			this.FieldGroups[fgIndex].toXml(writer);
 		}
 		
 		writer.WriteXmlNodeEnd("document");

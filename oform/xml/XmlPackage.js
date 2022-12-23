@@ -51,7 +51,7 @@
 	{
 		let zip = this.zip;
 		let pkg = this;
-		zip.files.forEach(function(path)
+		zip.getPaths().forEach(function(path)
 		{
 			if (!path.endsWith("/"))
 			{
@@ -77,6 +77,10 @@
 	XmlPackage.prototype.setContext = function(context)
 	{
 		this.context = context;
+	};
+	XmlPackage.prototype.getXmlWriter = function()
+	{
+		return this.xmlWriter;
 	};
 	
 	//--------------------------------------------------------export----------------------------------------------------
