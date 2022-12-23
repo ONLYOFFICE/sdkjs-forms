@@ -180,55 +180,48 @@
 	};
 	CFieldMaster.prototype.toXml = function(writer)
 	{
-		return;
-		writer.WriteXmlString(AscCommonWord.g_sXmlHeader);
-		writer.WriteXmlNodeStart("FieldMaster");
-		writer.WriteXmlAttributeString("xmlns:r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-		writer.WriteXmlNullableAttributeString("id", this.FieldId);
+		let context = writer.context;
+		
+		writer.WriteXmlHeader();
+		writer.WriteXmlNodeStart("fieldMaster");
+		writer.WriteXmlRelationshipsNS();
+		if (this.FieldId)
+			writer.WriteXmlNullableAttributeString("id", this.FieldId);
 		writer.WriteXmlAttributesEnd();
-
-		writer.WriteXmlNodeStart("Users");
+		
+		writer.WriteXmlNodeStart("users");
 		writer.WriteXmlAttributesEnd();
-		let oContext           = writer.context;
-		let oUserMasterPartMap = oContext.userMasterPartMap;
-		let oUsersIdMap        = {};
-		for (let nUser = 0; nUser < this.Users.length; ++nUser)
+		
+		for (let index = 0, count = this.Users.length; index < count; ++index)
 		{
-			let oUser = this.Users[nUser];
-			let oPart = oUserMasterPartMap[oUser.Id];
-			if (!oPart)
-			{
-				oPart               = writer.context.part.addPart(AscCommon.openXml.Types.userMaster);
-				let oUserMemory     = new AscCommon.CMemory();
-				oUserMemory.context = writer.context;
-				oPart.part.setDataXml(oUser, oUserMemory);
-				oUserMasterPartMap[oUser.Id] = oPart;
-			}
-			let oNode                = new CT_XmlNode();
-			let sRId                 = oContext.part.addRelationship(AscCommon.openXml.Types.userMaster.relationType, oPart.uri);
-			oNode.attributes["r:id"] = sRId
-			oUsersIdMap[oUser.Id]    = sRId;
-			oNode.toXml(writer, "User");
+			let user = this.Users[index];
+			let part = context.getUserMasterPart(user);
+			if (!part)
+				continue;
+			
+			writer.WriteXmlNodeStart("user");
+			writer.WriteXmlNullableAttributeString("r:id", context.getRId(part));
+			writer.WriteXmlAttributesEnd(true);
 		}
-		writer.WriteXmlNodeEnd("Users");
-		if (this.SignRequest)
+		writer.WriteXmlNodeEnd("users");
+		
+		writer.WriteXmlNodeStart("signRequest");
+		writer.WriteXmlAttributesEnd();
+		
+		for (let index = 0, count = this.Signers.length; index < count; ++index)
 		{
-			this.SignRequest.toXml(writer, oUsersIdMap);
+			let user = this.Signers[index];
+			let part = context.getUserMasterPart(user);
+			if (!part)
+				continue;
+			
+			writer.WriteXmlNodeStart("user");
+			writer.WriteXmlNullableAttributeString("r:id", context.getRId(part));
+			writer.WriteXmlAttributesEnd(true);
 		}
-		writer.WriteXmlNodeEnd("FieldMaster");
-
-		if (writer.context.fileType === Asc.c_oAscFileType.OFORM)
-		{
-			if (this.Field)
-			{
-				let oPart       = writer.context.docPart.part.addPartWithoutRels(AscCommon.openXml.Types.field);
-				let oMemory     = new AscCommon.CMemory();
-				oMemory.context = writer.context;
-				oPart.setDataXml(this.Field, oMemory);
-				oMemory.Seek(0);
-				oPart.addRelationship(AscCommon.openXml.Types.fieldMaster.relationType, oContext.part.uri)
-			}
-		}
+		writer.WriteXmlNodeEnd("signRequest");
+		
+		writer.WriteXmlNodeEnd("fieldMaster");
 	};
 	CFieldMaster.fromXml = function(reader)
 	{
