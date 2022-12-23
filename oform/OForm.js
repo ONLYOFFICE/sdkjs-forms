@@ -82,9 +82,10 @@
 		zip.getPaths().forEach(function(path)
 		{
 			let fileData = zip.getFile(path);
-			zip.removeFile(path);
 			if (path.startsWith("oform/"))
 				zip.addFile(path.substr(6), fileData);
+
+			zip.removeFile(path);
 		});
 	};
 	OForm.prototype.setCurrentRole = function(roleName)
