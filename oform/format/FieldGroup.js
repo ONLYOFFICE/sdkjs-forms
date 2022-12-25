@@ -247,7 +247,7 @@
 							let rel = reader.rels.getRelationship(rId);
 							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
 							if (userMaster)
-								fG.addUserMaster(userMaster);
+								fG.addUser(userMaster);
 						}
 					}
 					

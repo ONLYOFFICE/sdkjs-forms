@@ -228,7 +228,7 @@
 		if (!reader.ReadNextNode())
 			return null;
 		
-		if ("field" !== reader.GetNameNoNS())
+		if ("fieldMaster" !== reader.GetNameNoNS())
 			return null;
 		
 		let fieldMaster = new CFieldMaster();

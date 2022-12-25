@@ -70,6 +70,7 @@
 		this.clearUsers();
 		this.clearUserMasters();
 		this.clearFieldGroups();
+		this.clearFieldMasters();
 	};
 	CDocument.prototype.setDefaultUser = function(userMaster)
 	{
@@ -488,6 +489,13 @@
 			return null;
 		
 		return this.FieldMasters[index];
+	};
+	CDocument.prototype.clearFieldMasters = function()
+	{
+		while (this.FieldMasters.length)
+		{
+			this.removeFieldMaster(this.FieldMasters[0]);
+		}
 	};
 	CDocument.prototype.getMinWeight = function()
 	{
