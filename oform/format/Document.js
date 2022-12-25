@@ -220,10 +220,9 @@
 	};
 	CDocument.prototype.toPkg = function(xmlPkg)
 	{
-		// TODO: default.xml
-		
 		let xmlContext = xmlPkg.getContext();
 		let xmlWriter  = xmlPkg.getXmlWriter();
+		
 		let main = xmlPkg.addPart(AscCommon.openXml.Types.oformMain).part;
 		
 		xmlWriter.Seek(0);
@@ -324,10 +323,30 @@
 		
 		// TODO: Author, Date
 		
-		writer.WriteXmlNodeWithText("description", this.getDescription());
-		writer.WriteXmlNodeWithText("type", this.getType());
-		writer.WriteXmlNodeWithText("application", this.getApplication());
-		writer.WriteXmlNodeWithText("id", this.getDocumentId());
+		let description = this.getDescription();
+		if (description)
+			writer.WriteXmlNodeWithText("description", description);
+		
+		let type = this.getType();
+		if (type)
+			writer.WriteXmlNodeWithText("type", type);
+		
+		let application = this.getApplication();
+		if (application)
+			writer.WriteXmlNodeWithText("application", application);
+		
+		let documentId = this.getDocumentId();
+		if (documentId)
+			writer.WriteXmlNodeWithText("id", documentId);
+		
+		let xmlContext      = writer.context;
+		let defaultUserPart = xmlContext.getDefaultUserMasterPart(this.DefaultUser);
+		if (defaultUserPart)
+		{
+			writer.WriteXmlNodeStart("defaultUser");
+			writer.WriteXmlNullableAttributeString("r:id", xmlContext.getRId(defaultUserPart));
+			writer.WriteXmlAttributesEnd(true);
+		}
 		
 		for (let fgIndex = 0, fgCount = this.FieldGroups.length; fgIndex < fgCount; ++fgIndex)
 		{

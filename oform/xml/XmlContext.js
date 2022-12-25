@@ -186,12 +186,18 @@
 		this.userMasterToPart  = {};
 		this.fieldToPart       = {};
 		this.fieldMasterToPart = {};
+		
+		this.partToRId = {};
 	}
 	XmlWriterContext.prototype.clearCurrentPartDataMaps = function()
 	{
+		this.partToRId = {};
 	};
 	XmlWriterContext.prototype.getRId = function(part)
 	{
+		if (this.partToRId[part.uri])
+			return this.partToRId[part.uri];
+		
 		if (!this.part)
 			return "";
 		
@@ -220,7 +226,9 @@
 		
 		relative += targetSplit.join('/');
 		
-		return this.part.addRelationship(null, relative);
+		let rId = this.part.addRelationship(null, relative);
+		this.partToRId[part.uri] = rId;
+		return rId;
 	};
 	XmlWriterContext.prototype.getUserPart = function(user)
 	{
@@ -233,6 +241,10 @@
 	XmlWriterContext.prototype.getUserMasterPart = function(userMaster)
 	{
 		return this.getPartFromPkg(this.userMasterToPart, userMaster, AscCommon.openXml.Types.oformUserMaster);
+	};
+	XmlWriterContext.prototype.getDefaultUserMasterPart = function(userMaster)
+	{
+		return this.getPartFromPkg(this.userMasterToPart, userMaster, AscCommon.openXml.Types.oformDefaultUserMaster);
 	};
 	XmlWriterContext.prototype.haveUserMasterPart = function(userMaster)
 	{
