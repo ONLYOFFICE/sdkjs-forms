@@ -194,14 +194,16 @@
 		
 		return this.FieldGroups[index];
 	};
-	CDocument.prototype.fromPkg = function(xmlPkg)
+	CDocument.prototype.fromPkg = function(xmlPkg, opt_sdtPrWithFieldPath)
 	{
 		let xmlContext  = xmlPkg.getContext();
 		let mainPart    = xmlPkg.getMainPart();
 		let mainContent = mainPart ? mainPart.getDocumentContent() : null;
 		if (mainContent)
 		{
-			let reader = new AscCommon.StaxParser(mainContent, mainPart, xmlContext);
+			let xmlParserContext = new AscCommon.XmlParserContext();
+			xmlParserContext.xmlReaderContext = xmlContext;
+			let reader = new AscCommon.StaxParser(mainContent, mainPart, xmlParserContext);
 			this.fromXml(reader);
 		}
 		
@@ -218,8 +220,19 @@
 		{
 			document.addFieldMaster(fieldMaster);
 		});
+		//todo unite with XmlParserContext.prototype.assignFieldsToSdt
+		if (opt_sdtPrWithFieldPath) {
+			for (let nSdt = 0; nSdt < opt_sdtPrWithFieldPath.length; ++nSdt) {
+				let oPair = opt_sdtPrWithFieldPath[nSdt];
+				// let oFieldMaster = xmlContext.pathToFieldMaster[oPair.target];
+				let oFieldMaster = xmlContext.getFieldMaster(oPair.target);
+				if (oFieldMaster && oPair.sdt.SetFieldMaster) {
+					oPair.sdt.SetFieldMaster(oFieldMaster);
+				}
+			}
+		}
 	};
-	CDocument.prototype.toPkg = function(xmlPkg)
+	CDocument.prototype.toPkg = function(xmlPkg, opt_fieldMastersPartMap)
 	{
 		let xmlContext = xmlPkg.getContext();
 		let xmlWriter  = xmlPkg.getXmlWriter();
@@ -258,7 +271,14 @@
 				xmlWriter.Seek(0);
 				let part = xmlPkg.addPart(AscCommon.openXml.Types.oformFieldMaster);
 				if (part)
+				{
 					part.part.setDataXml(fieldMaster, xmlWriter);
+					if (opt_fieldMastersPartMap)
+					{
+						//todo remove path manipulation
+						opt_fieldMastersPartMap[fieldMaster.Id] = '..'+part.part.uri;
+					}
+				}
 			}
 		});
 	};
@@ -300,10 +320,10 @@
 					{
 						if ("r:id" === reader.GetName())
 						{
-							let xmlContext = reader.GetContext();
+							let xmlReaderContext = reader.GetContext().xmlReaderContext;
 							let rId = reader.GetValueDecodeXml();
 							let rel = reader.rels.getRelationship(rId);
-							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+							let userMaster = xmlReaderContext.getUserMaster(rel.getFullPath());
 							if (userMaster)
 								this.setDefaultUser(userMaster);
 						}

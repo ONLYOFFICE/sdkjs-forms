@@ -141,8 +141,10 @@
 		let partContent = part.getDocumentContent();
 		if (!partContent)
 			return null;
-		
-		return new AscCommon.StaxParser(partContent, part, this);
+
+		let xmlParserContext = new AscCommon.XmlParserContext();
+		xmlParserContext.xmlReaderContext = this;
+		return new AscCommon.StaxParser(partContent, part, xmlParserContext);
 	};
 	XmlReaderContext.prototype.getAllByMapAndPath = function(map, path, fromXml)
 	{
@@ -164,7 +166,10 @@
 				
 				let element = fromXml(reader);
 				if (element)
+				{
+					map[uri] = element;
 					result.push(element);
+				}
 			}
 		}
 		

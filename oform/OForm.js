@@ -64,19 +64,19 @@
 	{
 		return this.Format;
 	};
-	OForm.prototype.fromZip = function(zip)
+	OForm.prototype.fromZip = function(zip, opt_sdtPrWithFieldPath)
 	{
 		let xmlPkg = new AscOForm.XmlPackage(zip);
 		xmlPkg.setContext(new AscOForm.XmlReaderContext(xmlPkg));
-		this.Format.fromPkg(xmlPkg);
+		this.Format.fromPkg(xmlPkg, opt_sdtPrWithFieldPath);
 	};
-	OForm.prototype.toZip = function(zip)
+	OForm.prototype.toZip = function(zip, opt_fieldMastersPartMap)
 	{
 		let writer = new AscCommon.CMemory();
 		let xmlPkg = new AscOForm.XmlPackage(zip, writer);
 		xmlPkg.setContext(new AscOForm.XmlWriterContext(xmlPkg));
 		writer.context = xmlPkg.getContext();
-		this.Format.toPkg(xmlPkg);
+		this.Format.toPkg(xmlPkg, opt_fieldMastersPartMap);
 		
 		// Наш XmlPackage работает в общей папке, а нам нужно запихнуть в zip подпапку oform
 		zip.getPaths().forEach(function(path)

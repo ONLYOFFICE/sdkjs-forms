@@ -270,7 +270,7 @@
 	
 	function readUsersFromXml(reader)
 	{
-		let xmlContext = reader.GetContext();
+		let xmlReaderContext = reader.GetContext().xmlReaderContext;
 		let users = [];
 		let depth = reader.GetDepth();
 		while (reader.ReadNextSiblingNode(depth))
@@ -283,7 +283,7 @@
 					{
 						let rId = reader.GetValueDecodeXml();
 						let rel = reader.rels.getRelationship(rId);
-						let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+						let userMaster = xmlReaderContext && xmlReaderContext.getUserMaster(rel.getFullPath());
 						if (userMaster)
 							users.push(userMaster);
 					}

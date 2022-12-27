@@ -231,7 +231,7 @@
 				fG.setWeight(reader.GetValueInt());
 		}
 		
-		let xmlContext = reader.GetContext();
+		let xmlReaderContext = reader.GetContext().xmlReaderContext;
 		let depth = reader.GetDepth();
 		while (reader.ReadNextSiblingNode(depth))
 		{
@@ -245,7 +245,7 @@
 						{
 							let rId = reader.GetValueDecodeXml();
 							let rel = reader.rels.getRelationship(rId);
-							let userMaster = xmlContext.getUserMaster(rel.getFullPath());
+							let userMaster = xmlReaderContext && xmlReaderContext.getUserMaster(rel.getFullPath());
 							if (userMaster)
 								fG.addUser(userMaster);
 						}
@@ -260,7 +260,7 @@
 						{
 							let rId = reader.GetValueDecodeXml();
 							let rel = reader.rels.getRelationship(rId);
-							let fieldMaster = xmlContext.getFieldMaster(rel.getFullPath());
+							let fieldMaster = xmlReaderContext && xmlReaderContext.getFieldMaster(rel.getFullPath());
 							if (fieldMaster)
 								fG.addField(fieldMaster);
 						}
