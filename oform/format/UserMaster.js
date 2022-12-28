@@ -103,7 +103,7 @@
 	{
 		// TODO: Возможно стоит придумать уникальный id общий для дефолтовой роли
 		this.setRole("Anyone");
-		this.setColor(128, 128, 128);
+		this.setColor(255, 239, 191);
 	};
 	CUserMaster.prototype.compare = function(user)
 	{
