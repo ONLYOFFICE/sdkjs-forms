@@ -41,14 +41,21 @@
 	window['AscDFH'].historyitem_OForm_Document_Application = window['AscDFH'].historyitem_type_OForm_Document | 5;
 	window['AscDFH'].historyitem_OForm_Document_DocumentId  = window['AscDFH'].historyitem_type_OForm_Document | 6;
 	window['AscDFH'].historyitem_OForm_Document_FieldGroup  = window['AscDFH'].historyitem_type_OForm_Document | 7;
+	window['AscDFH'].historyitem_OForm_Document_User        = window['AscDFH'].historyitem_type_OForm_Document | 8;
+	window['AscDFH'].historyitem_OForm_Document_UserMaster  = window['AscDFH'].historyitem_type_OForm_Document | 9;
+	window['AscDFH'].historyitem_OForm_Document_FieldMaster = window['AscDFH'].historyitem_type_OForm_Document | 10;
+	window['AscDFH'].historyitem_OForm_Document_DefaultUser = window['AscDFH'].historyitem_type_OForm_Document | 11;
 
 	/**
 	 * @constructor
 	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
 	 */
-	function CChangesOFormDocumentAuthor(Class, Old, New)
+	function CChangesOFormDocumentAuthor(Class, oldAuthor, newAuthor)
 	{
-		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+		let oldId = oldAuthor ? oldAuthor.GetId() : undefined;
+		let newId = newAuthor ? newAuthor.GetId() : undefined;
+		
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, oldId, newId);
 	}
 	window['AscDFH'].InheritPropertyChange(
 		CChangesOFormDocumentAuthor,
@@ -56,7 +63,16 @@
 		window['AscDFH'].historyitem_OForm_Document_Author,
 		function(value)
 		{
-			this.Class.Author = value;
+			if (undefined === value)
+			{
+				this.Class.Author = undefined;
+			}
+			else
+			{
+				let author = AscCommon.g_oTableId.GetById(value);
+				if (author)
+					this.Class.Author = value;
+			}
 		},
 		false
 	);
@@ -177,16 +193,137 @@
 		{
 			let fieldGroup = AscCommon.g_oTableId.GetById(this.Key);
 			if (-1 === this.Class.FieldGroups.indexOf(fieldGroup))
+			{
+				fieldGroup.setParent(this.Class);
 				this.Class.FieldGroups.push(fieldGroup);
+				this.Class.onChangeFieldGroups();
+			}
 		},
 		function()
 		{
 			let fieldGroup = AscCommon.g_oTableId.GetById(this.Key);
 			let index      = this.Class.FieldGroups.indexOf(fieldGroup);
 			if (-1 !== index)
+			{
+				fieldGroup.setParent(null);
 				this.Class.FieldGroups.splice(index, 1);
+				this.Class.onChangeFieldGroups();
+			}
 		}
 	);
 	window['AscDFH'].CChangesOFormDocumentFieldGroup = CChangesOFormDocumentFieldGroup;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
+	 */
+	function CChangesOFormDocumentUser(Class, userId, isAdd)
+	{
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userId, isAdd);
+	}
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormDocumentUser,
+		window['AscDFH'].historyitem_OForm_Document_User,
+		function()
+		{
+			let user = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.Users.indexOf(user))
+				this.Class.Users.push(user);
+		},
+		function()
+		{
+			let user  = AscCommon.g_oTableId.GetById(this.Key);
+			let index = this.Class.Users.indexOf(user);
+			if (-1 !== index)
+				this.Class.Users.splice(index, 1);
+		}
+	);
+	window['AscDFH'].CChangesOFormDocumentUser = CChangesOFormDocumentUser;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
+	 */
+	function CChangesOFormDocumentUserMaster(Class, userMasterId, isAdd)
+	{
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, userMasterId, isAdd);
+	}
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormDocumentUserMaster,
+		window['AscDFH'].historyitem_OForm_Document_UserMaster,
+		function()
+		{
+			let userMaster = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.UserMasters.indexOf(userMaster))
+			{
+				userMaster.setParent(this.Class);
+				this.Class.UserMasters.push(userMaster);
+			}
+		},
+		function()
+		{
+			let userMaster = AscCommon.g_oTableId.GetById(this.Key);
+			let index      = this.Class.UserMasters.indexOf(userMaster);
+			if (-1 !== index)
+			{
+				userMaster.setParent(null);
+				this.Class.UserMasters.splice(index, 1);
+			}
+		}
+	);
+	window['AscDFH'].CChangesOFormDocumentUserMaster = CChangesOFormDocumentUserMaster;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesDictionaryBase}
+	 */
+	function CChangesOFormDocumentFieldMaster(Class, fieldMasterId, isAdd)
+	{
+		window['AscDFH'].CChangesDictionaryBase.call(this, Class, fieldMasterId, isAdd);
+	}
+	window['AscDFH'].InheritDictionaryChange(
+		CChangesOFormDocumentFieldMaster,
+		window['AscDFH'].historyitem_OForm_Document_FieldMaster,
+		function()
+		{
+			let field = AscCommon.g_oTableId.GetById(this.Key);
+			if (-1 === this.Class.FieldMasters.indexOf(field))
+				this.Class.FieldMasters.push(field);
+		},
+		function()
+		{
+			let field = AscCommon.g_oTableId.GetById(this.Key);
+			let index = this.Class.FieldMasters.indexOf(field);
+			if (-1 !== index)
+				this.Class.FieldMasters.splice(index, 1);
+		}
+	);
+	window['AscDFH'].CChangesOFormDocumentFieldMaster = CChangesOFormDocumentFieldMaster;
+
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormDocumentDefaultUser(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormDocumentDefaultUser,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_Document_DefaultUser,
+		function(value)
+		{
+			let document = this.Class;
+			let userMaster = AscCommon.g_oTableId.GetById(value);
+			if (userMaster)
+			{
+				userMaster.setParent(document);
+				document.DefaultUser = userMaster;
+			}
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormDocumentDefaultUser = CChangesOFormDocumentDefaultUser;
 
 })(window);
