@@ -270,7 +270,7 @@
 	
 	function readUsersFromXml(reader)
 	{
-		let xmlReaderContext = reader.GetContext().xmlReaderContext;
+		let xmlReaderContext = reader.GetOformContext();
 		let users = [];
 		let depth = reader.GetDepth();
 		while (reader.ReadNextSiblingNode(depth))

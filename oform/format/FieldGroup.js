@@ -231,7 +231,7 @@
 				fG.setWeight(reader.GetValueInt());
 		}
 		
-		let xmlReaderContext = reader.GetContext().xmlReaderContext;
+		let xmlReaderContext = reader.GetOformContext();
 		let depth = reader.GetDepth();
 		while (reader.ReadNextSiblingNode(depth))
 		{

@@ -52,6 +52,10 @@
 		this.pathToField       = {};
 		this.pathToFieldMaster = {};
 	}
+	XmlReaderContext.prototype.getOformContext = function()
+	{
+		return this;
+	};
 	XmlReaderContext.prototype.getUser = function(path)
 	{
 		let user = this.pathToUser[path];
@@ -143,7 +147,7 @@
 			return null;
 
 		let xmlParserContext = new AscCommon.XmlParserContext();
-		xmlParserContext.xmlReaderContext = this;
+		xmlParserContext.setOformContext(this);
 		return new AscCommon.StaxParser(partContent, part, xmlParserContext);
 	};
 	XmlReaderContext.prototype.getAllByMapAndPath = function(map, path, fromXml)
