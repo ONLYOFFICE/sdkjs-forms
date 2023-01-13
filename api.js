@@ -298,10 +298,35 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
 			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList);
-			var oCC = oLogicDocument.AddContentControlDatePicker(oPr, oCommonPr);
+			
+			let dateTimePr = null;
+			let formPr     = null;
+			let ccPr       = null;
+			
+			// Пока для совместимости со старым форматом оставляем, чтобы настройки могли приходить по старому (oPr, oCommonPr)
+			// но в будущем надо перейти на новый вариант contentPr (AscCommon.CContentControlPr)
+			if (oPr && (oPr instanceof AscCommon.CContentControlPr))
+			{
+				dateTimePr = oPr.DateTimePr;
+				ccPr       = oPr;
+				formPr     = oPr.FormPr;
+			}
+			else if (oPr && (oPr instanceof AscWord.CSdtDatePickerPr))
+			{
+				dateTimePr = oPr;
+				ccPr       = oCommonPr ? oCommonPr : null;
+			}
+			
+			var oCC = oLogicDocument.AddContentControlDatePicker(dateTimePr);
 
-			if (oCC && oCommonPr)
-				oCC.SetContentControlPr(oCommonPr);
+			if (oCC && ccPr)
+				oCC.SetContentControlPr(ccPr);
+			
+			if (oCC && formPr)
+			{
+				private_ApplyFormPr(oCC, formPr, oLogicDocument);
+				private_CheckFormKey(oCC, oLogicDocument);
+			}
 
 			oLogicDocument.Recalculate();
 			oLogicDocument.UpdateInterface();
