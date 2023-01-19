@@ -170,7 +170,22 @@
 		if (this.Roles.length <= 1
 			&& this.Roles[roleIndex].getUserMaster() === this.Format.getDefaultUserMaster()
 			&& -1 === delegateIndex)
+		{
+			let defaultUserMaster = this.Format.getDefaultUserMaster();
+			if (!defaultUserMaster.isDefaultUserProps())
+			{
+				if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
+					return false;
+				
+				defaultUserMaster.initDefaultUser();
+				
+				this.NeedRedraw = true;
+				this.endAction();
+				return true;
+			}
+			
 			return false;
+		}
 			
 		if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
 			return false;
