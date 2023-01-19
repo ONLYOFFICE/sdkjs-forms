@@ -460,7 +460,7 @@
 	{
 		if (!this.NeedUpdateRoles)
 			return;
-
+		
 		this.NeedUpdateRoles = false;
 		
 		this.Roles = [];
@@ -549,6 +549,11 @@
 		this.Format.removeUnusedFieldMasters();
 		this.Format.correctFieldMasters(this.getDocument());
 		this.correctFieldGroups();
+		this.updateRoles();
+		this.checkRedraw();
+	};
+	OForm.prototype.onUndoRedo = function()
+	{
 		this.updateRoles();
 		this.checkRedraw();
 	};
