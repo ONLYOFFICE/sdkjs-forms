@@ -37,10 +37,11 @@
 	/**
 	 * @param {boolean} [generateId=false]
 	 * @constructor
+	 * @extends AscOForm.CBaseFormatObject
 	 */
 	function CFieldMaster(generateId)
 	{
-		AscFormat.CBaseFormatObject.call(this);
+		AscOForm.CBaseFormatObject.call(this);
 
 		this.FieldId = null;
 		this.Field   = null;
@@ -50,7 +51,7 @@
 		if (true === generateId)
 			this.setFieldId(AscCommon.CreateGUID());
 	}
-	AscFormat.InitClass(CFieldMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldMaster);
+	AscFormat.InitClass(CFieldMaster, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldMaster);
 	CFieldMaster.prototype.setLogicField = function(logicField)
 	{
 		this.Field = logicField;
