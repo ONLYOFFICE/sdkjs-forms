@@ -51,7 +51,11 @@
 	AscFormat.InitClass(CFieldGroup, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
 	CFieldGroup.prototype.setParent = function(parent)
 	{
+		if (this.Parent === parent)
+			return;
+		
 		this.Parent = parent;
+		this.onChange();
 	};
 	CFieldGroup.prototype.setWeight = function(value)
 	{
