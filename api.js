@@ -30,6 +30,8 @@
  *
  */
 
+var AscOForm = {};
+window["AscOForm"] = window.AscOForm = AscOForm;
 
 (function(window, document) {
     window['Asc']['Addons'] = window['Asc']['Addons'] || {};
@@ -82,7 +84,7 @@
 
 			if (oFormPr)
 			{
-				oCC.SetFormPr(oFormPr);
+				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
 				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
 			}
@@ -272,7 +274,7 @@
 
 			if (oCC && oFormPr)
 			{
-				oCC.SetFormPr(oFormPr);
+				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
 				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
 			}
@@ -296,10 +298,35 @@
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
 			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList);
-			var oCC = oLogicDocument.AddContentControlDatePicker(oPr, oCommonPr);
+			
+			let dateTimePr = null;
+			let formPr     = null;
+			let ccPr       = null;
+			
+			// Пока для совместимости со старым форматом оставляем, чтобы настройки могли приходить по старому (oPr, oCommonPr)
+			// но в будущем надо перейти на новый вариант contentPr (AscCommon.CContentControlPr)
+			if (oPr && (oPr instanceof AscCommon.CContentControlPr))
+			{
+				dateTimePr = oPr.DateTimePr;
+				ccPr       = oPr;
+				formPr     = oPr.FormPr;
+			}
+			else if (oPr && (oPr instanceof AscWord.CSdtDatePickerPr))
+			{
+				dateTimePr = oPr;
+				ccPr       = oCommonPr ? oCommonPr : null;
+			}
+			
+			var oCC = oLogicDocument.AddContentControlDatePicker(dateTimePr);
 
-			if (oCC && oCommonPr)
-				oCC.SetContentControlPr(oCommonPr);
+			if (oCC && ccPr)
+				oCC.SetContentControlPr(ccPr);
+			
+			if (oCC && formPr)
+			{
+				private_ApplyFormPr(oCC, formPr, oLogicDocument);
+				private_CheckFormKey(oCC, oLogicDocument);
+			}
 
 			oLogicDocument.Recalculate();
 			oLogicDocument.UpdateInterface();
@@ -329,7 +356,7 @@
 
 				if (formPr)
 				{
-					oCC.SetFormPr(formPr);
+					private_ApplyFormPr(oCC, formPr, oLogicDocument);
 					oCC.UpdatePlaceHolderTextPrForForm();
 					private_CheckFormKey(oCC, oLogicDocument);
 				}
@@ -423,6 +450,27 @@
 		key = keyGenerator.GetNewKey(form);
 		formPr.SetKey(key);
 		form.SetFormPr(formPr);
+	}
+	function private_ApplyFormPr(form, formPr, logicDocument)
+	{
+		if (!form || !formPr)
+			return;
+		
+		form.SetFormPr(formPr);
+		
+		if (formPr.GetFixed())
+		{
+			logicDocument.Recalculate(true);
+			let drawing = form.ConvertFormToFixed();
+			if (drawing)
+			{
+				let drawingPr = new Asc.asc_CImgProperty();
+				drawingPr.asc_putWrappingStyle(Asc.c_oAscWrapStyle2.Square);
+				drawing.Set_Props(drawingPr);
+				
+				form.MoveCursorToContentControl(false);
+			}
+		}
 	}
 
 })(window, window.document);
