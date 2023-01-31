@@ -54,7 +54,11 @@
 	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
 	CUserMaster.prototype.setParent = function(parent)
 	{
+		if (this.Parent === parent)
+			return;
+		
 		this.Parent = parent;
+		this.onChange();
 	};
 	CUserMaster.prototype.setUserId = function(userId)
 	{
