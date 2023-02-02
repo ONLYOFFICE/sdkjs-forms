@@ -178,6 +178,10 @@
 			&& this.Field.IsUseInDocument()
 			&& this === this.Field.GetFieldMaster());
 	};
+	CFieldMaster.prototype.isMainField = function()
+	{
+		return (this.Field && this.Field.IsMainForm());
+	};
 	CFieldMaster.prototype.toXml = function(writer)
 	{
 		let context = writer.context;
@@ -270,7 +274,7 @@
 	
 	function readUsersFromXml(reader)
 	{
-		let xmlReaderContext = reader.GetContext().xmlReaderContext;
+		let xmlReaderContext = reader.GetOformContext();
 		let users = [];
 		let depth = reader.GetDepth();
 		while (reader.ReadNextSiblingNode(depth))

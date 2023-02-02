@@ -202,7 +202,7 @@
 		if (mainContent)
 		{
 			let xmlParserContext = new AscCommon.XmlParserContext();
-			xmlParserContext.xmlReaderContext = xmlContext;
+			xmlParserContext.setOformContext(xmlContext);
 			let reader = new AscCommon.StaxParser(mainContent, mainPart, xmlParserContext);
 			this.fromXml(reader);
 		}
@@ -320,7 +320,7 @@
 					{
 						if ("r:id" === reader.GetName())
 						{
-							let xmlReaderContext = reader.GetContext().xmlReaderContext;
+							let xmlReaderContext = reader.GetOformContext();
 							let rId = reader.GetValueDecodeXml();
 							let rel = reader.rels.getRelationship(rId);
 							let userMaster = xmlReaderContext.getUserMaster(rel.getFullPath());

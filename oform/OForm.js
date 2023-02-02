@@ -170,7 +170,22 @@
 		if (this.Roles.length <= 1
 			&& this.Roles[roleIndex].getUserMaster() === this.Format.getDefaultUserMaster()
 			&& -1 === delegateIndex)
+		{
+			let defaultUserMaster = this.Format.getDefaultUserMaster();
+			if (!defaultUserMaster.isDefaultUserProps())
+			{
+				if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
+					return false;
+				
+				defaultUserMaster.initDefaultUser();
+				
+				this.NeedRedraw = true;
+				this.endAction();
+				return true;
+			}
+			
 			return false;
+		}
 			
 		if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
 			return false;
@@ -445,7 +460,7 @@
 	{
 		if (!this.NeedUpdateRoles)
 			return;
-
+		
 		this.NeedUpdateRoles = false;
 		
 		this.Roles = [];
@@ -534,6 +549,11 @@
 		this.Format.removeUnusedFieldMasters();
 		this.Format.correctFieldMasters(this.getDocument());
 		this.correctFieldGroups();
+		this.updateRoles();
+		this.checkRedraw();
+	};
+	OForm.prototype.onUndoRedo = function()
+	{
 		this.updateRoles();
 		this.checkRedraw();
 	};

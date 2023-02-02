@@ -149,8 +149,11 @@
 		let fields = [];
 		for (let fieldIndex = 0, fieldCount = this.Fields.length; fieldIndex < fieldCount; ++fieldIndex)
 		{
-			if (this.Fields[fieldIndex].isUseInDocument())
+			if (this.Fields[fieldIndex].isUseInDocument()
+				&& this.Fields[fieldIndex].isMainField())
+			{
 				fields.push(this.Fields[fieldIndex]);
+			}
 		}
 		
 		if (this.Users.length && this.Parent)
@@ -160,8 +163,12 @@
 				let userFields = this.Parent.getAllFieldsByUserMaster(this.Users[index]);
 				for (let fieldIndex = 0, fieldCount = userFields.length; fieldIndex < fieldCount; ++fieldIndex)
 				{
-					if (-1 === fields.indexOf(userFields[fieldIndex]) && userFields[fieldIndex].isUseInDocument())
+					if (-1 === fields.indexOf(userFields[fieldIndex])
+						&& userFields[fieldIndex].isUseInDocument()
+						&& userFields[fieldIndex].isMainField())
+					{
 						fields.push(userFields[fieldIndex]);
+					}
 				}
 			}
 		}
@@ -231,7 +238,7 @@
 				fG.setWeight(reader.GetValueInt());
 		}
 		
-		let xmlReaderContext = reader.GetContext().xmlReaderContext;
+		let xmlReaderContext = reader.GetOformContext();
 		let depth = reader.GetDepth();
 		while (reader.ReadNextSiblingNode(depth))
 		{

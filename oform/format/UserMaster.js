@@ -102,7 +102,7 @@
 	CUserMaster.prototype.initDefaultUser = function()
 	{
 		// TODO: Возможно стоит придумать уникальный id общий для дефолтовой роли
-		this.setRole("Anyone");
+		this.setRole(AscCommon.translateManager.getValue("Anyone"));
 		this.setColor(255, 239, 191);
 	};
 	CUserMaster.prototype.compare = function(user)
@@ -141,6 +141,18 @@
 	CUserMaster.prototype.isEqual = function(user)
 	{
 		return (0 === this.compare(user));
+	};
+	CUserMaster.prototype.isDefaultUserProps = function()
+	{
+		let result = false;
+		let u = this;
+		AscCommon.ExecuteNoHistory(function()
+		{
+			let defaultUser = new CUserMaster();
+			defaultUser.initDefaultUser();
+			result = defaultUser.isEqual(u);
+		});
+		return result;
 	};
 	CUserMaster.prototype.onChange = function()
 	{
