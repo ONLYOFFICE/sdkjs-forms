@@ -62,33 +62,33 @@
 	 */
 
 	/**
-	 * Specific text form properties.
+	 * Specific text field properties.
 	 * @typedef {Object} TextFormPrBase
-	 * @property {boolean} comb - Specifies if the text form should be a comb of characters with the same cell width. The maximum number of characters must be set to a positive value.
-	 * @property {number} maxCharacters - The maximum number of characters in the text form.
+	 * @property {boolean} comb - Specifies if the text field should be a comb of characters with the same cell width. The maximum number of characters must be set to a positive value.
+	 * @property {number} maxCharacters - The maximum number of characters in the text field.
 	 * @property {number} cellWidth - The cell width for each character measured in millimeters. If this parameter is not specified or equal to 0 or less, then the width will be set automatically.
-	 * @property {boolean} multiLine - Specifies if the current fixed size text form is multiline or not.
-	 * @property {boolean} autoFit - Specifies if the text form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
+	 * @property {boolean} multiLine - Specifies if the current fixed size text field is multiline or not.
+	 * @property {boolean} autoFit - Specifies if the text field content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
 	 */
 
 	/**
-	 * Text form properties.
+	 * Text field properties.
 	 * @typedef {FormPrBase | TextFormPrBase} TextFormPr
 	 */
 	 
 	/**
-	 * Specific checkbox properties.
+	 * Specific checkbox / radio button properties.
 	 * @typedef {Object} CheckBoxFormPrBase
 	 * @property {boolean} radio - Specifies if the current checkbox is a radio button. In this case, the key parameter is considered as an identifier for the group of radio buttons.
 	 */
 
 	/**
-	 * Checkbox form properties.
+	 * Checkbox / radio button properties.
 	 * @typedef {FormPrBase | CheckBoxFormPrBase} CheckBoxFormPr
 	 */
 
 	/**
-	 * Specific combo box properties.
+	 * Specific combo box / dropdown list properties.
 	 * @typedef {Object} ComboBoxFormPrBase
 	 * @property {boolean} editable - Specifies if the combo box text can be edited.
 	 * @property {boolean} autoFit - Specifies if the combo box form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
@@ -100,7 +100,7 @@
 	 */
 
 	/**
-	 * Combo box form properties.
+	 * Combo box / dropdown list properties.
 	 * @typedef {FormPrBase | ComboBoxFormPrBase} ComboBoxFormPr
 	 */
 
@@ -136,9 +136,9 @@
 	 */
 
 	/**
-	 * Creates a text form with the specified text form properties.
+	 * Creates a text field with the specified text field properties.
 	 * @memberof Api
-	 * @param {TextFormPr} oFormPr - Text form properties.
+	 * @param {TextFormPr} oFormPr - Text field properties.
 	 * @returns {ApiTextForm}
 	 */
 	Api.prototype.CreateTextForm = function(oFormPr)
@@ -160,9 +160,9 @@
 		return new AscBuilder.ApiTextForm(oCC);
 	};
 	/**
-	 * Creates a checkbox/radio button form with the specified checkbox/radio button form properties.
+	 * Creates a checkbox / radio button with the specified checkbox / radio button properties.
 	 * @memberof Api
-	 * @param {CheckBoxFormPr} oFormPr - Checkbox/radio button form properties.
+	 * @param {CheckBoxFormPr} oFormPr - Checkbox / radio button properties.
 	 * @returns {ApiCheckBoxForm}
 	 */
 	Api.prototype.CreateCheckBoxForm = function(oFormPr)
@@ -230,9 +230,9 @@
 		return new AscBuilder.ApiCheckBoxForm(oCC);
 	};
 	/**
-	 * Creates a combo box/dropdown form with the specified combo box/dropdown form properties.
+	 * Creates a combo box / dropdown list with the specified combo box / dropdown list properties.
 	 * @memberof Api
-	 * @param {ComboBoxFormPr} oFormPr - Combo box/dropdown form properties.
+	 * @param {ComboBoxFormPr} oFormPr - Combo box / dropdown list properties.
 	 * @returns {ApiComboBoxForm}
 	 */
 	Api.prototype.CreateComboBoxForm = function(oFormPr)
