@@ -456,7 +456,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (!form || !formPr)
 			return;
 		
-		form.SetFormPr(formPr);
+		form.SetFormPr(formPr.Copy());
 		
 		if (formPr.GetFixed())
 		{

@@ -38,10 +38,11 @@
 	 * Основной класс для работы с форматом oform
 	 * @param oform {AscOForm.OForm}
 	 * @constructor
+	 * @extends AscOForm.CBaseFormatObject
 	 */
 	function CDocument(oform)
 	{
-		AscFormat.CBaseFormatObject.call(this);
+		AscOForm.CBaseFormatObject.call(this);
 		
 		this.OForm = oform;
 		
@@ -63,7 +64,7 @@
 		this.UserMasters  = [];
 		this.FieldMasters = [];
 	}
-	AscFormat.InitClass(CDocument, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
+	AscFormat.InitClass(CDocument, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
 	CDocument.prototype.clear = function()
 	{
 		// TODO: fields?

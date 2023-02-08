@@ -10,6 +10,7 @@
       "oform/Role.js",
       "oform/xml/XmlPackage.js",
       "oform/xml/XmlContext.js",
+      "oform/format/BaseFormatObject.js",
       "oform/format/Document.js",
       "oform/format/FieldGroup.js",
       "oform/format/FieldMaster.js",
