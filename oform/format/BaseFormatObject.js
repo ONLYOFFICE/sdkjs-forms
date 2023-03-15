@@ -34,76 +34,43 @@
 
 (function(window)
 {
+	
+	
 	/**
-	 * @param {AscOForm.CUserMaster} userMaster
+	 * Базовый класс для всех форматных классов в oform
 	 * @constructor
-	 * @extends AscOForm.CBaseFormatObject
 	 */
-	function CUser(userMaster)
+	function CBaseFormatObject()
 	{
-		AscOForm.CBaseFormatObject.call(this);
-
-		this.Email      = undefined;
-		this.Telephone  = undefined;
-		this.UserMaster = undefined;
-
-		if (userMaster)
-			this.setUserMaster(userMaster);
+		this.Id = null;
+		
+		if (!AscCommon.g_oIdCounter.m_bLoad && !AscCommon.History.CanAddChanges())
+			return;
+		
+		this.Id = AscCommon.g_oIdCounter.GetNewIdForOForm();
+		AscCommon.g_oTableId.Add(this, this.Id);
 	}
-	AscFormat.InitClass(CUser, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_User);
-	CUser.prototype.setUserMaster = function(userMaster)
+	CBaseFormatObject.prototype.GetId = function()
 	{
-		if (this.UserMaster === userMaster)
-			return;
-
-		let oldValue = this.UserMaster ? this.UserMaster.GetId() : undefined;
-		let newValue = userMaster ? userMaster.GetId() : undefined;
-
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserUserMaster(this, oldValue, newValue));
-		this.UserMaster = userMaster;
+		return this.Id;
 	};
-	CUser.prototype.setEmail = function(email)
+	CBaseFormatObject.prototype.Get_Id = function()
 	{
-		if (email === this.Email)
-			return;
-
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserEmail(this, this.Email, email));
-		this.Email = email;
+		return this.Id;
 	};
-	CUser.prototype.setTelephone = function(telephone)
+	CBaseFormatObject.prototype.Write_ToBinary2 = function(writer)
 	{
-		if (telephone === this.Telephone)
-			return;
-
-		AscCommon.History.Add(new AscDFH.CChangesOFormUserTelephone(this, this.Telephone, telephone));
-		this.Telephone = telephone;
+		writer.WriteLong(this.classType);
+		writer.WriteString2(this.GetId());
 	};
-	CUser.prototype.getUserMaster = function()
+	CBaseFormatObject.prototype.Read_FromBinary2 = function(reader)
 	{
-		return this.UserMaster;
+		this.Id = reader.GetString2();
 	};
-	CUser.prototype.toXml = function(writer)
+	CBaseFormatObject.prototype.Refresh_RecalcData = function(change)
 	{
-		writer.WriteXmlHeader();
-		writer.WriteXmlNodeStart("user");
-		writer.WriteXmlAttributesEnd();
-		
-		if (this.Email)
-			writer.WriteXmlNodeWithText("email", this.Email);
-		if (this.Telephone)
-			writer.WriteXmlNodeWithText("telephone", this.Telephone);
-		
-		writer.WriteXmlNodeEnd("user");
-	};
-	CUser.fromXml = function(reader)
-	{
-		let user = new CUser();
-		
-		
-		
-		return user;
 	};
 	//--------------------------------------------------------export----------------------------------------------------
-	AscOForm.CUser = CUser;
-
+	AscOForm.CBaseFormatObject = CBaseFormatObject;
+	
 })(window);

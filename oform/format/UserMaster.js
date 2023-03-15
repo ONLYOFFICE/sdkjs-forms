@@ -37,10 +37,11 @@
 	/**
 	 * @param {boolean} [generateId=false]
 	 * @constructor
+	 * @extends AscOForm.CBaseFormatObject
 	 */
 	function CUserMaster(generateId)
 	{
-		AscFormat.CBaseFormatObject.call(this);
+		AscOForm.CBaseFormatObject.call(this);
 
 		this.UserId = undefined;
 		this.Role   = undefined;
@@ -51,10 +52,14 @@
 		
 		this.Parent = null;
 	}
-	AscFormat.InitClass(CUserMaster, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
+	AscFormat.InitClass(CUserMaster, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
 	CUserMaster.prototype.setParent = function(parent)
 	{
+		if (this.Parent === parent)
+			return;
+		
 		this.Parent = parent;
+		this.onChange();
 	};
 	CUserMaster.prototype.setUserId = function(userId)
 	{

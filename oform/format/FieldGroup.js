@@ -36,10 +36,11 @@
 {
 	/**
 	 * @constructor
+	 * @extends AscOForm.CBaseFormatObject
 	 */
 	function CFieldGroup()
 	{
-		AscFormat.CBaseFormatObject.call(this);
+		AscOForm.CBaseFormatObject.call(this);
 
 		this.Weight = null;
 		this.Fields = [];
@@ -47,10 +48,14 @@
 		
 		this.Parent = null;
 	}
-	AscFormat.InitClass(CFieldGroup, AscFormat.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
+	AscFormat.InitClass(CFieldGroup, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
 	CFieldGroup.prototype.setParent = function(parent)
 	{
+		if (this.Parent === parent)
+			return;
+		
 		this.Parent = parent;
+		this.onChange();
 	};
 	CFieldGroup.prototype.setWeight = function(value)
 	{
