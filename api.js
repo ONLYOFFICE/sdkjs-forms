@@ -42,6 +42,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (!oLogicDocument)
 			return;
 		
+		CheckCurrentSelection(oLogicDocument);
+		
 		if (oPr && oFormPr)
 		{
 			if (oPr.GroupKey)
@@ -170,6 +172,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
 			return;
+		
+		CheckCurrentSelection(oLogicDocument);
 
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
@@ -260,6 +264,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
 			return;
+		
+		CheckCurrentSelection(oLogicDocument);
 
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
@@ -293,6 +299,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
 			return;
+		
+		CheckCurrentSelection(oLogicDocument);
 
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
@@ -339,6 +347,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
 			return;
+		
+		CheckCurrentSelection(oLogicDocument);
 
 		let textFormPr      = contentControlPr ? contentControlPr.TextFormPr : null;
 		let formPr          = contentControlPr ? contentControlPr.FormPr : null;
@@ -372,6 +382,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		let logicDocument = this.private_GetLogicDocument();
 		if (!logicDocument)
 			return;
+		
+		CheckCurrentSelection(logicDocument);
 
 		function AddComplexForm()
 		{
@@ -471,6 +483,16 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				form.MoveCursorToContentControl(false);
 			}
 		}
+	}
+	
+	function CheckCurrentSelection(logicDocument, isComplex)
+	{
+		let form = logicDocument.GetContentControl();
+		
+		if (!form || !form.IsForm() || form.IsComplexForm())
+			return;
+		
+		form.MoveCursorOutsideForm(false);
 	}
 
 })(window, window.document);
