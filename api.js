@@ -513,6 +513,9 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (!form || !form.IsForm() || (form.IsComplexForm() && !isComplex))
 			return;
 		
+		if (isComplex)
+			form = form.GetMainForm();
+		
 		form.MoveCursorOutsideForm(false);
 	}
 
