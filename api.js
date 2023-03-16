@@ -383,7 +383,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (!logicDocument)
 			return;
 		
-		CheckCurrentSelection(logicDocument);
+		CheckCurrentSelection(logicDocument, true);
 
 		function AddComplexForm()
 		{
@@ -489,7 +489,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 	{
 		let form = logicDocument.GetContentControl();
 		
-		if (!form || !form.IsForm() || form.IsComplexForm())
+		if (!form || !form.IsForm() || (form.IsComplexForm() && !isComplex))
 			return;
 		
 		form.MoveCursorOutsideForm(false);
