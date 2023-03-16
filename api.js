@@ -470,6 +470,27 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		
 		form.SetFormPr(formPr.Copy());
 		
+		let docPartId = form.GetPlaceholder();
+		if ((form.IsTextForm()
+				|| form.IsDropDownList()
+				|| form.IsComboBox()
+				|| form.IsDatePicker())
+			&&
+			(docPartId === c_oAscDefaultPlaceholderName.Text
+				|| docPartId === c_oAscDefaultPlaceholderName.List
+				|| docPartId === c_oAscDefaultPlaceholderName.DateTime))
+		{
+			if (docPartId === c_oAscDefaultPlaceholderName.Text)
+				form.SetPlaceholder(c_oAscDefaultPlaceholderName.TextOform);
+			else if (docPartId === c_oAscDefaultPlaceholderName.List)
+				form.SetPlaceholder(c_oAscDefaultPlaceholderName.ListOform);
+			else if (docPartId === c_oAscDefaultPlaceholderName.DateTime)
+				form.SetPlaceholder(c_oAscDefaultPlaceholderName.DateOform);
+
+			if (form.IsPlaceHolder())
+				form.private_FillPlaceholderContent();
+		}
+		
 		if (formPr.GetFixed())
 		{
 			logicDocument.Recalculate(true);
