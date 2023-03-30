@@ -442,6 +442,121 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 
 		return AscWord.FormToJson(form);
 	};
+	window['Asc']['asc_docs_api'].prototype['asc_SetFormValue'] = window['Asc']['asc_docs_api'].prototype.asc_SetFormValue = function(value, formId)
+	{
+		let logicDocument = this.private_GetLogicDocument();
+		if (!logicDocument)
+			return;
+		
+		let form = logicDocument.GetContentControl(formId);
+		if (!form || !form.IsForm())
+			return;
+		
+		return this.private_SetFormValue(form.GetId(), value);
+	};
+	window['Asc']['asc_docs_api'].prototype.private_SetFormValue = function(internalId, value)
+	{
+		let oLogicDocument = this.private_GetLogicDocument();
+		
+		if (!AscCommon.g_oTableId
+			|| !oLogicDocument
+			|| !oLogicDocument.IsDocumentEditor())
+			return;
+		
+		let oForm = AscCommon.g_oTableId.GetClass(internalId);
+		
+		if (!oForm
+			|| !(oForm instanceof AscWord.CInlineLevelSdt)
+			|| !oForm.IsForm())
+			return;
+		
+		let oParagraph = oForm.GetParagraph();
+		
+		oForm.SkipFillingFormModeCheck(true);
+		oForm.SkipSpecialContentControlLock(true);
+		if (!oParagraph
+			|| oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
+				Type      : AscCommon.changestype_2_ElementsArray_and_Type,
+				Elements  : [oParagraph],
+				CheckType : AscCommon.changestype_Paragraph_Content
+			}, true, oLogicDocument.IsFillingFormMode()))
+		{
+			oForm.SkipFillingFormModeCheck(false);
+			oForm.SkipSpecialContentControlLock(false);
+			return;
+		}
+		oForm.SkipFillingFormModeCheck(false);
+		oForm.SkipSpecialContentControlLock(false);
+		
+		oLogicDocument.StartAction(AscDFH.historydescription_Document_FillFormInPlugin);
+		
+		let isClear = false;
+		if (null === value)
+		{
+			isClear = true;
+		}
+		else if (oForm.IsTextForm() || oForm.IsComboBox())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			if (!value)
+				isClear = true;
+			else
+				oForm.SetInnerText(sValue);
+		}
+		else if (oForm.IsDropDownList())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			let oPr    = oForm.GetDropDownListPr();
+			let nIndex = oPr.FindByText(sValue);
+			if (-1 !== nIndex)
+				oForm.SelectListItem(oPr.GetItemValue(nIndex));
+			else
+				isClear = true;
+		}
+		else if (oForm.IsCheckBox())
+		{
+			let isChecked = value === "true" ? true : value === "false" ? false : AscBuilder.GetBoolParameter(value, null);
+			if (null !== isChecked)
+				oForm.SetCheckBoxChecked(isChecked);
+			else
+				isClear = true;
+		}
+		else if (oForm.IsPictureForm())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			if (!sValue)
+				return;
+			
+			let oImg;
+			let allDrawings = oForm.GetAllDrawingObjects();
+			for (let nDrawing = 0; nDrawing < allDrawings.length; ++nDrawing)
+			{
+				if (allDrawings[nDrawing].IsPicture())
+				{
+					oImg = allDrawings[nDrawing].GraphicObj;
+					break;
+				}
+			}
+			
+			if (oImg)
+			{
+				oForm.SetShowingPlcHdr(false);
+				oImg.setBlipFill(AscFormat.CreateBlipFillRasterImageId(sValue));
+			}
+			else
+			{
+				isClear = true;
+			}
+		}
+		
+		if (isClear)
+			oForm.ClearContentControlExt();
+		
+		oLogicDocument.OnChangeForm(oForm);
+		oLogicDocument.Recalculate();
+		oLogicDocument.UpdateTracks();
+		oLogicDocument.FinalizeAction();
+	};
 
 	function private_CheckFormKey(form, logicDocument)
 	{
