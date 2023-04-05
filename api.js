@@ -574,6 +574,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.OnChangeForm(oForm);
 		oLogicDocument.Recalculate();
 		oLogicDocument.UpdateTracks();
+		oLogicDocument.UpdateInterface();
 		oLogicDocument.FinalizeAction();
 	};
 
