@@ -454,6 +454,25 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		
 		return this.private_SetFormValue(form.GetId(), value);
 	};
+	window['Asc']['asc_docs_api'].prototype['asc_GetFormValue'] = window['Asc']['asc_docs_api'].prototype.asc_GetFormValue = function(formId)
+	{
+		let logicDocument = this.private_GetLogicDocument();
+		if (!logicDocument)
+			return "";
+		
+		let form = logicDocument.GetContentControl(formId);
+		if (!form || !form.IsForm())
+			return "";
+		
+		if (form.IsPictureForm())
+			return "";
+		else if (form.IsCheckBox())
+			return form.IsCheckBoxChecked();
+		else if (form.IsPlaceHolder(true))
+			return "";
+		
+		return form.GetInnerText();
+	};
 	window['Asc']['asc_docs_api'].prototype.private_SetFormValue = function(internalId, value)
 	{
 		let oLogicDocument = this.private_GetLogicDocument();
