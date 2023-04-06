@@ -514,7 +514,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		{
 			isClear = true;
 		}
-		else if (oForm.IsTextForm() || oForm.IsComboBox())
+		else if (oForm.IsTextForm() || oForm.IsComboBox() || oForm.IsDatePicker())
 		{
 			let sValue = AscBuilder.GetStringParameter(value, "");
 			if (!value)
