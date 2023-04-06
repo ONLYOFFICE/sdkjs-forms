@@ -87,7 +87,6 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			if (oFormPr)
 			{
 				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
-				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
 			}
 
