@@ -467,7 +467,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			return "";
 		else if (form.IsCheckBox())
 			return form.IsCheckBoxChecked();
-		else if (form.IsPlaceHolder(true))
+		else if (form.IsPlaceHolder())
 			return "";
 		
 		return form.GetInnerText();
