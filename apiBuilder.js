@@ -38,7 +38,7 @@
 	// Import
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const AscBuilder         = window["AscBuilder"];
-	const ApiDocument        = AscBuilder["ApiDocument"];
+	const ApiDocument        = AscBuilder.ApiDocument;
 	const GetStringParameter = AscBuilder.GetStringParameter;
 	const GetBoolParameter   = AscBuilder.GetBoolParameter;
 	const GetNumberParameter = AscBuilder.GetNumberParameter;
@@ -440,6 +440,7 @@
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
-	Api.prototype["InsertTextForm"]     = Api.prototype.InsertTextForm;
+	
+	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 
 }(window, null));
