@@ -626,7 +626,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				form.private_FillPlaceholderContent();
 		}
 		
-		if (form.IsMainForm() && formPr.GetFixed())
+		let paragraph = form.GetParagraph();
+		if (form.IsMainForm() && formPr.GetFixed() && (!paragraph || !paragraph.GetParentShape()))
 		{
 			logicDocument.Recalculate(true);
 			let drawing = form.ConvertFormToFixed();
