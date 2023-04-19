@@ -636,8 +636,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				let drawingPr = new Asc.asc_CImgProperty();
 				drawingPr.asc_putWrappingStyle(Asc.c_oAscWrapStyle2.Square);
 				drawing.Set_Props(drawingPr);
-				
-				form.MoveCursorToContentControl(false);
+				drawing.SelectAsDrawing();
 			}
 		}
 	}
