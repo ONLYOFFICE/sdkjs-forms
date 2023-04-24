@@ -513,10 +513,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		{
 			isClear = true;
 		}
-		else if (oForm.IsTextForm() || oForm.IsComboBox() || oForm.IsDatePicker())
+		else if (oForm.IsTextForm() || oForm.IsComboBox())
 		{
 			let sValue = AscBuilder.GetStringParameter(value, "");
-			if (!value)
+			if (!sValue)
 				isClear = true;
 			else
 				oForm.SetInnerText(sValue);
@@ -565,6 +565,19 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			{
 				isClear = true;
 			}
+		}
+		else if (oForm.IsDatePicker())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			if (!sValue)
+				isClear = true;
+			else
+				oForm.SetInnerText(sValue);
+			
+			// TODO: Надо FullDate попытаться выставить по заданному значение. Сейчас мы всегда сбрасываем на текущую дату
+			 let datePickerPr = oForm.GetDatePickerPr().Copy();
+			 datePickerPr.SetFullDate(null);
+			 oForm.SetDatePickerPr(datePickerPr);
 		}
 		
 		if (isClear)
