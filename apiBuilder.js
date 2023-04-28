@@ -80,8 +80,8 @@
 	/**
 	 * Form insertion specific properties.
 	 * @typedef {Object} FormInsertPr
-	 * @property {boolean} [placeholderFromSelection=false] - Specifies if the currently selected text should be saved as placeholder for the inserted form.
-	 * @property {boolean} [keepSelectedTextInForm=true] - Specifies if the currently selected text should be saved as content for the inserted form.
+	 * @property {boolean} [placeholderFromSelection=false] - Specifies if the currently selected text should be saved as a placeholder of the inserted form.
+	 * @property {boolean} [keepSelectedTextInForm=true] - Specifies if the currently selected text should be saved as the content of the inserted form.
 	 */
 	
 	/**
@@ -340,9 +340,9 @@
 		return new AscBuilder.ApiPictureForm(oCC);
 	};
 	/**
-	 * Insert a text box with the specified text box properties over of the selected text.
+	 * Inserts a text box with the specified text box properties over the selected text.
 	 * @memberof ApiDocument
-	 * @param {TextFormPr} oFormPr - Text field properties.
+	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
 	 * @returns {ApiTextForm}
 	 */
 	ApiDocument.prototype.InsertTextForm = function(oFormPr)
