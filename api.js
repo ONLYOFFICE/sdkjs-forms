@@ -654,13 +654,13 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				drawingPr.asc_putWrappingStyle(Asc.c_oAscWrapStyle2.Square);
 				
 				let positionH = new Asc.CImagePositionH();
-				drawingPr.put_PositionH(positionH);
+				drawingPr.asc_putPositionH(positionH);
 				positionH.put_UseAlign(false);
 				positionH.put_RelativeFrom(Asc.c_oAscRelativeFromH.Page);
 				positionH.put_Value(x);
 				
 				let positionV = new Asc.CImagePositionV();
-				drawingPr.put_PositionV(positionV);
+				drawingPr.asc_putPositionV(positionV);
 				positionV.put_UseAlign(false);
 				positionV.put_RelativeFrom(Asc.c_oAscRelativeFromV.Page);
 				positionV.put_Value(y);
