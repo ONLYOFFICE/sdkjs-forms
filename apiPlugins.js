@@ -128,8 +128,13 @@
 			|| !oForm.IsForm())
 			return;
 
+		// При проверке лока внутри параграфа мы ориентируемся на выделение внутри этого параграфа
+		// поэтому нужно выделить форму
+		let state = oLogicDocument.SaveDocumentState();
+		oForm.SelectContentControl();
+		
 		let oParagraph = oForm.GetParagraph();
-
+		
 		oForm.SkipSpecialContentControlLock(true);
 		if (!oParagraph
 			|| oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
@@ -138,9 +143,11 @@
 				CheckType : AscCommon.changestype_Paragraph_Content
 			}, true, oLogicDocument.IsFillingFormMode()))
 		{
+			oLogicDocument.LoadDocumentState(state);
 			oForm.SkipSpecialContentControlLock(false);
 			return;
 		}
+		oLogicDocument.LoadDocumentState(state);
 		oForm.SkipSpecialContentControlLock(false);
 
 		oLogicDocument.StartAction(AscDFH.historydescription_Document_FillFormInPlugin);
