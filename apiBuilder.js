@@ -38,6 +38,7 @@
 	// Import
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const AscBuilder         = window["AscBuilder"];
+	const ApiDocument        = AscBuilder.ApiDocument;
 	const GetStringParameter = AscBuilder.GetStringParameter;
 	const GetBoolParameter   = AscBuilder.GetBoolParameter;
 	const GetNumberParameter = AscBuilder.GetNumberParameter;
@@ -75,6 +76,19 @@
 	 * Text field properties.
 	 * @typedef {FormPrBase | TextFormPrBase} TextFormPr
 	 */
+	
+	/**
+	 * Form insertion specific properties.
+	 * @typedef {Object} FormInsertPr
+	 * @property {boolean} [placeholderFromSelection=false] - Specifies if the currently selected text should be saved as a placeholder of the inserted form.
+	 * @property {boolean} [keepSelectedTextInForm=true] - Specifies if the currently selected text should be saved as the content of the inserted form.
+	 */
+	
+	/**
+	 * Properties for inserting a text field.
+	 * @typedef {FormPrBase | TextFormPrBase | FormInsertPr} TextFormInsertPr
+	 */
+	
 	 
 	/**
 	 * Specific checkbox / radio button properties.
@@ -146,18 +160,10 @@
 		if (!oFormPr)
 			oFormPr = {};
 
-		let oCC = CreateCommonForm(oFormPr);
-
-		let oPr = new AscCommon.CSdtTextFormPr();
-		oPr.SetComb(GetBoolParameter(oFormPr["comb"], false));
-		oPr.SetMaxCharacters(GetNumberParameter(oFormPr["maxCharacters"], -1));
-		oPr.SetMultiLine(GetBoolParameter(oFormPr["multiLine"], false));
-		oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
-		oPr.SetWidth((GetNumberParameter(oFormPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
-
-		oCC.ApplyTextFormPr(oPr);
-		CheckFormKey(oCC);
-		return new AscBuilder.ApiTextForm(oCC);
+		let form = CreateCommonForm(oFormPr);
+		ApplyTextFormPr(form, oFormPr);
+		CheckFormKey(form);
+		return new AscBuilder.ApiTextForm(form);
 	};
 	/**
 	 * Creates a checkbox / radio button with the specified checkbox / radio button properties.
@@ -333,32 +339,78 @@
 		CheckFormKey(oCC);
 		return new AscBuilder.ApiPictureForm(oCC);
 	};
+	/**
+	 * Inserts a text box with the specified text box properties over the selected text.
+	 * @memberof ApiDocument
+	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
+	 * @returns {ApiTextForm}
+	 */
+	ApiDocument.prototype.InsertTextForm = function(oFormPr)
+	{
+		if (!oFormPr)
+			oFormPr = {};
+		
+		let logicDocument = this.Document;
+		let placeholder = GetStringParameter(oFormPr["placeholder"], undefined);
+		if (GetBoolParameter(oFormPr["placeholderFromSelection"], false))
+			placeholder = logicDocument.GetSelectedText();
+		
+		if (!GetBoolParameter(oFormPr["keepSelectedTextInForm"], true))
+			logicDocument.RemoveBeforePaste();
+		
+		let contentControl = logicDocument.AddContentControl(c_oAscSdtLevelType.Inline);
+		if (!contentControl)
+			return null;
+		
+		ApplyCommonFormPr(contentControl, oFormPr);
+		SetFormPlaceholder(contentControl, placeholder);
+		ApplyTextFormPr(contentControl, oFormPr, true);
+		CheckFormKey(contentControl);
+		return new AscBuilder.ApiTextForm(contentControl);
+	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	function CreateCommonForm(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
+		let contentControl = new AscCommonWord.CInlineLevelSdt();
 		
-		var oTempFormPr = new AscCommon.CSdtFormPr();
-		oTempFormPr.SetHelpText(GetStringParameter(oFormPr["tip"], undefined));
-		oTempFormPr.SetRequired(GetBoolParameter(oFormPr["required"], false));
-		oTempFormPr.SetKey(GetStringParameter(oFormPr["key"], undefined));
-
-		var oCC = new AscCommonWord.CInlineLevelSdt();
-
-		let sPlaceHolder = GetStringParameter(oFormPr["placeholder"], undefined);
-		if (sPlaceHolder)
-			oCC.SetPlaceholderText(sPlaceHolder);
+		ApplyCommonFormPr(contentControl, oFormPr);
+		
+		let placeholder = oFormPr ? GetStringParameter(oFormPr["placeholder"], undefined) : undefined;
+		SetFormPlaceholder(contentControl, placeholder);
+		
+		contentControl.ReplaceContentWithPlaceHolder(false);
+		contentControl.UpdatePlaceHolderTextPrForForm();
+		return contentControl;
+	}
+	function SetFormPlaceholder(form, text)
+	{
+		if (text)
+			form.SetPlaceholderText(text);
 		else
-			oCC.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
-
-		oCC.ReplaceContentWithPlaceHolder(false);
-		oCC.SetFormPr(oTempFormPr);
-		oCC.UpdatePlaceHolderTextPrForForm();
-
-		return oCC;
+			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
+	}
+	function ApplyCommonFormPr(form, formPr)
+	{
+		if (!formPr)
+			formPr = {};
+		
+		let sdtFormPr = new AscCommon.CSdtFormPr();
+		sdtFormPr.SetHelpText(GetStringParameter(formPr["tip"], undefined));
+		sdtFormPr.SetRequired(GetBoolParameter(formPr["required"], false));
+		sdtFormPr.SetKey(GetStringParameter(formPr["key"], undefined));
+		form.SetFormPr(sdtFormPr);
+	}
+	function ApplyTextFormPr(form, formPr, keepContent)
+	{
+		let textFormPr = new AscCommon.CSdtTextFormPr();
+		textFormPr.SetComb(GetBoolParameter(formPr["comb"], false));
+		textFormPr.SetMaxCharacters(GetNumberParameter(formPr["maxCharacters"], -1));
+		textFormPr.SetMultiLine(GetBoolParameter(formPr["multiLine"], false));
+		textFormPr.SetAutoFit(GetBoolParameter(formPr["autoFit"], false));
+		textFormPr.SetWidth((GetNumberParameter(formPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
+		form.ApplyTextFormPr(textFormPr, keepContent);
 	}
 	function CheckFormKey(form)
 	{
@@ -387,6 +439,8 @@
 	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
-	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;	
+	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
+	
+	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 
 }(window, null));

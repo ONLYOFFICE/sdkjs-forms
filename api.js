@@ -87,7 +87,6 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			if (oFormPr)
 			{
 				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
-				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
 			}
 
@@ -442,6 +441,154 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 
 		return AscWord.FormToJson(form);
 	};
+	window['Asc']['asc_docs_api'].prototype['asc_SetFormValue'] = window['Asc']['asc_docs_api'].prototype.asc_SetFormValue = function(value, formId)
+	{
+		let logicDocument = this.private_GetLogicDocument();
+		if (!logicDocument)
+			return;
+		
+		let form = logicDocument.GetContentControl(formId);
+		if (!form || !form.IsForm())
+			return;
+		
+		return this.private_SetFormValue(form.GetId(), value);
+	};
+	window['Asc']['asc_docs_api'].prototype['asc_GetFormValue'] = window['Asc']['asc_docs_api'].prototype.asc_GetFormValue = function(formId)
+	{
+		let logicDocument = this.private_GetLogicDocument();
+		if (!logicDocument)
+			return "";
+		
+		let form = logicDocument.GetContentControl(formId);
+		if (!form || !form.IsForm())
+			return "";
+		
+		if (form.IsPictureForm())
+			return "";
+		else if (form.IsCheckBox())
+			return form.IsCheckBoxChecked();
+		else if (form.IsPlaceHolder())
+			return "";
+		
+		return form.GetInnerText();
+	};
+	window['Asc']['asc_docs_api'].prototype.private_SetFormValue = function(internalId, value)
+	{
+		let oLogicDocument = this.private_GetLogicDocument();
+		
+		if (!AscCommon.g_oTableId
+			|| !oLogicDocument
+			|| !oLogicDocument.IsDocumentEditor())
+			return;
+		
+		let oForm = AscCommon.g_oTableId.GetClass(internalId);
+		
+		if (!oForm
+			|| !(oForm instanceof AscWord.CInlineLevelSdt)
+			|| !oForm.IsForm())
+			return;
+		
+		let oParagraph = oForm.GetParagraph();
+		
+		oForm.SkipFillingFormModeCheck(true);
+		oForm.SkipSpecialContentControlLock(true);
+		if (!oParagraph
+			|| oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
+				Type      : AscCommon.changestype_2_ElementsArray_and_Type,
+				Elements  : [oParagraph],
+				CheckType : AscCommon.changestype_Paragraph_Content
+			}, true, oLogicDocument.IsFillingFormMode()))
+		{
+			oForm.SkipFillingFormModeCheck(false);
+			oForm.SkipSpecialContentControlLock(false);
+			return;
+		}
+		oForm.SkipFillingFormModeCheck(false);
+		oForm.SkipSpecialContentControlLock(false);
+		
+		oLogicDocument.StartAction(AscDFH.historydescription_Document_FillFormInPlugin);
+		
+		let isClear = false;
+		if (null === value)
+		{
+			isClear = true;
+		}
+		else if (oForm.IsTextForm() || oForm.IsComboBox())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			if (!sValue)
+				isClear = true;
+			else
+				oForm.SetInnerText(sValue);
+		}
+		else if (oForm.IsDropDownList())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			let oPr    = oForm.GetDropDownListPr();
+			let nIndex = oPr.FindByText(sValue);
+			if (-1 !== nIndex)
+				oForm.SelectListItem(oPr.GetItemValue(nIndex));
+			else
+				isClear = true;
+		}
+		else if (oForm.IsCheckBox())
+		{
+			let isChecked = value === "true" ? true : value === "false" ? false : AscBuilder.GetBoolParameter(value, null);
+			if (null !== isChecked)
+				oForm.SetCheckBoxChecked(isChecked);
+			else
+				isClear = true;
+		}
+		else if (oForm.IsPictureForm())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			if (!sValue)
+				return;
+			
+			let oImg;
+			let allDrawings = oForm.GetAllDrawingObjects();
+			for (let nDrawing = 0; nDrawing < allDrawings.length; ++nDrawing)
+			{
+				if (allDrawings[nDrawing].IsPicture())
+				{
+					oImg = allDrawings[nDrawing].GraphicObj;
+					break;
+				}
+			}
+			
+			if (oImg)
+			{
+				oForm.SetShowingPlcHdr(false);
+				oImg.setBlipFill(AscFormat.CreateBlipFillRasterImageId(sValue));
+			}
+			else
+			{
+				isClear = true;
+			}
+		}
+		else if (oForm.IsDatePicker())
+		{
+			let sValue = AscBuilder.GetStringParameter(value, "");
+			if (!sValue)
+				isClear = true;
+			else
+				oForm.SetInnerText(sValue);
+			
+			// TODO: Надо FullDate попытаться выставить по заданному значение. Сейчас мы всегда сбрасываем на текущую дату
+			 let datePickerPr = oForm.GetDatePickerPr().Copy();
+			 datePickerPr.SetFullDate(null);
+			 oForm.SetDatePickerPr(datePickerPr);
+		}
+		
+		if (isClear)
+			oForm.ClearContentControlExt();
+		
+		oLogicDocument.OnChangeForm(oForm);
+		oLogicDocument.Recalculate();
+		oLogicDocument.UpdateTracks();
+		oLogicDocument.UpdateInterface();
+		oLogicDocument.FinalizeAction();
+	};
 
 	function private_CheckFormKey(form, logicDocument)
 	{
@@ -471,37 +618,55 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		form.SetFormPr(formPr.Copy());
 		
 		let docPartId = form.GetPlaceholder();
+		let glossary  = logicDocument.GetGlossaryDocument();
 		if ((form.IsTextForm()
 				|| form.IsDropDownList()
 				|| form.IsComboBox()
 				|| form.IsDatePicker())
 			&&
-			(docPartId === c_oAscDefaultPlaceholderName.Text
-				|| docPartId === c_oAscDefaultPlaceholderName.List
-				|| docPartId === c_oAscDefaultPlaceholderName.DateTime))
+			(docPartId === glossary.GetDefaultPlaceholderTextDocPartId()
+				|| docPartId === glossary.GetDefaultPlaceholderListDocPartId()
+				|| docPartId === glossary.GetDefaultPlaceholderDateTimeDocPartId()))
 		{
-			if (docPartId === c_oAscDefaultPlaceholderName.Text)
-				form.SetPlaceholder(c_oAscDefaultPlaceholderName.TextOform);
-			else if (docPartId === c_oAscDefaultPlaceholderName.List)
-				form.SetPlaceholder(c_oAscDefaultPlaceholderName.ListOform);
-			else if (docPartId === c_oAscDefaultPlaceholderName.DateTime)
-				form.SetPlaceholder(c_oAscDefaultPlaceholderName.DateOform);
+			if (docPartId === glossary.GetDefaultPlaceholderTextDocPartId())
+				form.SetPlaceholder(glossary.GetDefaultPlaceholderTextOformDocPartId());
+			else if (docPartId === glossary.GetDefaultPlaceholderListDocPartId())
+				form.SetPlaceholder(glossary.GetDefaultPlaceholderListOformDocPartId());
+			else if (docPartId === glossary.GetDefaultPlaceholderDateTimeDocPartId())
+				form.SetPlaceholder(glossary.GetDefaultPlaceholderDateTimeOformDocPartId());
 
 			if (form.IsPlaceHolder())
 				form.private_FillPlaceholderContent();
 		}
 		
-		if (form.IsMainForm() && formPr.GetFixed())
+		let paragraph = form.GetParagraph();
+		if (form.IsMainForm() && formPr.GetFixed() && (!paragraph || !paragraph.GetParentShape()))
 		{
 			logicDocument.Recalculate(true);
 			let drawing = form.ConvertFormToFixed();
 			if (drawing)
 			{
+				logicDocument.Recalculate(true);
+				let x = drawing.Internal_Position.Calculate_X_Value(Asc.c_oAscRelativeFromH.Page);
+				let y = drawing.Internal_Position.Calculate_Y_Value(Asc.c_oAscRelativeFromV.Page);
+
 				let drawingPr = new Asc.asc_CImgProperty();
 				drawingPr.asc_putWrappingStyle(Asc.c_oAscWrapStyle2.Square);
-				drawing.Set_Props(drawingPr);
 				
-				form.MoveCursorToContentControl(false);
+				let positionH = new Asc.CImagePositionH();
+				drawingPr.asc_putPositionH(positionH);
+				positionH.put_UseAlign(false);
+				positionH.put_RelativeFrom(Asc.c_oAscRelativeFromH.Page);
+				positionH.put_Value(x);
+				
+				let positionV = new Asc.CImagePositionV();
+				drawingPr.asc_putPositionV(positionV);
+				positionV.put_UseAlign(false);
+				positionV.put_RelativeFrom(Asc.c_oAscRelativeFromV.Page);
+				positionV.put_Value(y);
+				
+				drawing.Set_Props(drawingPr);
+				drawing.SelectAsDrawing();
 			}
 		}
 	}
