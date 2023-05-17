@@ -488,6 +488,11 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			|| !oForm.IsForm())
 			return;
 		
+		// При проверке лока внутри параграфа мы ориентируемся на выделение внутри этого параграфа
+		// поэтому нужно выделить форму
+		let state = oLogicDocument.SaveDocumentState();
+		oForm.SelectContentControl();
+		
 		let oParagraph = oForm.GetParagraph();
 		
 		oForm.SkipFillingFormModeCheck(true);
@@ -499,10 +504,12 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				CheckType : AscCommon.changestype_Paragraph_Content
 			}, true, oLogicDocument.IsFillingFormMode()))
 		{
+			oLogicDocument.LoadDocumentState(state);
 			oForm.SkipFillingFormModeCheck(false);
 			oForm.SkipSpecialContentControlLock(false);
 			return;
 		}
+		oLogicDocument.LoadDocumentState(state);
 		oForm.SkipFillingFormModeCheck(false);
 		oForm.SkipSpecialContentControlLock(false);
 		
