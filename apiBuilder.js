@@ -1,5 +1,5 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2019
+ * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
@@ -12,7 +12,7 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-12 Ernesta Birznieka-Upisha
+ * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
  * street, Riga, Latvia, EU, LV-1050.
  *
  * The  interactive user interfaces in modified source and object code versions
@@ -38,6 +38,7 @@
 	// Import
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const AscBuilder         = window["AscBuilder"];
+	const ApiDocument        = AscBuilder.ApiDocument;
 	const GetStringParameter = AscBuilder.GetStringParameter;
 	const GetBoolParameter   = AscBuilder.GetBoolParameter;
 	const GetNumberParameter = AscBuilder.GetNumberParameter;
@@ -62,33 +63,46 @@
 	 */
 
 	/**
-	 * Specific text form properties.
+	 * Specific text field properties.
 	 * @typedef {Object} TextFormPrBase
-	 * @property {boolean} comb - Specifies if the text form should be a comb of characters with the same cell width. The maximum number of characters must be set to a positive value.
-	 * @property {number} maxCharacters - The maximum number of characters in the text form.
+	 * @property {boolean} comb - Specifies if the text field should be a comb of characters with the same cell width. The maximum number of characters must be set to a positive value.
+	 * @property {number} maxCharacters - The maximum number of characters in the text field.
 	 * @property {number} cellWidth - The cell width for each character measured in millimeters. If this parameter is not specified or equal to 0 or less, then the width will be set automatically.
-	 * @property {boolean} multiLine - Specifies if the current fixed size text form is multiline or not.
-	 * @property {boolean} autoFit - Specifies if the text form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
+	 * @property {boolean} multiLine - Specifies if the current fixed size text field is multiline or not.
+	 * @property {boolean} autoFit - Specifies if the text field content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
 	 */
 
 	/**
-	 * Text form properties.
+	 * Text field properties.
 	 * @typedef {FormPrBase | TextFormPrBase} TextFormPr
 	 */
+	
+	/**
+	 * Form insertion specific properties.
+	 * @typedef {Object} FormInsertPr
+	 * @property {boolean} [placeholderFromSelection=false] - Specifies if the currently selected text should be saved as a placeholder of the inserted form.
+	 * @property {boolean} [keepSelectedTextInForm=true] - Specifies if the currently selected text should be saved as the content of the inserted form.
+	 */
+	
+	/**
+	 * Properties for inserting a text field.
+	 * @typedef {FormPrBase | TextFormPrBase | FormInsertPr} TextFormInsertPr
+	 */
+	
 	 
 	/**
-	 * Specific checkbox properties.
+	 * Specific checkbox / radio button properties.
 	 * @typedef {Object} CheckBoxFormPrBase
 	 * @property {boolean} radio - Specifies if the current checkbox is a radio button. In this case, the key parameter is considered as an identifier for the group of radio buttons.
 	 */
 
 	/**
-	 * Checkbox form properties.
+	 * Checkbox / radio button properties.
 	 * @typedef {FormPrBase | CheckBoxFormPrBase} CheckBoxFormPr
 	 */
 
 	/**
-	 * Specific combo box properties.
+	 * Specific combo box / dropdown list properties.
 	 * @typedef {Object} ComboBoxFormPrBase
 	 * @property {boolean} editable - Specifies if the combo box text can be edited.
 	 * @property {boolean} autoFit - Specifies if the combo box form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
@@ -100,7 +114,7 @@
 	 */
 
 	/**
-	 * Combo box form properties.
+	 * Combo box / dropdown list properties.
 	 * @typedef {FormPrBase | ComboBoxFormPrBase} ComboBoxFormPr
 	 */
 
@@ -136,9 +150,9 @@
 	 */
 
 	/**
-	 * Creates a text form with the specified text form properties.
+	 * Creates a text field with the specified text field properties.
 	 * @memberof Api
-	 * @param {TextFormPr} oFormPr - Text form properties.
+	 * @param {TextFormPr} oFormPr - Text field properties.
 	 * @returns {ApiTextForm}
 	 */
 	Api.prototype.CreateTextForm = function(oFormPr)
@@ -146,23 +160,15 @@
 		if (!oFormPr)
 			oFormPr = {};
 
-		let oCC = CreateCommonForm(oFormPr);
-
-		let oPr = new AscCommon.CSdtTextFormPr();
-		oPr.SetComb(GetBoolParameter(oFormPr["comb"], false));
-		oPr.SetMaxCharacters(GetNumberParameter(oFormPr["maxCharacters"], -1));
-		oPr.SetMultiLine(GetBoolParameter(oFormPr["multiLine"], false));
-		oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
-		oPr.SetWidth((GetNumberParameter(oFormPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
-
-		oCC.ApplyTextFormPr(oPr);
-		CheckFormKey(oCC);
-		return new AscBuilder.ApiTextForm(oCC);
+		let form = CreateCommonForm(oFormPr);
+		ApplyTextFormPr(form, oFormPr);
+		CheckFormKey(form);
+		return new AscBuilder.ApiTextForm(form);
 	};
 	/**
-	 * Creates a checkbox/radio button form with the specified checkbox/radio button form properties.
+	 * Creates a checkbox / radio button with the specified checkbox / radio button properties.
 	 * @memberof Api
-	 * @param {CheckBoxFormPr} oFormPr - Checkbox/radio button form properties.
+	 * @param {CheckBoxFormPr} oFormPr - Checkbox / radio button properties.
 	 * @returns {ApiCheckBoxForm}
 	 */
 	Api.prototype.CreateCheckBoxForm = function(oFormPr)
@@ -230,9 +236,9 @@
 		return new AscBuilder.ApiCheckBoxForm(oCC);
 	};
 	/**
-	 * Creates a combo box/dropdown form with the specified combo box/dropdown form properties.
+	 * Creates a combo box / dropdown list with the specified combo box / dropdown list properties.
 	 * @memberof Api
-	 * @param {ComboBoxFormPr} oFormPr - Combo box/dropdown form properties.
+	 * @param {ComboBoxFormPr} oFormPr - Combo box / dropdown list properties.
 	 * @returns {ApiComboBoxForm}
 	 */
 	Api.prototype.CreateComboBoxForm = function(oFormPr)
@@ -333,32 +339,78 @@
 		CheckFormKey(oCC);
 		return new AscBuilder.ApiPictureForm(oCC);
 	};
+	/**
+	 * Inserts a text box with the specified text box properties over the selected text.
+	 * @memberof ApiDocument
+	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
+	 * @returns {ApiTextForm}
+	 */
+	ApiDocument.prototype.InsertTextForm = function(oFormPr)
+	{
+		if (!oFormPr)
+			oFormPr = {};
+		
+		let logicDocument = this.Document;
+		let placeholder = GetStringParameter(oFormPr["placeholder"], undefined);
+		if (GetBoolParameter(oFormPr["placeholderFromSelection"], false))
+			placeholder = logicDocument.GetSelectedText();
+		
+		if (!GetBoolParameter(oFormPr["keepSelectedTextInForm"], true))
+			logicDocument.RemoveBeforePaste();
+		
+		let contentControl = logicDocument.AddContentControl(c_oAscSdtLevelType.Inline);
+		if (!contentControl)
+			return null;
+		
+		ApplyCommonFormPr(contentControl, oFormPr);
+		SetFormPlaceholder(contentControl, placeholder);
+		ApplyTextFormPr(contentControl, oFormPr, true);
+		CheckFormKey(contentControl);
+		return new AscBuilder.ApiTextForm(contentControl);
+	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	function CreateCommonForm(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
+		let contentControl = new AscCommonWord.CInlineLevelSdt();
 		
-		var oTempFormPr = new AscCommon.CSdtFormPr();
-		oTempFormPr.SetHelpText(GetStringParameter(oFormPr["tip"], undefined));
-		oTempFormPr.SetRequired(GetBoolParameter(oFormPr["required"], false));
-		oTempFormPr.SetKey(GetStringParameter(oFormPr["key"], undefined));
-
-		var oCC = new AscCommonWord.CInlineLevelSdt();
-
-		let sPlaceHolder = GetStringParameter(oFormPr["placeholder"], undefined);
-		if (sPlaceHolder)
-			oCC.SetPlaceholderText(sPlaceHolder);
+		ApplyCommonFormPr(contentControl, oFormPr);
+		
+		let placeholder = oFormPr ? GetStringParameter(oFormPr["placeholder"], undefined) : undefined;
+		SetFormPlaceholder(contentControl, placeholder);
+		
+		contentControl.ReplaceContentWithPlaceHolder(false);
+		contentControl.UpdatePlaceHolderTextPrForForm();
+		return contentControl;
+	}
+	function SetFormPlaceholder(form, text)
+	{
+		if (text)
+			form.SetPlaceholderText(text);
 		else
-			oCC.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
-
-		oCC.ReplaceContentWithPlaceHolder(false);
-		oCC.SetFormPr(oTempFormPr);
-		oCC.UpdatePlaceHolderTextPrForForm();
-
-		return oCC;
+			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
+	}
+	function ApplyCommonFormPr(form, formPr)
+	{
+		if (!formPr)
+			formPr = {};
+		
+		let sdtFormPr = new AscCommon.CSdtFormPr();
+		sdtFormPr.SetHelpText(GetStringParameter(formPr["tip"], undefined));
+		sdtFormPr.SetRequired(GetBoolParameter(formPr["required"], false));
+		sdtFormPr.SetKey(GetStringParameter(formPr["key"], undefined));
+		form.SetFormPr(sdtFormPr);
+	}
+	function ApplyTextFormPr(form, formPr, keepContent)
+	{
+		let textFormPr = new AscCommon.CSdtTextFormPr();
+		textFormPr.SetComb(GetBoolParameter(formPr["comb"], false));
+		textFormPr.SetMaxCharacters(GetNumberParameter(formPr["maxCharacters"], -1));
+		textFormPr.SetMultiLine(GetBoolParameter(formPr["multiLine"], false));
+		textFormPr.SetAutoFit(GetBoolParameter(formPr["autoFit"], false));
+		textFormPr.SetWidth((GetNumberParameter(formPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
+		form.ApplyTextFormPr(textFormPr, keepContent);
 	}
 	function CheckFormKey(form)
 	{
@@ -387,6 +439,8 @@
 	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
-	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;	
+	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
+	
+	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 
 }(window, null));

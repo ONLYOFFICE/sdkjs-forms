@@ -1,5 +1,5 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2022
+ * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
@@ -12,7 +12,7 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-12 Ernesta Birznieka-Upisha
+ * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
  * street, Riga, Latvia, EU, LV-1050.
  *
  * The  interactive user interfaces in modified source and object code versions
@@ -114,110 +114,7 @@
 	 */
 	window["asc_docs_api"].prototype["pluginMethod_SetFormValue"] = function(internalId, value)
 	{
-		let oLogicDocument = this.private_GetLogicDocument();
-
-		if (!AscCommon.g_oTableId
-			|| !oLogicDocument
-			|| !oLogicDocument.IsDocumentEditor())
-			return;
-
-		let oForm = AscCommon.g_oTableId.GetClass(internalId);
-
-		if (!oForm
-			|| !(oForm instanceof AscWord.CInlineLevelSdt)
-			|| !oForm.IsForm())
-			return;
-
-		// При проверке лока внутри параграфа мы ориентируемся на выделение внутри этого параграфа
-		// поэтому нужно выделить форму
-		let state = oLogicDocument.SaveDocumentState();
-		oForm.SelectContentControl();
-		
-		let oParagraph = oForm.GetParagraph();
-		
-		oForm.SkipSpecialContentControlLock(true);
-		if (!oParagraph
-			|| oLogicDocument.IsSelectionLocked(AscCommon.changestype_None, {
-				Type      : AscCommon.changestype_2_ElementsArray_and_Type,
-				Elements  : [oParagraph],
-				CheckType : AscCommon.changestype_Paragraph_Content
-			}, true, oLogicDocument.IsFillingFormMode()))
-		{
-			oLogicDocument.LoadDocumentState(state);
-			oForm.SkipSpecialContentControlLock(false);
-			return;
-		}
-		oLogicDocument.LoadDocumentState(state);
-		oForm.SkipSpecialContentControlLock(false);
-
-		oLogicDocument.StartAction(AscDFH.historydescription_Document_FillFormInPlugin);
-
-		let isClear = false;
-		if (null === value)
-		{
-			isClear = true;
-		}
-		else if (oForm.IsTextForm() || oForm.IsComboBox())
-		{
-			let sValue = AscBuilder.GetStringParameter(value, "");
-			if (!value)
-				isClear = true;
-			else
-				oForm.SetInnerText(sValue);
-		}
-		else if (oForm.IsDropDownList())
-		{
-			let sValue = AscBuilder.GetStringParameter(value, "");
-			let oPr    = oForm.GetDropDownListPr();
-			let nIndex = oPr.FindByText(sValue);
-			if (-1 !== nIndex)
-				oForm.SelectListItem(oPr.GetItemValue(nIndex));
-			else
-				isClear = true;
-		}
-		else if (oForm.IsCheckBox())
-		{
-			let isChecked = value === "true" ? true : value === "false" ? false : AscBuilder.GetBoolParameter(value, null);
-			if (null !== isChecked)
-				oForm.SetCheckBoxChecked(isChecked);
-			else
-				isClear = true;
-		}
-		else if (oForm.IsPictureForm())
-		{
-			let sValue = AscBuilder.GetStringParameter(value, "");
-			if (!sValue)
-				return;
-
-			let oImg;
-			let allDrawings = oForm.GetAllDrawingObjects();
-			for (let nDrawing = 0; nDrawing < allDrawings.length; ++nDrawing)
-			{
-				if (allDrawings[nDrawing].IsPicture())
-				{
-					oImg = allDrawings[nDrawing].GraphicObj;
-					break;
-				}
-			}
-
-			if (oImg)
-			{
-				oForm.SetShowingPlcHdr(false);
-				oImg.setBlipFill(AscFormat.CreateBlipFillRasterImageId(sValue));
-			}
-			else
-			{
-				isClear = true;
-			}
-		}
-
-		if (isClear)
-			oForm.ClearContentControlExt();
-
-		oLogicDocument.OnChangeForm(oForm);
-		oLogicDocument.Recalculate();
-		oLogicDocument.UpdateTracks();
-		oLogicDocument.FinalizeAction();
+		this.private_SetFormValue(internalId, value);
 	};
 	/**
 	 * Returns a value of the specified form.
