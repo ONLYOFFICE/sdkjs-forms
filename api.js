@@ -672,6 +672,13 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				positionV.put_RelativeFrom(Asc.c_oAscRelativeFromV.Page);
 				positionV.put_Value(y);
 				
+				let paddings = new Asc.asc_CPaddings();
+				paddings.put_Left(0);
+				paddings.put_Right(0);
+				paddings.put_Top(0);
+				paddings.put_Bottom(0);
+				drawingPr.asc_putPaddings(paddings);
+				
 				drawing.Set_Props(drawingPr);
 				drawing.SelectAsDrawing();
 			}
