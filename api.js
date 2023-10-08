@@ -186,7 +186,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
-
+				oLogicDocument.Recalculate(true);
 				oFormParaDrawing = oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
 				var aDrawings = oCC.GetAllDrawingObjects();
