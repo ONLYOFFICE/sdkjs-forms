@@ -186,7 +186,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
 				private_CheckFormKey(oCC, oLogicDocument);
-
+				oLogicDocument.Recalculate(true);
 				oFormParaDrawing = oCC.ConvertFormToFixed();
 				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
 				var aDrawings = oCC.GetAllDrawingObjects();
@@ -652,29 +652,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			logicDocument.Recalculate(true);
 			let drawing = form.ConvertFormToFixed();
 			if (drawing)
-			{
-				logicDocument.Recalculate(true);
-				let x = drawing.Internal_Position.Calculate_X_Value(Asc.c_oAscRelativeFromH.Page);
-				let y = drawing.Internal_Position.Calculate_Y_Value(Asc.c_oAscRelativeFromV.Page);
-
-				let drawingPr = new Asc.asc_CImgProperty();
-				drawingPr.asc_putWrappingStyle(Asc.c_oAscWrapStyle2.Square);
-				
-				let positionH = new Asc.CImagePositionH();
-				drawingPr.asc_putPositionH(positionH);
-				positionH.put_UseAlign(false);
-				positionH.put_RelativeFrom(Asc.c_oAscRelativeFromH.Page);
-				positionH.put_Value(x);
-				
-				let positionV = new Asc.CImagePositionV();
-				drawingPr.asc_putPositionV(positionV);
-				positionV.put_UseAlign(false);
-				positionV.put_RelativeFrom(Asc.c_oAscRelativeFromV.Page);
-				positionV.put_Value(y);
-				
-				drawing.Set_Props(drawingPr);
 				drawing.SelectAsDrawing();
-			}
 		}
 	}
 	
