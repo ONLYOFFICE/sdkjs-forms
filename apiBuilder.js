@@ -150,6 +150,19 @@
 	 */
 
 	/**
+	 * Specific date form properties.
+	 * @typedef {Object} DateFormPrBase
+	 * @property {string} format	- The date format, ex: mm.dd.yyyy
+	 * @property {string} lang		- The date language. Possible value for this parameter is a language identifier as defined by
+	 * RFC 4646/BCP 47. Example: "en-CA".
+	 */
+
+	/**
+	 * Date form properties.
+	 * @typedef {FormPrBase | DateFormPrBase} DateFormPr
+	 */
+
+	/**
 	 * Creates a text field with the specified text field properties.
 	 * @memberof Api
 	 * @param {TextFormPr} oFormPr - Text field properties.
@@ -340,6 +353,22 @@
 		return new AscBuilder.ApiPictureForm(oCC);
 	};
 	/**
+	 * Creates a date form with the specified date form properties.
+	 * @memberof Api
+	 * @param {DateFormPr} oFormPr - Date form properties.
+	 * @returns {ApiDateForm}
+	 */
+	Api.prototype.CreateDateForm = function(oFormPr)
+	{
+		if (!oFormPr)
+			oFormPr = {};
+
+		let form = CreateCommonForm(oFormPr);
+		ApplyDateFormPr(form, oFormPr);
+		CheckFormKey(form);
+		return new AscBuilder.ApiDateForm(form);
+	};
+	/**
 	 * Inserts a text box with the specified text box properties over the selected text.
 	 * @memberof ApiDocument
 	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
@@ -412,6 +441,18 @@
 		textFormPr.SetWidth((GetNumberParameter(formPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
 		form.ApplyTextFormPr(textFormPr, keepContent);
 	}
+	function ApplyDateFormPr(form, formPr) {
+		let datePickerPr = new AscCommon.CSdtDatePickerPr();
+
+		var nLcid = Asc.g_oLcidNameToIdMap[formPr["lang"]];
+		if (undefined == nLcid)
+			nLcid = 1033;
+
+		datePickerPr.SetDateFormat(GetStringParameter(formPr["format"], "mm/dd/yyyy"));
+		datePickerPr.SetLangId(nLcid);
+
+		form.ApplyDatePickerPr(datePickerPr);
+	}
 	function CheckFormKey(form)
 	{
 		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
@@ -438,6 +479,7 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
+	Api.prototype["CreateDateForm"]		= Api.prototype.CreateDateForm;
 	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
 	
