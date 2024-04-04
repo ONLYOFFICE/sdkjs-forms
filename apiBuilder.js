@@ -38,11 +38,13 @@
 	// Import
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	const AscBuilder         = window["AscBuilder"];
-	const ApiDocument        = AscBuilder.ApiDocument;
-	const GetStringParameter = AscBuilder.GetStringParameter;
-	const GetBoolParameter   = AscBuilder.GetBoolParameter;
-	const GetNumberParameter = AscBuilder.GetNumberParameter;
-	const GetArrayParameter  = AscBuilder.GetArrayParameter;
+
+	const ApiDocument            = AscBuilder.ApiDocument;
+	const GetStringParameter     = AscBuilder.GetStringParameter;
+	const GetBoolParameter       = AscBuilder.GetBoolParameter;
+	const GetNumberParameter     = AscBuilder.GetNumberParameter;
+	const GetArrayParameter      = AscBuilder.GetArrayParameter;
+	const executeNoFormLockCheck = AscBuilder.executeNoFormLockCheck;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -170,13 +172,16 @@
 	 */
 	Api.prototype.CreateTextForm = function(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
-
-		let form = CreateCommonForm(oFormPr);
-		ApplyTextFormPr(form, oFormPr);
-		CheckFormKey(form);
-		return new AscBuilder.ApiTextForm(form);
+		return executeNoFormLockCheck(function()
+		{
+			if (!oFormPr)
+				oFormPr = {};
+			
+			let form = CreateCommonForm(oFormPr);
+			ApplyTextFormPr(form, oFormPr);
+			CheckFormKey(form);
+			return new AscBuilder.ApiTextForm(form);
+		}, this);
 	};
 	/**
 	 * Creates a checkbox / radio button with the specified checkbox / radio button properties.
@@ -186,67 +191,70 @@
 	 */
 	Api.prototype.CreateCheckBoxForm = function(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
-
-		oFormPr["placeholder"] = undefined;
-
-		var oCC;
-		var oCheckboxPr  = new AscCommon.CSdtCheckBoxPr();
-		if (GetBoolParameter(oFormPr["radio"], false))
+		return executeNoFormLockCheck(function()
 		{
-			oCheckboxPr.CheckedSymbol   = 0x25C9;
-			oCheckboxPr.UncheckedSymbol = 0x25CB;
-			oCheckboxPr.GroupKey        = GetStringParameter(oFormPr["key"], "Group1");
-		}
-		else
-		{
-			oCheckboxPr.CheckedSymbol   = 0x2611;
-			oCheckboxPr.UncheckedSymbol = 0x2610;
-		}
-
-		oCheckboxPr.CheckedFont = "Segoe UI Symbol";
-		oCheckboxPr.UncheckedFont = "Segoe UI Symbol";
-
-		var nCheckedSymbol   = oCheckboxPr && oCheckboxPr.CheckedSymbol ? oCheckboxPr.CheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.CheckedSymbol;
-		var nUncheckedSymbol = oCheckboxPr && oCheckboxPr.UncheckedSymbol ? oCheckboxPr.UncheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.UncheckedSymbol;
-		var sCheckedFont     = oCheckboxPr && oCheckboxPr.CheckedFont ? oCheckboxPr.CheckedFont : Asc.c_oAscSdtCheckBoxDefaults.CheckedFont;
-		var sUncheckedFont   = oCheckboxPr && oCheckboxPr.UncheckedFont ? oCheckboxPr && oCheckboxPr.UncheckedFont : Asc.c_oAscSdtCheckBoxDefaults.UncheckedFont;
-
-		var isLoadFonts = false;
-		if (!AscCommon.IsAscFontSupport(sCheckedFont, nCheckedSymbol))
-		{
-			isLoadFonts = true;
-			AscFonts.FontPickerByCharacter.getFontBySymbol(nCheckedSymbol);
-		}
-
-		if (!AscCommon.IsAscFontSupport(sUncheckedFont, nUncheckedSymbol))
-		{
-			isLoadFonts = true;
-			AscFonts.FontPickerByCharacter.getFontBySymbol(nUncheckedSymbol);
-		}
-
-		function private_PerformAddCheckBox()
-		{
-			oCC = CreateCommonForm(oFormPr);
-			oCC.ApplyCheckBoxPr(oCheckboxPr);
-		}
-
-		if (isLoadFonts)
-		{
-			var oFonts = {};
-			oFonts[sCheckedFont]   = true;
-			oFonts[sUncheckedFont] = true;
-
-			AscCommon.Check_LoadingDataBeforePrepaste(this, oFonts, {}, private_PerformAddCheckBox);
-		}
-		else
-		{
-			private_PerformAddCheckBox();
-		}
-
-		CheckFormKey(oCC);
-		return new AscBuilder.ApiCheckBoxForm(oCC);
+			if (!oFormPr)
+				oFormPr = {};
+			
+			oFormPr["placeholder"] = undefined;
+			
+			var oCC;
+			var oCheckboxPr = new AscCommon.CSdtCheckBoxPr();
+			if (GetBoolParameter(oFormPr["radio"], false))
+			{
+				oCheckboxPr.CheckedSymbol   = 0x25C9;
+				oCheckboxPr.UncheckedSymbol = 0x25CB;
+				oCheckboxPr.GroupKey        = GetStringParameter(oFormPr["key"], "Group1");
+			}
+			else
+			{
+				oCheckboxPr.CheckedSymbol   = 0x2611;
+				oCheckboxPr.UncheckedSymbol = 0x2610;
+			}
+			
+			oCheckboxPr.CheckedFont   = "Segoe UI Symbol";
+			oCheckboxPr.UncheckedFont = "Segoe UI Symbol";
+			
+			var nCheckedSymbol   = oCheckboxPr && oCheckboxPr.CheckedSymbol ? oCheckboxPr.CheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.CheckedSymbol;
+			var nUncheckedSymbol = oCheckboxPr && oCheckboxPr.UncheckedSymbol ? oCheckboxPr.UncheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.UncheckedSymbol;
+			var sCheckedFont     = oCheckboxPr && oCheckboxPr.CheckedFont ? oCheckboxPr.CheckedFont : Asc.c_oAscSdtCheckBoxDefaults.CheckedFont;
+			var sUncheckedFont   = oCheckboxPr && oCheckboxPr.UncheckedFont ? oCheckboxPr && oCheckboxPr.UncheckedFont : Asc.c_oAscSdtCheckBoxDefaults.UncheckedFont;
+			
+			var isLoadFonts = false;
+			if (!AscCommon.IsAscFontSupport(sCheckedFont, nCheckedSymbol))
+			{
+				isLoadFonts = true;
+				AscFonts.FontPickerByCharacter.getFontBySymbol(nCheckedSymbol);
+			}
+			
+			if (!AscCommon.IsAscFontSupport(sUncheckedFont, nUncheckedSymbol))
+			{
+				isLoadFonts = true;
+				AscFonts.FontPickerByCharacter.getFontBySymbol(nUncheckedSymbol);
+			}
+			
+			function private_PerformAddCheckBox()
+			{
+				oCC = CreateCommonForm(oFormPr);
+				oCC.ApplyCheckBoxPr(oCheckboxPr);
+			}
+			
+			if (isLoadFonts)
+			{
+				var oFonts             = {};
+				oFonts[sCheckedFont]   = true;
+				oFonts[sUncheckedFont] = true;
+				
+				AscCommon.Check_LoadingDataBeforePrepaste(this, oFonts, {}, private_PerformAddCheckBox);
+			}
+			else
+			{
+				private_PerformAddCheckBox();
+			}
+			
+			CheckFormKey(oCC);
+			return new AscBuilder.ApiCheckBoxForm(oCC);
+		}, this);
 	};
 	/**
 	 * Creates a combo box / dropdown list with the specified combo box / dropdown list properties.
@@ -256,62 +264,65 @@
 	 */
 	Api.prototype.CreateComboBoxForm = function(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
-
-		var oPr = new AscCommon.CSdtComboBoxPr();
-		oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
-
-		var oCC = CreateCommonForm(oFormPr);
-
-		let sPlaceholder = GetStringParameter(oFormPr["placeholder"], undefined);
-
-		let arrList = GetArrayParameter(oFormPr["items"], []);
-		for (let nIndex = 0, nCount = arrList.length; nIndex < nCount; ++nIndex)
+		return executeNoFormLockCheck(function()
 		{
-			let oItem = arrList[nIndex];
-
-			if (GetStringParameter(oItem, null))
+			if (!oFormPr)
+				oFormPr = {};
+			
+			var oPr = new AscCommon.CSdtComboBoxPr();
+			oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
+			
+			var oCC = CreateCommonForm(oFormPr);
+			
+			let sPlaceholder = GetStringParameter(oFormPr["placeholder"], undefined);
+			
+			let arrList = GetArrayParameter(oFormPr["items"], []);
+			for (let nIndex = 0, nCount = arrList.length; nIndex < nCount; ++nIndex)
 			{
-				oPr.AddItem(oItem, oItem);
+				let oItem = arrList[nIndex];
+				
+				if (GetStringParameter(oItem, null))
+				{
+					oPr.AddItem(oItem, oItem);
+				}
+				else if (GetArrayParameter(oItem, null))
+				{
+					let sDisplay = GetStringParameter(oItem[0], null);
+					let sValue   = GetStringParameter(oItem[1], null);
+					if (null !== sDisplay && null !== sValue)
+						oPr.AddItem(sDisplay, sValue);
+				}
 			}
-			else if (GetArrayParameter(oItem, null))
+			oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
+			
+			if (!GetBoolParameter(oFormPr["editable"], false))
 			{
-				let sDisplay = GetStringParameter(oItem[0], null);
-				let sValue   = GetStringParameter(oItem[1], null);
-				if (null !== sDisplay && null !== sValue)
-					oPr.AddItem(sDisplay, sValue);
-			}
-		}
-		oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
-
-		if (!GetBoolParameter(oFormPr["editable"], false))
-		{
-			if (sPlaceholder)
-			{
-				oCC.ApplyDropDownListPr(oPr);
+				if (sPlaceholder)
+				{
+					oCC.ApplyDropDownListPr(oPr);
+				}
+				else
+				{
+					oCC.SetDropDownListPr(oPr);
+					oCC.SelectListItem();
+				}
 			}
 			else
 			{
-				oCC.SetDropDownListPr(oPr);
-				oCC.SelectListItem();
+				if (sPlaceholder)
+				{
+					oCC.ApplyComboBoxPr(oPr);
+				}
+				else
+				{
+					oCC.SetComboBoxPr(oPr);
+					oCC.SelectListItem();
+				}
 			}
-		}
-		else
-		{
-			if (sPlaceholder)
-			{
-				oCC.ApplyComboBoxPr(oPr);
-			}
-			else
-			{
-				oCC.SetComboBoxPr(oPr);
-				oCC.SelectListItem();
-			}
-		}
-
-		CheckFormKey(oCC);
-		return new AscBuilder.ApiComboBoxForm(oCC);
+			
+			CheckFormKey(oCC);
+			return new AscBuilder.ApiComboBoxForm(oCC);
+		}, this);
 	};
 	/**
 	 * Creates a picture form with the specified picture form properties.
@@ -321,36 +332,47 @@
 	 */
 	Api.prototype.CreatePictureForm = function(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
-
-		if (GetStringParameter("placeholder", null))
-			oFormPr["placeholder"] = AscCommon.translateManager.getValue("Click to load image");
-
-		var oCC = CreateCommonForm(oFormPr);
-		oCC.ApplyPicturePr(true);
-		oCC.ConvertFormToFixed();
-
-		let oPr = new AscCommon.CSdtPictureFormPr();
-
-		let sScale = GetStringParameter(oFormPr["scaleFlag"], undefined);
-		switch (sScale)
+		return executeNoFormLockCheck(function()
 		{
-			case "always": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Always); break;
-			case "never": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Never); break;
-			case "tooBig": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Bigger); break;
-			case "tooSmall": oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Smaller); break;
-		}
-
-		oPr.SetConstantProportions(GetBoolParameter(oFormPr["lockAspectRatio"], true));
-		oPr.SetRespectBorders(GetBoolParameter(oFormPr["respectBorders"], false));
-		oPr.SetShiftX(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftX"], 50))) / 100);
-		oPr.SetShiftY(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftY"], 50))) / 100);
-
-		oCC.SetPictureFormPr(oPr);
-
-		CheckFormKey(oCC);
-		return new AscBuilder.ApiPictureForm(oCC);
+			if (!oFormPr)
+				oFormPr = {};
+			
+			if (GetStringParameter("placeholder", null))
+				oFormPr["placeholder"] = AscCommon.translateManager.getValue("Click to load image");
+			
+			var oCC = CreateCommonForm(oFormPr);
+			oCC.ApplyPicturePr(true);
+			oCC.ConvertFormToFixed();
+			
+			let oPr = new AscCommon.CSdtPictureFormPr();
+			
+			let sScale = GetStringParameter(oFormPr["scaleFlag"], undefined);
+			switch (sScale)
+			{
+				case "always":
+					oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Always);
+					break;
+				case "never":
+					oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Never);
+					break;
+				case "tooBig":
+					oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Bigger);
+					break;
+				case "tooSmall":
+					oPr.SetScaleFlag(Asc.c_oAscPictureFormScaleFlag.Smaller);
+					break;
+			}
+			
+			oPr.SetConstantProportions(GetBoolParameter(oFormPr["lockAspectRatio"], true));
+			oPr.SetRespectBorders(GetBoolParameter(oFormPr["respectBorders"], false));
+			oPr.SetShiftX(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftX"], 50))) / 100);
+			oPr.SetShiftY(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftY"], 50))) / 100);
+			
+			oCC.SetPictureFormPr(oPr);
+			
+			CheckFormKey(oCC);
+			return new AscBuilder.ApiPictureForm(oCC);
+		}, this);
 	};
 	/**
 	 * Creates a date form with the specified date form properties.
@@ -360,13 +382,16 @@
 	 */
 	Api.prototype.CreateDateForm = function(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
-
-		let form = CreateCommonForm(oFormPr);
-		ApplyDateFormPr(form, oFormPr);
-		CheckFormKey(form);
-		return new AscBuilder.ApiDateForm(form);
+		return executeNoFormLockCheck(function()
+		{
+			if (!oFormPr)
+				oFormPr = {};
+			
+			let form = CreateCommonForm(oFormPr);
+			ApplyDateFormPr(form, oFormPr);
+			CheckFormKey(form);
+			return new AscBuilder.ApiDateForm(form);
+		}, this);
 	};
 	/**
 	 * Inserts a text box with the specified text box properties over the selected text.
@@ -376,26 +401,29 @@
 	 */
 	ApiDocument.prototype.InsertTextForm = function(oFormPr)
 	{
-		if (!oFormPr)
-			oFormPr = {};
-		
-		let logicDocument = this.Document;
-		let placeholder = GetStringParameter(oFormPr["placeholder"], undefined);
-		if (GetBoolParameter(oFormPr["placeholderFromSelection"], false))
-			placeholder = logicDocument.GetSelectedText();
-		
-		if (!GetBoolParameter(oFormPr["keepSelectedTextInForm"], true))
-			logicDocument.RemoveBeforePaste();
-		
-		let contentControl = logicDocument.AddContentControl(c_oAscSdtLevelType.Inline);
-		if (!contentControl)
-			return null;
-		
-		ApplyCommonFormPr(contentControl, oFormPr);
-		SetFormPlaceholder(contentControl, placeholder);
-		ApplyTextFormPr(contentControl, oFormPr, true);
-		CheckFormKey(contentControl);
-		return new AscBuilder.ApiTextForm(contentControl);
+		return executeNoFormLockCheck(function()
+		{
+			if (!oFormPr)
+				oFormPr = {};
+			
+			let logicDocument = this.Document;
+			let placeholder   = GetStringParameter(oFormPr["placeholder"], undefined);
+			if (GetBoolParameter(oFormPr["placeholderFromSelection"], false))
+				placeholder = logicDocument.GetSelectedText();
+			
+			if (!GetBoolParameter(oFormPr["keepSelectedTextInForm"], true))
+				logicDocument.RemoveBeforePaste();
+			
+			let contentControl = logicDocument.AddContentControl(c_oAscSdtLevelType.Inline);
+			if (!contentControl)
+				return null;
+			
+			ApplyCommonFormPr(contentControl, oFormPr);
+			SetFormPlaceholder(contentControl, placeholder);
+			ApplyTextFormPr(contentControl, oFormPr, true);
+			CheckFormKey(contentControl);
+			return new AscBuilder.ApiTextForm(contentControl);
+		}, this);
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
@@ -441,7 +469,8 @@
 		textFormPr.SetWidth((GetNumberParameter(formPr["cellWidth"], 0) * 72 * 20 / 25.4) | 0);
 		form.ApplyTextFormPr(textFormPr, keepContent);
 	}
-	function ApplyDateFormPr(form, formPr) {
+	function ApplyDateFormPr(form, formPr)
+	{
 		let datePickerPr = new AscCommon.CSdtDatePickerPr();
 
 		var nLcid = Asc.g_oLcidNameToIdMap[formPr["lang"]];
