@@ -240,6 +240,11 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 					oLogicDocument.Recalculate(true);
 					oCC.UpdatePictureFormLayout();
 				}
+				else
+				{
+					oCC.ReplaceContentWithPlaceHolder();
+					oCC.ApplyPicturePr(true);
+				}
 			}
 
 			if (oCC && oCommonPr)
