@@ -61,6 +61,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			oPr.UncheckedFont = "Segoe UI Symbol";
 		}
 		
+		
 		var nCheckedSymbol   = oPr && oPr.CheckedSymbol ? oPr.CheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.CheckedSymbol;
 		var nUncheckedSymbol = oPr && oPr.UncheckedSymbol ? oPr.UncheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.UncheckedSymbol;
 		var sCheckedFont     = oPr && oPr.CheckedFont ? oPr.CheckedFont : Asc.c_oAscSdtCheckBoxDefaults.CheckedFont;
@@ -87,7 +88,11 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			if (oFormPr)
 			{
 				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
-				private_CheckFormKey(oCC, oLogicDocument);
+				
+				if (oPr && oPr.GroupKey)
+					private_CheckRadioButtonChoice(oCC, oLogicDocument, oPr.GroupKey);
+				else
+					private_CheckFormKey(oCC, oLogicDocument);
 			}
 
 			if (oCommonPr)
@@ -620,6 +625,26 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 
 		key = keyGenerator.GetNewKey(form);
 		formPr.SetKey(key);
+		form.SetFormPr(formPr);
+	}
+	function private_CheckRadioButtonChoice(form, logicDocument, groupKey)
+	{
+		if (!form || !form.IsForm() || !logicDocument)
+			return;
+		
+		let choice = form.GetFormKey();
+		if (choice && "" !== choice.trim())
+			return;
+		
+		let formManager  = logicDocument.GetFormsManager();
+		let keyGenerator = formManager.GetKeyGenerator();
+		
+		let formPr = form.GetFormPr().Copy();
+		if (!formPr)
+			return;
+		
+		choice = keyGenerator.GetNewChoiceByGroupKey(groupKey);
+		formPr.SetKey(choice);
 		form.SetFormPr(formPr);
 	}
 	function private_ApplyFormPr(form, formPr, logicDocument)
