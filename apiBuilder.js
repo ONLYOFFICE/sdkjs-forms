@@ -185,7 +185,7 @@
 	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {TextFormPr} oFormPr - Text field properties.
 	 * @returns {ApiTextForm}
-	 * @see office-js-api/Examples/../Sdkjs-Forms/Api/Methods/CreateTextForm.js
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateTextForm.js
 	 */
 	Api.prototype.CreateTextForm = function(oFormPr)
 	{
@@ -206,7 +206,7 @@
 	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {CheckBoxFormPr} oFormPr - Checkbox / radio button properties.
 	 * @returns {ApiCheckBoxForm}
-	 * @see office-js-api/Examples/../Sdkjs-Forms/Api/Methods/CreateCheckBoxForm.js
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateCheckBoxForm.js
 	 */
 	Api.prototype.CreateCheckBoxForm = function(oFormPr)
 	{
@@ -281,7 +281,7 @@
 	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {ComboBoxFormPr} oFormPr - Combo box / dropdown list properties.
 	 * @returns {ApiComboBoxForm}
-	 * @see office-js-api/Examples/../Sdkjs-Forms/Api/Methods/CreateComboBoxForm.js
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComboBoxForm.js
 	 */
 	Api.prototype.CreateComboBoxForm = function(oFormPr)
 	{
@@ -351,7 +351,7 @@
 	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {PictureFormPr} oFormPr - Picture form properties.
 	 * @returns {ApiPictureForm}
-	 * @see office-js-api/Examples/../Sdkjs-Forms/Api/Methods/CreatePictureForm.js
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreatePictureForm.js
 	 */
 	Api.prototype.CreatePictureForm = function(oFormPr)
 	{
@@ -403,7 +403,7 @@
 	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {DateFormPr} oFormPr - Date form properties.
 	 * @returns {ApiDateForm}
-	 * @see office-js-api/Examples/../Sdkjs-Forms/Api/Methods/CreateDateForm.js
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateDateForm.js
 	 */
 	Api.prototype.CreateDateForm = function(oFormPr)
 	{
@@ -424,7 +424,7 @@
 	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
 	 * @returns {ApiTextForm}
-	 * @see office-js-api/Examples/../Sdkjs-Forms/ApiDocument/Methods/InsertTextForm.js
+	 * @see office-js-api/Examples/Forms/ApiDocument/Methods/InsertTextForm.js
 	 */
 	ApiDocument.prototype.InsertTextForm = function(oFormPr)
 	{
