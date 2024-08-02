@@ -41,7 +41,8 @@
      * @property {string} Id - A unique identifier of the content control. It can be used to search for a certain content control and make reference to it in the code.
      * @property {ContentControlLock} Lock - A value that defines if it is possible to delete and/or edit the content control or not: 0 - only deleting, 1 - no deleting or editing, 2 - only editing, 3 - full access.
      * @property {string} InternalId - A unique internal identifier of the content control. It is used for all operations with content controls.
-     */
+     * @see office-js-api/Examples/Plugins/Forms/Enumeration\ContentControl.js
+	 */
 
 	/**
      * @typedef {(0 | 1 | 2 | 3)} ContentControlLock
@@ -50,7 +51,8 @@
 	 * * **1** - disable deleting or editing
 	 * * **2** - only editing
 	 * * **3** - full access
-     */
+     * @see office-js-api/Examples/Plugins/Forms/Enumeration\ContentControlLock.js
+	 */
 
 	/**
 	 * Returns information about all the forms that have been added to the document.
@@ -58,8 +60,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @alias GetAllForms
 	 * @returns {ContentControl[]} - An array with all the forms from the document.
-	 * @example
-	 * window.Asc.plugin.executeMethod("GetAllForms");
+	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods\GetAllForms.js
 	 */
 	window["asc_docs_api"].prototype["pluginMethod_GetAllForms"] = function()
 	{
@@ -82,8 +83,7 @@
 	 * @alias GetFormsByTag
 	 * @param {string} tag - The form tag.
 	 * @returns {ContentControl[]} - An array with all the forms from the document with the specified tag.
-	 * @example
-	 * window.Asc.plugin.executeMethod("GetFormsByTag");
+	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods\GetFormsByTag.js
 	 */
 	window["asc_docs_api"].prototype["pluginMethod_GetFormsByTag"] = function(tag)
 	{
@@ -109,8 +109,7 @@
 	 * @alias SetFormValue
 	 * @param {string} internalId - A unique internal identifier of the form.
 	 * @param {string | boolean} value - Form value to be set. Its type depends on the form type.
-	 * @example
-	 * window.Asc.plugin.executeMethod("SetFormValue");
+	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods\SetFormValue.js
 	 */
 	window["asc_docs_api"].prototype["pluginMethod_SetFormValue"] = function(internalId, value)
 	{
@@ -123,9 +122,7 @@
 	 * @alias GetFormValue
 	 * @param {string} internalId - A unique internal identifier of the form.
 	 * @returns {null | string | boolean} The form value in the string or boolean format depending on the form type. The null value means that the form is filled with a placeholder.
-	 * @example
-	 * window.Asc.plugin.executeMethod("GetFormValue");
-	 *
+	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods\GetFormValue.js
 	 */
 	window["asc_docs_api"].prototype["pluginMethod_GetFormValue"] = function(internalId)
 	{
@@ -171,3 +168,4 @@
 	};
 
 })(window);
+
