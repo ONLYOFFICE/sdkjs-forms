@@ -60,6 +60,7 @@
 	 * @typedef {Object} FormPrBase
 	 * @property {string} key - Form key.
 	 * @property {string} tip - Form tip text.
+	 * @property {string} tag - Form tag.
 	 * @property {boolean} required - Specifies if the form is required or not.
 	 * @property {string} placeholder - Form placeholder text.
 	 * @see office-js-api/Examples/Enumerations/FormPrBase.js
@@ -463,6 +464,10 @@
 		
 		let placeholder = oFormPr ? GetStringParameter(oFormPr["placeholder"], undefined) : undefined;
 		SetFormPlaceholder(contentControl, placeholder);
+		
+		let tag = oFormPr ? GetStringParameter(oFormPr["tag"], undefined) : undefined;
+		if (tag)
+			contentControl.SetTag(tag);
 		
 		contentControl.ReplaceContentWithPlaceHolder(false);
 		contentControl.UpdatePlaceHolderTextPrForForm();
