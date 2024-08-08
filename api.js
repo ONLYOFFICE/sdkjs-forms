@@ -171,7 +171,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			private_PerformAddCheckBox();
 		}
 	};
-	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlPicture'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlPicture = function(oFormPr, oCommonPr)
+	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlPicture'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlPicture = function(oFormPr, oCommonPr, isSignature)
 	{
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
@@ -193,7 +193,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				private_CheckFormKey(oCC, oLogicDocument);
 				oLogicDocument.Recalculate(true);
 				oFormParaDrawing = oCC.ConvertFormToFixed();
-				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
+				let pictPr = new AscCommon.CSdtPictureFormPr();
+				if (isSignature)
+					pictPr.SetSignature(true);
+				oCC.SetPictureFormPr(pictPr);
 				var aDrawings = oCC.GetAllDrawingObjects();
 				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing)
 				{
@@ -267,6 +270,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			}
  			oLogicDocument.FinalizeAction();
 		}
+	};
+	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlSignature'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlSignature = function(oFormPr, oCommonPr)
+	{
+		return this.asc_AddContentControlPicture(oFormPr, oCommonPr, true);
 	};
 	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlList'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlList = function(isComboBox, oPr, oFormPr, oCommonPr)
 	{
