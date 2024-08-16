@@ -149,13 +149,13 @@
 	 * @property {boolean} lockAspectRatio - Specifies if the aspect ratio of the picture form is locked or not.
 	 * @property {boolean} respectBorders - Specifies if the form border width is respected or not when scaling the image.
 	 * @property {percentage} shiftX - Horizontal picture position inside the picture form measured in percent:
-	 * * <b>0</b> - the picture is placed on the left;
-	 * * <b>50</b> - the picture is placed in the center;
-	 * * <b>100</b> - the picture is placed on the right.
+	 * <b>0</b> - the picture is placed on the left;
+	 * <b>50</b> - the picture is placed in the center;
+	 * <b>100</b> - the picture is placed on the right.
 	 * @property {percentage} shiftY - Vertical picture position inside the picture form measured in percent:
-	 * * <b>0</b> - the picture is placed on top;
-	 * * <b>50</b> - the picture is placed in the center;
-	 * * <b>100</b> - the picture is placed on the bottom.
+	 * <b>0</b> - the picture is placed on top;
+	 * <b>50</b> - the picture is placed in the center;
+	 * <b>100</b> - the picture is placed on the bottom.
 	 * @see office-js-api/Examples/Enumerations/PictureFormPrBase.js
 	 */
 
