@@ -1,5 +1,5 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * (c) Copyright Ascensio System SIA 2010-2024
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
@@ -60,8 +60,10 @@
 	 * @typedef {Object} FormPrBase
 	 * @property {string} key - Form key.
 	 * @property {string} tip - Form tip text.
+	 * @property {string} tag - Form tag.
 	 * @property {boolean} required - Specifies if the form is required or not.
 	 * @property {string} placeholder - Form placeholder text.
+	 * @see office-js-api/Examples/Enumerations/FormPrBase.js
 	 */
 
 	/**
@@ -72,11 +74,13 @@
 	 * @property {number} cellWidth - The cell width for each character measured in millimeters. If this parameter is not specified or equal to 0 or less, then the width will be set automatically.
 	 * @property {boolean} multiLine - Specifies if the current fixed size text field is multiline or not.
 	 * @property {boolean} autoFit - Specifies if the text field content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.
+	 * @see office-js-api/Examples/Enumerations/TextFormPrBase.js
 	 */
 
 	/**
 	 * Text field properties.
 	 * @typedef {FormPrBase | TextFormPrBase} TextFormPr
+	 * @see office-js-api/Examples/Enumerations/TextFormPr.js
 	 */
 	
 	/**
@@ -84,11 +88,13 @@
 	 * @typedef {Object} FormInsertPr
 	 * @property {boolean} [placeholderFromSelection=false] - Specifies if the currently selected text should be saved as a placeholder of the inserted form.
 	 * @property {boolean} [keepSelectedTextInForm=true] - Specifies if the currently selected text should be saved as the content of the inserted form.
+	 * @see office-js-api/Examples/Enumerations/FormInsertPr.js
 	 */
 	
 	/**
 	 * Properties for inserting a text field.
 	 * @typedef {FormPrBase | TextFormPrBase | FormInsertPr} TextFormInsertPr
+	 * @see office-js-api/Examples/Enumerations/TextFormInsertPr.js
 	 */
 	
 	 
@@ -96,11 +102,13 @@
 	 * Specific checkbox / radio button properties.
 	 * @typedef {Object} CheckBoxFormPrBase
 	 * @property {boolean} radio - Specifies if the current checkbox is a radio button. In this case, the key parameter is considered as an identifier for the group of radio buttons.
+	 * @see office-js-api/Examples/Enumerations/CheckBoxFormPrBase.js
 	 */
 
 	/**
 	 * Checkbox / radio button properties.
 	 * @typedef {FormPrBase | CheckBoxFormPrBase} CheckBoxFormPr
+	 * @see office-js-api/Examples/Enumerations/CheckBoxFormPr.js
 	 */
 
 	/**
@@ -113,21 +121,25 @@
      * If the array consists of single strings, then the displayed value and its meaning are the same.
      * Example: ["First", ["Second", "2"], ["Third", "3"], "Fourth"].
 
+	 * @see office-js-api/Examples/Enumerations/ComboBoxFormPrBase.js
 	 */
 
 	/**
 	 * Combo box / dropdown list properties.
 	 * @typedef {FormPrBase | ComboBoxFormPrBase} ComboBoxFormPr
+	 * @see office-js-api/Examples/Enumerations/ComboBoxFormPr.js
 	 */
 
 	/**
 	 * The condition to scale an image in the picture form.
 	 * @typedef {"always" | "never" | "tooBig" | "tooSmall"} ScaleFlag
+	 * @see office-js-api/Examples/Enumerations/ScaleFlag.js
 	 */
 
 	/**
 	 * Value from 0 to 100.
 	 * @typedef {number} percentage
+	 * @see office-js-api/Examples/Enumerations/percentage.js
 	 */
 
 	/**
@@ -137,18 +149,20 @@
 	 * @property {boolean} lockAspectRatio - Specifies if the aspect ratio of the picture form is locked or not.
 	 * @property {boolean} respectBorders - Specifies if the form border width is respected or not when scaling the image.
 	 * @property {percentage} shiftX - Horizontal picture position inside the picture form measured in percent:
-	 * * <b>0</b> - the picture is placed on the left;
-	 * * <b>50</b> - the picture is placed in the center;
-	 * * <b>100</b> - the picture is placed on the right.
+	 * <b>0</b> - the picture is placed on the left;
+	 * <b>50</b> - the picture is placed in the center;
+	 * <b>100</b> - the picture is placed on the right.
 	 * @property {percentage} shiftY - Vertical picture position inside the picture form measured in percent:
-	 * * <b>0</b> - the picture is placed on top;
-	 * * <b>50</b> - the picture is placed in the center;
-	 * * <b>100</b> - the picture is placed on the bottom.
+	 * <b>0</b> - the picture is placed on top;
+	 * <b>50</b> - the picture is placed in the center;
+	 * <b>100</b> - the picture is placed on the bottom.
+	 * @see office-js-api/Examples/Enumerations/PictureFormPrBase.js
 	 */
 
 	/**
 	 * Picture form properties.
 	 * @typedef {FormPrBase | PictureFormPrBase} PictureFormPr
+	 * @see office-js-api/Examples/Enumerations/PictureFormPr.js
 	 */
 
 	/**
@@ -157,18 +171,22 @@
 	 * @property {string} format	- The date format, ex: mm.dd.yyyy
 	 * @property {string} lang		- The date language. Possible value for this parameter is a language identifier as defined by
 	 * RFC 4646/BCP 47. Example: "en-CA".
+	 * @see office-js-api/Examples/Enumerations/DateFormPrBase.js
 	 */
 
 	/**
 	 * Date form properties.
 	 * @typedef {FormPrBase | DateFormPrBase} DateFormPr
+	 * @see office-js-api/Examples/Enumerations/DateFormPr.js
 	 */
 
 	/**
 	 * Creates a text field with the specified text field properties.
 	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {TextFormPr} oFormPr - Text field properties.
 	 * @returns {ApiTextForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateTextForm.js
 	 */
 	Api.prototype.CreateTextForm = function(oFormPr)
 	{
@@ -186,8 +204,10 @@
 	/**
 	 * Creates a checkbox / radio button with the specified checkbox / radio button properties.
 	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {CheckBoxFormPr} oFormPr - Checkbox / radio button properties.
 	 * @returns {ApiCheckBoxForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateCheckBoxForm.js
 	 */
 	Api.prototype.CreateCheckBoxForm = function(oFormPr)
 	{
@@ -259,8 +279,10 @@
 	/**
 	 * Creates a combo box / dropdown list with the specified combo box / dropdown list properties.
 	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {ComboBoxFormPr} oFormPr - Combo box / dropdown list properties.
 	 * @returns {ApiComboBoxForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComboBoxForm.js
 	 */
 	Api.prototype.CreateComboBoxForm = function(oFormPr)
 	{
@@ -327,8 +349,10 @@
 	/**
 	 * Creates a picture form with the specified picture form properties.
 	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {PictureFormPr} oFormPr - Picture form properties.
 	 * @returns {ApiPictureForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreatePictureForm.js
 	 */
 	Api.prototype.CreatePictureForm = function(oFormPr)
 	{
@@ -377,8 +401,10 @@
 	/**
 	 * Creates a date form with the specified date form properties.
 	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {DateFormPr} oFormPr - Date form properties.
 	 * @returns {ApiDateForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateDateForm.js
 	 */
 	Api.prototype.CreateDateForm = function(oFormPr)
 	{
@@ -396,8 +422,10 @@
 	/**
 	 * Inserts a text box with the specified text box properties over the selected text.
 	 * @memberof ApiDocument
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
 	 * @returns {ApiTextForm}
+	 * @see office-js-api/Examples/Forms/ApiDocument/Methods/InsertTextForm.js
 	 */
 	ApiDocument.prototype.InsertTextForm = function(oFormPr)
 	{
@@ -436,6 +464,10 @@
 		
 		let placeholder = oFormPr ? GetStringParameter(oFormPr["placeholder"], undefined) : undefined;
 		SetFormPlaceholder(contentControl, placeholder);
+		
+		let tag = oFormPr ? GetStringParameter(oFormPr["tag"], undefined) : undefined;
+		if (tag)
+			contentControl.SetTag(tag);
 		
 		contentControl.ReplaceContentWithPlaceHolder(false);
 		contentControl.UpdatePlaceHolderTextPrForForm();
@@ -515,3 +547,4 @@
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 
 }(window, null));
+

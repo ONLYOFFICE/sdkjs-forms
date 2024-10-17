@@ -1,5 +1,5 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * (c) Copyright Ascensio System SIA 2010-2024
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
@@ -61,6 +61,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			oPr.UncheckedFont = "Segoe UI Symbol";
 		}
 		
+		
 		var nCheckedSymbol   = oPr && oPr.CheckedSymbol ? oPr.CheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.CheckedSymbol;
 		var nUncheckedSymbol = oPr && oPr.UncheckedSymbol ? oPr.UncheckedSymbol : Asc.c_oAscSdtCheckBoxDefaults.UncheckedSymbol;
 		var sCheckedFont     = oPr && oPr.CheckedFont ? oPr.CheckedFont : Asc.c_oAscSdtCheckBoxDefaults.CheckedFont;
@@ -87,7 +88,11 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			if (oFormPr)
 			{
 				private_ApplyFormPr(oCC, oFormPr, oLogicDocument);
-				private_CheckFormKey(oCC, oLogicDocument);
+				
+				if (oPr && oPr.GroupKey)
+					private_CheckRadioButtonChoice(oCC, oLogicDocument, oPr.GroupKey);
+				else
+					private_CheckFormKey(oCC, oLogicDocument);
 			}
 
 			if (oCommonPr)
@@ -166,7 +171,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			private_PerformAddCheckBox();
 		}
 	};
-	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlPicture'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlPicture = function(oFormPr, oCommonPr)
+	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlPicture'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlPicture = function(oFormPr, oCommonPr, isSignature)
 	{
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
@@ -179,16 +184,31 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		{
 			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlPicture);
 
-			var oCC = oLogicDocument.AddContentControlPicture();
+			// 150x32pt for Signature
+			let w = isSignature ? 150 / 72 * 25.4 : undefined;
+			let h = isSignature ? 32 / 72 * 25.4 : undefined;
+			
+			var oCC = oLogicDocument.AddContentControlPicture(w, h);
 			let oFormParaDrawing = null;
 			if (oCC && oFormPr)
 			{
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
+				let pictPr = new AscCommon.CSdtPictureFormPr();
+				if (isSignature)
+				{
+					pictPr.SetSignature(true);
+					let glossary = oLogicDocument.GetGlossaryDocument();
+					if (glossary)
+						oCC.SetPlaceholder(glossary.GetDefaultPlaceholderSignatureOformDocPartId());
+				}
+				
+				oCC.SetPictureFormPr(pictPr);
+				
 				private_CheckFormKey(oCC, oLogicDocument);
 				oLogicDocument.Recalculate(true);
 				oFormParaDrawing = oCC.ConvertFormToFixed();
-				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
+				
 				var aDrawings = oCC.GetAllDrawingObjects();
 				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing)
 				{
@@ -262,6 +282,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			}
  			oLogicDocument.FinalizeAction();
 		}
+	};
+	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlSignature'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlSignature = function(oFormPr, oCommonPr)
+	{
+		return this.asc_AddContentControlPicture(oFormPr, oCommonPr, true);
 	};
 	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlList'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlList = function(isComboBox, oPr, oFormPr, oCommonPr)
 	{
@@ -620,6 +644,26 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 
 		key = keyGenerator.GetNewKey(form);
 		formPr.SetKey(key);
+		form.SetFormPr(formPr);
+	}
+	function private_CheckRadioButtonChoice(form, logicDocument, groupKey)
+	{
+		if (!form || !form.IsForm() || !logicDocument)
+			return;
+		
+		let choice = form.GetFormKey();
+		if (choice && "" !== choice.trim())
+			return;
+		
+		let formManager  = logicDocument.GetFormsManager();
+		let keyGenerator = formManager.GetKeyGenerator();
+		
+		let formPr = form.GetFormPr().Copy();
+		if (!formPr)
+			return;
+		
+		choice = keyGenerator.GetNewChoiceByGroupKey(groupKey);
+		formPr.SetKey(choice);
 		form.SetFormPr(formPr);
 	}
 	function private_ApplyFormPr(form, formPr, logicDocument)
