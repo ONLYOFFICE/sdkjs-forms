@@ -171,7 +171,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			private_PerformAddCheckBox();
 		}
 	};
-	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlPicture'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlPicture = function(oFormPr, oCommonPr)
+	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlPicture'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlPicture = function(oFormPr, oCommonPr, isSignature)
 	{
 		var oLogicDocument = this.private_GetLogicDocument();
 		if (!oLogicDocument)
@@ -184,16 +184,31 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		{
 			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlPicture);
 
-			var oCC = oLogicDocument.AddContentControlPicture();
+			// 150x32pt for Signature
+			let w = isSignature ? 150 / 72 * 25.4 : undefined;
+			let h = isSignature ? 32 / 72 * 25.4 : undefined;
+			
+			var oCC = oLogicDocument.AddContentControlPicture(w, h);
 			let oFormParaDrawing = null;
 			if (oCC && oFormPr)
 			{
 				oCC.SetFormPr(oFormPr);
 				oCC.UpdatePlaceHolderTextPrForForm();
+				let pictPr = new AscCommon.CSdtPictureFormPr();
+				if (isSignature)
+				{
+					pictPr.SetSignature(true);
+					let glossary = oLogicDocument.GetGlossaryDocument();
+					if (glossary)
+						oCC.SetPlaceholder(glossary.GetDefaultPlaceholderSignatureOformDocPartId());
+				}
+				
+				oCC.SetPictureFormPr(pictPr);
+				
 				private_CheckFormKey(oCC, oLogicDocument);
 				oLogicDocument.Recalculate(true);
 				oFormParaDrawing = oCC.ConvertFormToFixed();
-				oCC.SetPictureFormPr(new AscCommon.CSdtPictureFormPr());
+				
 				var aDrawings = oCC.GetAllDrawingObjects();
 				for(var nDrawing = 0; nDrawing < aDrawings.length; ++nDrawing)
 				{
@@ -267,6 +282,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			}
  			oLogicDocument.FinalizeAction();
 		}
+	};
+	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlSignature'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlSignature = function(oFormPr, oCommonPr)
+	{
+		return this.asc_AddContentControlPicture(oFormPr, oCommonPr, true);
 	};
 	window['Asc']['asc_docs_api'].prototype['asc_AddContentControlList'] = window['Asc']['asc_docs_api'].prototype.asc_AddContentControlList = function(isComboBox, oPr, oFormPr, oCommonPr)
 	{
