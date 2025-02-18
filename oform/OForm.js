@@ -561,6 +561,24 @@
 	{
 		this.onUndoRedo();
 	};
+	OForm.prototype.canFillRole = function(roleName)
+	{
+		let role = this.getRole(roleName);
+		if (!role || role.isFilled())
+			return false;
+		
+		let weight = role.getWeight();
+		for (let i = 0; i < this.Roles.length; ++i)
+		{
+			if (this.Roles[i] === role || this.Roles[i].isFilled())
+				continue;
+			
+			if (this.Roles[i].getWeight() < weight)
+				return false;
+		}
+		
+		return true;
+	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -598,5 +616,6 @@
 	OForm.prototype['asc_moveDownRole'] = OForm.prototype.moveDownRole;
 	OForm.prototype['asc_haveRole']     = OForm.prototype.haveRole;
 	OForm.prototype['asc_getRole']      = OForm.prototype.getRoleSettings;
+	OForm.prototype['asc_canFillRole']  = OForm.prototype.canFillRole;
 	
 })(window);
