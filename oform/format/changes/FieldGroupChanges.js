@@ -37,6 +37,7 @@
 	window['AscDFH'].historyitem_OForm_FieldGroup_Weight         = window['AscDFH'].historyitem_type_OForm_FieldGroup | 1;
 	window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveField = window['AscDFH'].historyitem_type_OForm_FieldGroup | 2;
 	window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveUser  = window['AscDFH'].historyitem_type_OForm_FieldGroup | 3;
+	window['AscDFH'].historyitem_OForm_FieldGroup_Filled         = window['AscDFH'].historyitem_type_OForm_FieldGroup | 4;
 
 	/**
 	 * @constructor
@@ -120,5 +121,26 @@
 		}
 	);
 	window['AscDFH'].CChangesOFormFieldGroupAddRemoveUser = CChangesOFormFieldGroupAddRemoveUser;
-
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseBoolProperty}
+	 */
+	function CChangesOFormFieldGroupFilled(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseBoolProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormFieldGroupFilled,
+		window['AscDFH'].CChangesBaseBoolProperty,
+		window['AscDFH'].historyitem_OForm_FieldGroup_Filled,
+		function(value)
+		{
+			this.Class.Filled = value;
+			this.Class.onChange();
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormFieldGroupFilled = CChangesOFormFieldGroupFilled;
+	
 })(window);
