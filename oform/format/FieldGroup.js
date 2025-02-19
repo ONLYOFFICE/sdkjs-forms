@@ -229,7 +229,7 @@
 		writer.WriteXmlNodeStart("fieldGroup");
 		writer.WriteXmlNullableAttributeInt("weight", this.getWeight());
 		if (this.isFilled())
-			writer.WriteXmlNullableAttributeInt("filled", "1");
+			writer.WriteXmlNullableAttributeBool("filled", true);
 		writer.WriteXmlAttributesEnd();
 		
 		for (let userIndex = 0, userCount = this.Users.length; userIndex < userCount; ++userIndex)
