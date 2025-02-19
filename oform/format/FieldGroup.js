@@ -163,6 +163,13 @@
 		
 		this.Parent.onChangeFieldGroup(this);
 	};
+	CFieldGroup.prototype.onChangeFilled = function()
+	{
+		if (!this.Parent)
+			return;
+		
+		this.Parent.onChangeFieldGroupFilled(this);
+	};
 	CFieldGroup.prototype.getAllFields = function()
 	{
 		let fields = [];

@@ -100,6 +100,10 @@
 	{
 		this.CurrentUser = null;
 	};
+	OForm.prototype.getCurrentRole = function()
+	{
+		return this.CurrentUser ? this.CurrentUser.getRole() : null;
+	};
 	OForm.prototype.getCurrentUserMaster = function()
 	{
 		return this.CurrentUser;
@@ -444,6 +448,21 @@
 	{
 		this.NeedUpdateRoles = true;
 	};
+	OForm.prototype.onChangeFieldGroupFilled = function(fieldGroup)
+	{
+		if (!this.Document)
+			return;
+		
+		for (let i = 0; i < this.Roles.length; ++i)
+		{
+			let role = this.Roles[i];
+			if (fieldGroup === role.getFieldGroup())
+			{
+				this.Document.sendEvent("asc_onOFormRoleFilled", role.getRole(), fieldGroup.isFilled());
+				return;
+			}
+		}
+	};
 	OForm.prototype.onChangeRoleColor = function()
 	{
 		this.NeedRedraw = true;
@@ -579,13 +598,13 @@
 		
 		return true;
 	};
-	OForm.prototype.setRoleFilled = function(roleName)
+	OForm.prototype.setRoleFilled = function(roleName, isFilled)
 	{
 		let role = this.getRole(roleName);
 		if (!role)
 			return;
 		
-		role.setFilled(true);
+		role.setFilled(isFilled);
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
