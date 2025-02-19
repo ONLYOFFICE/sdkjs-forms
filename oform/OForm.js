@@ -96,6 +96,14 @@
 			
 		this.CurrentUser = role.getUserMaster();
 	};
+	/**
+	 * Difference between noRole and when role is not set, is that when role is not set we can fill any field,
+	 * but when noRole is set then we can't fill anything
+	 */
+	OForm.prototype.setCurrentNoRole = function()
+	{
+		this.CurrentUser = AscOForm.getNoRole();
+	};
 	OForm.prototype.clearCurrentRole = function()
 	{
 		this.CurrentUser = null;

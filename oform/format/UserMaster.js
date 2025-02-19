@@ -34,6 +34,23 @@
 
 (function(window)
 {
+	let noRole = null;
+	function getNoRole()
+	{
+		if (!noRole)
+		{
+			noRole = AscCommon.ExecuteNoHistory(function()
+			{
+				let user = new CUserMaster();
+				user.setUserId("{BA186350-BB64-8503-5C55-083595AB15A9}");
+				user.setRole("NoRole");
+				return user;
+			});
+		}
+		
+		return noRole;
+	}
+	
 	/**
 	 * @param {boolean} [generateId=false]
 	 * @constructor
@@ -228,5 +245,7 @@
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CUserMaster = CUserMaster;
+	AscOForm.getNoRole   = getNoRole;
+	
 
 })(window);
