@@ -78,6 +78,15 @@
 		if (this.FieldGroup)
 			this.FieldGroup.setWeight(weight);
 	};
+	CRole.prototype.isFilled = function()
+	{
+		return this.FieldGroup ? this.FieldGroup.isFilled() : true;
+	};
+	CRole.prototype.setFilled = function(isFilled)
+	{
+		if (this.FieldGroup)
+			this.FieldGroup.setFilled(isFilled);
+	};
 	CRole.prototype.getFieldGroup = function()
 	{
 		return this.FieldGroup;
