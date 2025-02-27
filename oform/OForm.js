@@ -96,9 +96,21 @@
 			
 		this.CurrentUser = role.getUserMaster();
 	};
+	/**
+	 * Difference between noRole and when role is not set, is that when role is not set we can fill any field,
+	 * but when noRole is set then we can't fill anything
+	 */
+	OForm.prototype.setCurrentNoRole = function()
+	{
+		this.CurrentUser = AscOForm.getNoRole();
+	};
 	OForm.prototype.clearCurrentRole = function()
 	{
 		this.CurrentUser = null;
+	};
+	OForm.prototype.getCurrentRole = function()
+	{
+		return this.CurrentUser ? this.CurrentUser.getRole() : null;
 	};
 	OForm.prototype.getCurrentUserMaster = function()
 	{
@@ -444,6 +456,21 @@
 	{
 		this.NeedUpdateRoles = true;
 	};
+	OForm.prototype.onChangeFieldGroupFilled = function(fieldGroup)
+	{
+		if (!this.Document)
+			return;
+		
+		for (let i = 0; i < this.Roles.length; ++i)
+		{
+			let role = this.Roles[i];
+			if (fieldGroup === role.getFieldGroup())
+			{
+				this.Document.sendEvent("asc_onOFormRoleFilled", role.getRole(), fieldGroup.isFilled());
+				return;
+			}
+		}
+	};
 	OForm.prototype.onChangeRoleColor = function()
 	{
 		this.NeedRedraw = true;
@@ -561,6 +588,39 @@
 	{
 		this.onUndoRedo();
 	};
+	OForm.prototype.canFillRole = function(roleName)
+	{
+		let role = this.getRole(roleName);
+		if (!role || role.isFilled())
+			return false;
+		
+		let weight = role.getWeight();
+		for (let i = 0; i < this.Roles.length; ++i)
+		{
+			if (this.Roles[i] === role || this.Roles[i].isFilled())
+				continue;
+			
+			if (this.Roles[i].getWeight() < weight)
+				return false;
+		}
+		
+		return true;
+	};
+	OForm.prototype.setRoleFilled = function(roleName, isFilled)
+	{
+		let role = this.getRole(roleName);
+		if (!role)
+			return;
+		
+		role.setFilled(isFilled);
+	};
+	OForm.prototype.setAllRolesNotFilled = function()
+	{
+		for (let roleIndex = 0, roleCount = this.Roles.length; roleIndex < roleCount; ++roleIndex)
+		{
+			this.Roles[roleIndex].setFilled(false);
+		}
+	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -598,5 +658,6 @@
 	OForm.prototype['asc_moveDownRole'] = OForm.prototype.moveDownRole;
 	OForm.prototype['asc_haveRole']     = OForm.prototype.haveRole;
 	OForm.prototype['asc_getRole']      = OForm.prototype.getRoleSettings;
+	OForm.prototype['asc_canFillRole']  = OForm.prototype.canFillRole;
 	
 })(window);

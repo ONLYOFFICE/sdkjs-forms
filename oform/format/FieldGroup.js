@@ -42,6 +42,7 @@
 	{
 		AscOForm.CBaseFormatObject.call(this);
 
+		this.Filled = false;
 		this.Weight = null;
 		this.Fields = [];
 		this.Users  = [];
@@ -55,6 +56,19 @@
 			return;
 		
 		this.Parent = parent;
+		this.onChange();
+	};
+	CFieldGroup.prototype.isFilled = function()
+	{
+		return !!this.Filled;
+	};
+	CFieldGroup.prototype.setFilled = function(isFilled)
+	{
+		if (this.Filled === isFilled)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupFilled(this, this.Filled, isFilled));
+		this.Filled = isFilled;
 		this.onChange();
 	};
 	CFieldGroup.prototype.setWeight = function(value)
@@ -149,6 +163,13 @@
 		
 		this.Parent.onChangeFieldGroup(this);
 	};
+	CFieldGroup.prototype.onChangeFilled = function()
+	{
+		if (!this.Parent)
+			return;
+		
+		this.Parent.onChangeFieldGroupFilled(this);
+	};
 	CFieldGroup.prototype.getAllFields = function()
 	{
 		let fields = [];
@@ -207,6 +228,8 @@
 		
 		writer.WriteXmlNodeStart("fieldGroup");
 		writer.WriteXmlNullableAttributeInt("weight", this.getWeight());
+		if (this.isFilled())
+			writer.WriteXmlNullableAttributeBool("filled", true);
 		writer.WriteXmlAttributesEnd();
 		
 		for (let userIndex = 0, userCount = this.Users.length; userIndex < userCount; ++userIndex)
@@ -239,8 +262,11 @@
 		
 		while (reader.MoveToNextAttribute())
 		{
-			if ("weight" === reader.GetNameNoNS())
+			let attrName = reader.GetNameNoNS();
+			if ("weight" === attrName)
 				fG.setWeight(reader.GetValueInt());
+			if ("filled" === attrName)
+				fG.setFilled(reader.GetValueBool());
 		}
 		
 		let xmlReaderContext = reader.GetOformContext();
