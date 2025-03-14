@@ -124,7 +124,7 @@
 	CUserMaster.prototype.initDefaultUser = function()
 	{
 		// TODO: Возможно стоит придумать уникальный id общий для дефолтовой роли
-		this.setRole(AscCommon.translateManager.getValue("Anyone"));
+		this.setRole("Anyone");
 		this.setColor(255, 239, 191);
 	};
 	CUserMaster.prototype.compare = function(user)
