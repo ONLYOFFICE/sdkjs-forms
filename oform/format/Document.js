@@ -568,7 +568,7 @@
 		
 		this.OForm.onChangeRoles();
 	};
-	CDocument.prototype.onChangeFieldGroup = function(fieldGroup)
+	CDocument.prototype.onChangeFieldGroupFilled = function(fieldGroup)
 	{
 		if (!this.OForm)
 			return;

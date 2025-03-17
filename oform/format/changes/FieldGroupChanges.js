@@ -137,7 +137,7 @@
 		function(value)
 		{
 			this.Class.Filled = value;
-			this.Class.onChange();
+			this.Class.onChangeFilled();
 		},
 		false
 	);
