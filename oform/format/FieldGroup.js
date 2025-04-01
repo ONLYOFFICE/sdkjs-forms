@@ -69,7 +69,7 @@
 		
 		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupFilled(this, this.Filled, isFilled));
 		this.Filled = isFilled;
-		this.onChange();
+		this.onChangeFilled();
 	};
 	CFieldGroup.prototype.setWeight = function(value)
 	{
