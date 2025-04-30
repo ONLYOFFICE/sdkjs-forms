@@ -673,6 +673,9 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		
 		form.SetFormPr(formPr.Copy());
 		
+		if (!form.IsMainForm() && form.GetMainForm().GetFormRole() !== formPr.GetRole())
+			form.SetFormRole(form.GetMainForm().GetFormRole());
+		
 		let docPartId = form.GetPlaceholder();
 		let glossary  = logicDocument.GetGlossaryDocument();
 		if ((form.IsTextForm()
