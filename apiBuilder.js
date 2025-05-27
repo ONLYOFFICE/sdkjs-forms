@@ -61,6 +61,7 @@
 	 * @property {string} key - Form key.
 	 * @property {string} tip - Form tip text.
 	 * @property {string} tag - Form tag.
+	 * @property {string} role - The role to fill out form.
 	 * @property {boolean} required - Specifies if the form is required or not.
 	 * @property {string} placeholder - Form placeholder text.
 	 * @see office-js-api/Examples/Enumerations/FormPrBase.js
@@ -695,6 +696,7 @@
 		sdtFormPr.SetHelpText(GetStringParameter(formPr["tip"], undefined));
 		sdtFormPr.SetRequired(GetBoolParameter(formPr["required"], false));
 		sdtFormPr.SetKey(GetStringParameter(formPr["key"], undefined));
+		sdtFormPr.SetRole(GetStringParameter(formPr["role"], undefined));
 		form.SetFormPr(sdtFormPr);
 	}
 	function ApplyTextFormPr(form, formPr, keepContent)
