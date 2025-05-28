@@ -198,7 +198,7 @@
 			
 			let form = CreateCommonForm(oFormPr);
 			ApplyTextFormPr(form, oFormPr);
-			CheckFormKey(form);
+			CheckForm(form);
 			return new AscBuilder.ApiTextForm(form);
 		}, this);
 	};
@@ -273,7 +273,7 @@
 				private_PerformAddCheckBox();
 			}
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiCheckBoxForm(oCC);
 		}, this);
 	};
@@ -343,7 +343,7 @@
 				}
 			}
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiComboBoxForm(oCC);
 		}, this);
 	};
@@ -395,7 +395,7 @@
 			
 			oCC.SetPictureFormPr(oPr);
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiPictureForm(oCC);
 		}, this);
 	};
@@ -416,7 +416,7 @@
 			
 			let form = CreateCommonForm(oFormPr);
 			ApplyDateFormPr(form, oFormPr);
-			CheckFormKey(form);
+			CheckForm(form);
 			return new AscBuilder.ApiDateForm(form);
 		}, this);
 	};
@@ -450,7 +450,7 @@
 			ApplyCommonFormPr(contentControl, oFormPr);
 			SetFormPlaceholder(contentControl, placeholder);
 			ApplyTextFormPr(contentControl, oFormPr, true);
-			CheckFormKey(contentControl);
+			CheckForm(contentControl);
 			return new AscBuilder.ApiTextForm(contentControl);
 		}, this);
 	};
@@ -722,6 +722,11 @@
 
 		form.ApplyDatePickerPr(datePickerPr);
 	}
+	function CheckForm(form)
+	{
+		CheckFormKey(form);
+		CheckFormRole(form);
+	}
 	function CheckFormKey(form)
 	{
 		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
@@ -742,6 +747,26 @@
 		key = keyGenerator.GetNewKey(form);
 		formPr.SetKey(key);
 		form.SetFormPr(formPr);
+	}
+	function CheckFormRole(form)
+	{
+		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
+		if (!form || !form.IsForm() || !logicDocument)
+			return;
+		
+		let role = form.GetFormRole();
+		if (role && "" !== role.trim())
+			return;
+		
+		let oform = logicDocument.GetOFormDocument();
+		if (!oform)
+			return;
+		
+		let defaultRole = oform.getDefaultRole();
+		if (!defaultRole)
+			return;
+		
+		form.SetFormRole(defaultRole.getRole());
 	}
 	function ParseRoleColor(color)
 	{
