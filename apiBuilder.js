@@ -61,6 +61,7 @@
 	 * @property {string} key - Form key.
 	 * @property {string} tip - Form tip text.
 	 * @property {string} tag - Form tag.
+	 * @property {string} role - The role to fill out form.
 	 * @property {boolean} required - Specifies if the form is required or not.
 	 * @property {string} placeholder - Form placeholder text.
 	 * @see office-js-api/Examples/Enumerations/FormPrBase.js
@@ -197,7 +198,7 @@
 			
 			let form = CreateCommonForm(oFormPr);
 			ApplyTextFormPr(form, oFormPr);
-			CheckFormKey(form);
+			CheckForm(form);
 			return new AscBuilder.ApiTextForm(form);
 		}, this);
 	};
@@ -272,7 +273,7 @@
 				private_PerformAddCheckBox();
 			}
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiCheckBoxForm(oCC);
 		}, this);
 	};
@@ -342,7 +343,7 @@
 				}
 			}
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiComboBoxForm(oCC);
 		}, this);
 	};
@@ -394,7 +395,7 @@
 			
 			oCC.SetPictureFormPr(oPr);
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiPictureForm(oCC);
 		}, this);
 	};
@@ -415,7 +416,7 @@
 			
 			let form = CreateCommonForm(oFormPr);
 			ApplyDateFormPr(form, oFormPr);
-			CheckFormKey(form);
+			CheckForm(form);
 			return new AscBuilder.ApiDateForm(form);
 		}, this);
 	};
@@ -449,9 +450,215 @@
 			ApplyCommonFormPr(contentControl, oFormPr);
 			SetFormPlaceholder(contentControl, placeholder);
 			ApplyTextFormPr(contentControl, oFormPr, true);
-			CheckFormKey(contentControl);
+			CheckForm(contentControl);
 			return new AscBuilder.ApiTextForm(contentControl);
 		}, this);
+	};
+	
+	/**
+	 * Class representing a collection of form roles.
+	 * @constructor
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 */
+	function ApiFormRoles(oform)
+	{
+		this.oform = oform;
+	}
+	
+	/**
+	 * Role properties.
+	 * @typedef {FormPrBase | DateFormPrBase} DateFormPr
+	 * @see office-js-api/Examples/Enumerations/DateFormPr.js
+	 */
+	
+	/**
+	 * Role properties.
+	 * @typedef {Object} RoleProperties
+	 * @property {string} color
+	 * @see office-js-api/Examples/Enumerations/RolePr.js
+	 */
+	
+	/**
+	 * Get the collection of form roles.
+	 *
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @returns {ApiFormRoles}
+	 * @see office-js-api/Examples/Forms/ApiDocument/Methods/GetFormRoles.js
+	 */
+	ApiDocument.prototype.GetFormRoles = function()
+	{
+		return new ApiFormRoles(this.Document.GetOFormDocument());
+	};
+	
+	/**
+	 * Add new role.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role being added.
+	 * @param {RoleProperties} props - Properties for the new role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/Add.js
+	 */
+	ApiFormRoles.prototype.Add = function(name, props)
+	{
+		if (!this.oform || !name || this.oform.getRole(name))
+			return false;
+		
+		let rgba = ParseRoleColor(props && props["color"] ? props["color"] : null);
+		
+		let rolePr = new AscOForm.CRoleSettings();
+		rolePr.Name  = name;
+		rolePr.Color = AscCommon.CreateAscColorCustom(rgba.R, rgba.G, rgba.B);
+		this.oform.addRole(rolePr);
+		return true;
+	};
+	/**
+	 * Remove role.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role to be removed.
+	 * @param {string} [delegateRole] - The name of the role to which all forms binded to this role will be delegated.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/Remove.js
+	 */
+	ApiFormRoles.prototype.Remove = function(name, delegateRole)
+	{
+		if (!this.oform)
+			return false;
+		
+		return this.oform.removeRole(name, delegateRole);
+	};
+	/**
+	 * Get the number of roles.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @returns {number}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/GetCount.js
+	 */
+	ApiFormRoles.prototype.GetCount = function()
+	{
+		if (!this.oform)
+			return 0;
+		
+		return this.oform.getAllRoles().length;
+	};
+	/**
+	 * List all roles.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @returns {string[]}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/GetAllRoles.js
+	 */
+	ApiFormRoles.prototype.GetAllRoles = function()
+	{
+		if (!this.oform)
+			return [];
+		
+		let roles = this.oform.getAllRoles();
+		let result = [];
+		for (let i = 0; i < roles.length; ++i)
+		{
+			result.push(roles[i].getRole());
+		}
+		return result;
+	};
+	/**
+	 * Check if a role with the specified name exists.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/HaveRole.js
+	 */
+	ApiFormRoles.prototype.HaveRole = function(name)
+	{
+		return this.oform && this.oform.haveRole(name);
+	};
+	/**
+	 * Get the color of the specified role
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {null | {r:byte, g:byte, b:byte}}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/GetRoleColor.js
+	 */
+	ApiFormRoles.prototype.GetRoleColor = function(name)
+	{
+		if (!this.oform || !this.oform.haveRole(name))
+			return null;
+		
+		let color = this.oform.getRoleSettings(name).getColor();
+		if (!color)
+			return null;
+		
+		return {
+			"r" : color.r,
+			"g" : color.g,
+			"b" : color.b
+		};
+	};
+	/**
+	 * Set the color of the specified role
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @param {string} color - The specified color.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/SetRoleColor.js
+	 */
+	ApiFormRoles.prototype.SetRoleColor = function(name, color)
+	{
+		if (!this.oform || !this.oform.haveRole(name))
+			return false;
+		
+		let rgba = ParseRoleColor(color);
+		
+		let rolePr = new AscOForm.CRoleSettings();
+		rolePr.Name  = name;
+		rolePr.Color = AscCommon.CreateAscColorCustom(rgba.R, rgba.G, rgba.B);
+		this.oform.editRole(name, rolePr);
+		return true;
+	};
+	/**
+	 * Move role up in filling order.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/MoveUp.js
+	 */
+	ApiFormRoles.prototype.MoveUp = function(name)
+	{
+		if (!this.oform)
+			return false;
+		
+		return this.oform.moveUpRole(name);
+	};
+	/**
+	 * Move role down in filling order.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/MoveUp.js
+	 */
+	ApiFormRoles.prototype.MoveDown = function(name)
+	{
+		if (!this.oform)
+			return false;
+		
+		return this.oform.moveDownRole(name);
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
@@ -489,6 +696,7 @@
 		sdtFormPr.SetHelpText(GetStringParameter(formPr["tip"], undefined));
 		sdtFormPr.SetRequired(GetBoolParameter(formPr["required"], false));
 		sdtFormPr.SetKey(GetStringParameter(formPr["key"], undefined));
+		sdtFormPr.SetRole(GetStringParameter(formPr["role"], undefined));
 		form.SetFormPr(sdtFormPr);
 	}
 	function ApplyTextFormPr(form, formPr, keepContent)
@@ -514,6 +722,11 @@
 
 		form.ApplyDatePickerPr(datePickerPr);
 	}
+	function CheckForm(form)
+	{
+		CheckFormKey(form);
+		CheckFormRole(form);
+	}
 	function CheckFormKey(form)
 	{
 		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
@@ -535,6 +748,30 @@
 		formPr.SetKey(key);
 		form.SetFormPr(formPr);
 	}
+	function CheckFormRole(form)
+	{
+		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
+		if (!form || !form.IsForm() || !logicDocument)
+			return;
+		
+		let role = form.GetFormRole();
+		if (role && "" !== role.trim())
+			return;
+		
+		let oform = logicDocument.GetOFormDocument();
+		if (!oform)
+			return;
+		
+		let defaultRole = oform.getDefaultRole();
+		if (!defaultRole)
+			return;
+		
+		form.SetFormRole(defaultRole.getRole());
+	}
+	function ParseRoleColor(color)
+	{
+		return color ? AscCommon.RgbaTextToRGBA(color) : {R : 254, G : 248, B : 229, A : 255};
+	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -545,6 +782,17 @@
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
+	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
+	
+	ApiFormRoles.prototype["Add"]          = ApiFormRoles.prototype.Add;
+	ApiFormRoles.prototype["Remove"]       = ApiFormRoles.prototype.Remove;
+	ApiFormRoles.prototype["GetCount"]     = ApiFormRoles.prototype.GetCount;
+	ApiFormRoles.prototype["GetAllRoles"]  = ApiFormRoles.prototype.GetAllRoles;
+	ApiFormRoles.prototype["HaveRole"]     = ApiFormRoles.prototype.HaveRole;
+	ApiFormRoles.prototype["GetRoleColor"] = ApiFormRoles.prototype.GetRoleColor;
+	ApiFormRoles.prototype["SetRoleColor"] = ApiFormRoles.prototype.SetRoleColor;
+	ApiFormRoles.prototype["MoveUp"]       = ApiFormRoles.prototype.MoveUp;
+	ApiFormRoles.prototype["MoveDown"]     = ApiFormRoles.prototype.MoveDown;
 
 }(window, null));
 
