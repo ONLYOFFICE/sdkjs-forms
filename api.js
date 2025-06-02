@@ -274,7 +274,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				else
 				{
 					oCC.ReplaceContentWithPlaceHolder();
-					oCC.ApplyPicturePr(true);
+					oCC.ApplyPicturePr(true, w, h);
 				}
 			}
 
