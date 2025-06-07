@@ -426,7 +426,7 @@
 	 * @typeofeditors ["CDE", "CFE"]
 	 * @param {FormPrBase} oFormPr - Complex form properties.
 	 * @returns {ApiComplexForm}
-	 * @see office-js-api/Examples/Forms/Api/Methods/CreateDateForm.js
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComplexForm.js
 	 */
 	Api.prototype.CreateComplexForm = function(oFormPr)
 	{
