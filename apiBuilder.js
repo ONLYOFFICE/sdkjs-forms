@@ -421,6 +421,27 @@
 		}, this);
 	};
 	/**
+	 * Creates a complex form with the specified complex form properties.
+	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
+	 * @param {FormPrBase} oFormPr - Complex form properties.
+	 * @returns {ApiComplexForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateDateForm.js
+	 */
+	Api.prototype.CreateComplexForm = function(oFormPr)
+	{
+		return executeNoFormLockCheck(function()
+		{
+			if (!oFormPr)
+				oFormPr = {};
+
+			let form = CreateCommonForm(oFormPr);
+			ApplyComplexFormPr(form);
+			CheckForm(form);
+			return new AscBuilder.ApiComplexForm(form);
+		}, this);
+	};
+	/**
 	 * Inserts a text box with the specified text box properties over the selected text.
 	 * @memberof ApiDocument
 	 * @typeofeditors ["CDE", "CFE"]
@@ -722,6 +743,11 @@
 
 		form.ApplyDatePickerPr(datePickerPr);
 	}
+	function ApplyComplexFormPr(form)
+	{
+		let complexFormPr = new AscWord.CSdtComplexFormPr();
+		form.SetComplexFormPr(complexFormPr);
+	};
 	function CheckForm(form)
 	{
 		CheckFormKey(form);
@@ -778,8 +804,9 @@
 	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateDateForm"]		= Api.prototype.CreateDateForm;
-	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
+	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
+	Api.prototype["CreateComplexForm"]	= Api.prototype.CreateComplexForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
