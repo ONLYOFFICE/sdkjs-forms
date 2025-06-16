@@ -34,6 +34,8 @@
 
 (function(window)
 {
+	let Api = window["asc_docs_api"];
+
 	/**
      * @typedef {Object} ContentControl
 	 * Content control object.
@@ -62,7 +64,7 @@
 	 * @returns {ContentControl[]} - An array with all the forms from the document.
 	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods/GetAllForms.js
 	 */
-	window["asc_docs_api"].prototype["pluginMethod_GetAllForms"] = function()
+	Api.prototype["pluginMethod_GetAllForms"] = function()
 	{
 		let oFormsManager = this.private_GetFormsManager();
 		if (!oFormsManager)
@@ -85,7 +87,7 @@
 	 * @returns {ContentControl[]} - An array with all the forms from the document with the specified tag.
 	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods/GetFormsByTag.js
 	 */
-	window["asc_docs_api"].prototype["pluginMethod_GetFormsByTag"] = function(tag)
+	Api.prototype["pluginMethod_GetFormsByTag"] = function(tag)
 	{
 		let oFormsManager = this.private_GetFormsManager();
 		if (!oFormsManager)
@@ -111,7 +113,7 @@
 	 * @param {string | boolean} value - Form value to be set. Its type depends on the form type.
 	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods/SetFormValue.js
 	 */
-	window["asc_docs_api"].prototype["pluginMethod_SetFormValue"] = function(internalId, value)
+	Api.prototype["pluginMethod_SetFormValue"] = function(internalId, value)
 	{
 		this.private_SetFormValue(internalId, value);
 	};
@@ -124,7 +126,7 @@
 	 * @returns {null | string | boolean} The form value in the string or boolean format depending on the form type. The null value means that the form is filled with a placeholder.
 	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods/GetFormValue.js
 	 */
-	window["asc_docs_api"].prototype["pluginMethod_GetFormValue"] = function(internalId)
+	Api.prototype["pluginMethod_GetFormValue"] = function(internalId)
 	{
 		if (!AscCommon.g_oTableId)
 			return "";

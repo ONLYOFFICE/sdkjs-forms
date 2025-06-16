@@ -61,6 +61,7 @@
 	 * @property {string} key - Form key.
 	 * @property {string} tip - Form tip text.
 	 * @property {string} tag - Form tag.
+	 * @property {string} role - The role to fill out form.
 	 * @property {boolean} required - Specifies if the form is required or not.
 	 * @property {string} placeholder - Form placeholder text.
 	 * @see office-js-api/Examples/Enumerations/FormPrBase.js
@@ -184,20 +185,20 @@
 	 * Creates a text field with the specified text field properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {TextFormPr} oFormPr - Text field properties.
+	 * @param {TextFormPr} formPr - Text field properties.
 	 * @returns {ApiTextForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateTextForm.js
 	 */
-	Api.prototype.CreateTextForm = function(oFormPr)
+	Api.prototype.CreateTextForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
-			let form = CreateCommonForm(oFormPr);
-			ApplyTextFormPr(form, oFormPr);
-			CheckFormKey(form);
+			let form = CreateCommonForm(formPr);
+			ApplyTextFormPr(form, formPr);
+			CheckForm(form);
 			return new AscBuilder.ApiTextForm(form);
 		}, this);
 	};
@@ -205,26 +206,26 @@
 	 * Creates a checkbox / radio button with the specified checkbox / radio button properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {CheckBoxFormPr} oFormPr - Checkbox / radio button properties.
+	 * @param {CheckBoxFormPr} formPr - Checkbox / radio button properties.
 	 * @returns {ApiCheckBoxForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateCheckBoxForm.js
 	 */
-	Api.prototype.CreateCheckBoxForm = function(oFormPr)
+	Api.prototype.CreateCheckBoxForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
-			oFormPr["placeholder"] = undefined;
+			formPr["placeholder"] = undefined;
 			
 			var oCC;
 			var oCheckboxPr = new AscCommon.CSdtCheckBoxPr();
-			if (GetBoolParameter(oFormPr["radio"], false))
+			if (GetBoolParameter(formPr["radio"], false))
 			{
 				oCheckboxPr.CheckedSymbol   = 0x25C9;
 				oCheckboxPr.UncheckedSymbol = 0x25CB;
-				oCheckboxPr.GroupKey        = GetStringParameter(oFormPr["key"], "Group1");
+				oCheckboxPr.GroupKey        = GetStringParameter(formPr["key"], "Group1");
 			}
 			else
 			{
@@ -255,7 +256,7 @@
 			
 			function private_PerformAddCheckBox()
 			{
-				oCC = CreateCommonForm(oFormPr);
+				oCC = CreateCommonForm(formPr);
 				oCC.ApplyCheckBoxPr(oCheckboxPr);
 			}
 			
@@ -272,7 +273,7 @@
 				private_PerformAddCheckBox();
 			}
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiCheckBoxForm(oCC);
 		}, this);
 	};
@@ -280,25 +281,25 @@
 	 * Creates a combo box / dropdown list with the specified combo box / dropdown list properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {ComboBoxFormPr} oFormPr - Combo box / dropdown list properties.
+	 * @param {ComboBoxFormPr} formPr - Combo box / dropdown list properties.
 	 * @returns {ApiComboBoxForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComboBoxForm.js
 	 */
-	Api.prototype.CreateComboBoxForm = function(oFormPr)
+	Api.prototype.CreateComboBoxForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
 			var oPr = new AscCommon.CSdtComboBoxPr();
 			oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
 			
-			var oCC = CreateCommonForm(oFormPr);
+			var oCC = CreateCommonForm(formPr);
 			
-			let sPlaceholder = GetStringParameter(oFormPr["placeholder"], undefined);
+			let sPlaceholder = GetStringParameter(formPr["placeholder"], undefined);
 			
-			let arrList = GetArrayParameter(oFormPr["items"], []);
+			let arrList = GetArrayParameter(formPr["items"], []);
 			for (let nIndex = 0, nCount = arrList.length; nIndex < nCount; ++nIndex)
 			{
 				let oItem = arrList[nIndex];
@@ -315,9 +316,9 @@
 						oPr.AddItem(sDisplay, sValue);
 				}
 			}
-			oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
+			oPr.SetAutoFit(GetBoolParameter(formPr["autoFit"], false));
 			
-			if (!GetBoolParameter(oFormPr["editable"], false))
+			if (!GetBoolParameter(formPr["editable"], false))
 			{
 				if (sPlaceholder)
 				{
@@ -342,7 +343,7 @@
 				}
 			}
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiComboBoxForm(oCC);
 		}, this);
 	};
@@ -350,27 +351,27 @@
 	 * Creates a picture form with the specified picture form properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {PictureFormPr} oFormPr - Picture form properties.
+	 * @param {PictureFormPr} formPr - Picture form properties.
 	 * @returns {ApiPictureForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreatePictureForm.js
 	 */
-	Api.prototype.CreatePictureForm = function(oFormPr)
+	Api.prototype.CreatePictureForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
 			if (GetStringParameter("placeholder", null))
-				oFormPr["placeholder"] = AscCommon.translateManager.getValue("Click to load image");
+				formPr["placeholder"] = AscCommon.translateManager.getValue("Click to load image");
 			
-			var oCC = CreateCommonForm(oFormPr);
+			var oCC = CreateCommonForm(formPr);
 			oCC.ApplyPicturePr(true);
 			oCC.ConvertFormToFixed();
 			
 			let oPr = new AscCommon.CSdtPictureFormPr();
 			
-			let sScale = GetStringParameter(oFormPr["scaleFlag"], undefined);
+			let sScale = GetStringParameter(formPr["scaleFlag"], undefined);
 			switch (sScale)
 			{
 				case "always":
@@ -387,14 +388,14 @@
 					break;
 			}
 			
-			oPr.SetConstantProportions(GetBoolParameter(oFormPr["lockAspectRatio"], true));
-			oPr.SetRespectBorders(GetBoolParameter(oFormPr["respectBorders"], false));
-			oPr.SetShiftX(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftX"], 50))) / 100);
-			oPr.SetShiftY(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftY"], 50))) / 100);
+			oPr.SetConstantProportions(GetBoolParameter(formPr["lockAspectRatio"], true));
+			oPr.SetRespectBorders(GetBoolParameter(formPr["respectBorders"], false));
+			oPr.SetShiftX(Math.max(0, Math.min(100, GetNumberParameter(formPr["shiftX"], 50))) / 100);
+			oPr.SetShiftY(Math.max(0, Math.min(100, GetNumberParameter(formPr["shiftY"], 50))) / 100);
 			
 			oCC.SetPictureFormPr(oPr);
 			
-			CheckFormKey(oCC);
+			CheckForm(oCC);
 			return new AscBuilder.ApiPictureForm(oCC);
 		}, this);
 	};
@@ -402,70 +403,297 @@
 	 * Creates a date form with the specified date form properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {DateFormPr} oFormPr - Date form properties.
+	 * @param {DateFormPr} formPr - Date form properties.
 	 * @returns {ApiDateForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateDateForm.js
 	 */
-	Api.prototype.CreateDateForm = function(oFormPr)
+	Api.prototype.CreateDateForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
-			let form = CreateCommonForm(oFormPr);
-			ApplyDateFormPr(form, oFormPr);
-			CheckFormKey(form);
+			let form = CreateCommonForm(formPr);
+			ApplyDateFormPr(form, formPr);
+			CheckForm(form);
 			return new AscBuilder.ApiDateForm(form);
+		}, this);
+	};
+	/**
+	 * Creates a complex form with the specified complex form properties.
+	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
+	 * @param {FormPrBase} formPr - Complex form properties.
+	 * @returns {ApiComplexForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComplexForm.js
+	 */
+	Api.prototype.CreateComplexForm = function(formPr)
+	{
+		return executeNoFormLockCheck(function()
+		{
+			if (!formPr)
+				formPr = {};
+
+			let form = CreateCommonForm(formPr);
+			ApplyComplexFormPr(form);
+			CheckForm(form);
+			return new AscBuilder.ApiComplexForm(form);
 		}, this);
 	};
 	/**
 	 * Inserts a text box with the specified text box properties over the selected text.
 	 * @memberof ApiDocument
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
+	 * @param {TextFormInsertPr} formPr - Properties for inserting a text field.
 	 * @returns {ApiTextForm}
 	 * @see office-js-api/Examples/Forms/ApiDocument/Methods/InsertTextForm.js
 	 */
-	ApiDocument.prototype.InsertTextForm = function(oFormPr)
+	ApiDocument.prototype.InsertTextForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
 			let logicDocument = this.Document;
-			let placeholder   = GetStringParameter(oFormPr["placeholder"], undefined);
-			if (GetBoolParameter(oFormPr["placeholderFromSelection"], false))
+			let placeholder   = GetStringParameter(formPr["placeholder"], undefined);
+			if (GetBoolParameter(formPr["placeholderFromSelection"], false))
 				placeholder = logicDocument.GetSelectedText();
 			
-			if (!GetBoolParameter(oFormPr["keepSelectedTextInForm"], true))
+			if (!GetBoolParameter(formPr["keepSelectedTextInForm"], true))
 				logicDocument.RemoveBeforePaste();
 			
 			let contentControl = logicDocument.AddContentControl(c_oAscSdtLevelType.Inline);
 			if (!contentControl)
 				return null;
 			
-			ApplyCommonFormPr(contentControl, oFormPr);
+			ApplyCommonFormPr(contentControl, formPr);
 			SetFormPlaceholder(contentControl, placeholder);
-			ApplyTextFormPr(contentControl, oFormPr, true);
-			CheckFormKey(contentControl);
+			ApplyTextFormPr(contentControl, formPr, true);
+			CheckForm(contentControl);
 			return new AscBuilder.ApiTextForm(contentControl);
 		}, this);
+	};
+	
+	/**
+	 * Class representing a collection of form roles.
+	 * @constructor
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 */
+	function ApiFormRoles(oform)
+	{
+		this.oform = oform;
+	}
+	
+	/**
+	 * Role properties.
+	 * @typedef {FormPrBase | DateFormPrBase} DateFormPr
+	 * @see office-js-api/Examples/Enumerations/DateFormPr.js
+	 */
+	
+	/**
+	 * Role properties.
+	 * @typedef {Object} RoleProperties
+	 * @property {string} color
+	 * @see office-js-api/Examples/Enumerations/RolePr.js
+	 */
+	
+	/**
+	 * Get the collection of form roles.
+	 *
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @returns {ApiFormRoles}
+	 * @see office-js-api/Examples/Forms/ApiDocument/Methods/GetFormRoles.js
+	 */
+	ApiDocument.prototype.GetFormRoles = function()
+	{
+		return new ApiFormRoles(this.Document.GetOFormDocument());
+	};
+	
+	/**
+	 * Add new role.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role being added.
+	 * @param {RoleProperties} props - Properties for the new role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/Add.js
+	 */
+	ApiFormRoles.prototype.Add = function(name, props)
+	{
+		if (!this.oform || !name || this.oform.getRole(name))
+			return false;
+		
+		let rgba = ParseRoleColor(props && props["color"] ? props["color"] : null);
+		
+		let rolePr = new AscOForm.CRoleSettings();
+		rolePr.Name  = name;
+		rolePr.Color = AscCommon.CreateAscColorCustom(rgba.R, rgba.G, rgba.B);
+		this.oform.addRole(rolePr);
+		return true;
+	};
+	/**
+	 * Remove role.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role to be removed.
+	 * @param {string} [delegateRole] - The name of the role to which all forms binded to this role will be delegated.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/Remove.js
+	 */
+	ApiFormRoles.prototype.Remove = function(name, delegateRole)
+	{
+		if (!this.oform)
+			return false;
+		
+		return this.oform.removeRole(name, delegateRole);
+	};
+	/**
+	 * Get the number of roles.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @returns {number}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/GetCount.js
+	 */
+	ApiFormRoles.prototype.GetCount = function()
+	{
+		if (!this.oform)
+			return 0;
+		
+		return this.oform.getAllRoles().length;
+	};
+	/**
+	 * List all roles.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @returns {string[]}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/GetAllRoles.js
+	 */
+	ApiFormRoles.prototype.GetAllRoles = function()
+	{
+		if (!this.oform)
+			return [];
+		
+		let roles = this.oform.getAllRoles();
+		let result = [];
+		for (let i = 0; i < roles.length; ++i)
+		{
+			result.push(roles[i].getRole());
+		}
+		return result;
+	};
+	/**
+	 * Check if a role with the specified name exists.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/HaveRole.js
+	 */
+	ApiFormRoles.prototype.HaveRole = function(name)
+	{
+		return this.oform && this.oform.haveRole(name);
+	};
+	/**
+	 * Get the color of the specified role
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {null | {r:byte, g:byte, b:byte}}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/GetRoleColor.js
+	 */
+	ApiFormRoles.prototype.GetRoleColor = function(name)
+	{
+		if (!this.oform || !this.oform.haveRole(name))
+			return null;
+		
+		let color = this.oform.getRoleSettings(name).getColor();
+		if (!color)
+			return null;
+		
+		return {
+			"r" : color.r,
+			"g" : color.g,
+			"b" : color.b
+		};
+	};
+	/**
+	 * Set the color of the specified role
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @param {string} color - The specified color.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/SetRoleColor.js
+	 */
+	ApiFormRoles.prototype.SetRoleColor = function(name, color)
+	{
+		if (!this.oform || !this.oform.haveRole(name))
+			return false;
+		
+		let rgba = ParseRoleColor(color);
+		
+		let rolePr = new AscOForm.CRoleSettings();
+		rolePr.Name  = name;
+		rolePr.Color = AscCommon.CreateAscColorCustom(rgba.R, rgba.G, rgba.B);
+		this.oform.editRole(name, rolePr);
+		return true;
+	};
+	/**
+	 * Move role up in filling order.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/MoveUp.js
+	 */
+	ApiFormRoles.prototype.MoveUp = function(name)
+	{
+		if (!this.oform)
+			return false;
+		
+		return this.oform.moveUpRole(name);
+	};
+	/**
+	 * Move role down in filling order.
+	 * @memberof ApiFormRoles
+	 * @since 9.0.0
+	 * @typeofeditors ["CFE"]
+	 * @param {string} name - The name of role.
+	 * @returns {boolean}
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/MoveUp.js
+	 */
+	ApiFormRoles.prototype.MoveDown = function(name)
+	{
+		if (!this.oform)
+			return false;
+		
+		return this.oform.moveDownRole(name);
 	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	function CreateCommonForm(oFormPr)
+	function CreateCommonForm(formPr)
 	{
 		let contentControl = new AscCommonWord.CInlineLevelSdt();
 		
-		ApplyCommonFormPr(contentControl, oFormPr);
+		ApplyCommonFormPr(contentControl, formPr);
 		
-		let placeholder = oFormPr ? GetStringParameter(oFormPr["placeholder"], undefined) : undefined;
+		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
 		SetFormPlaceholder(contentControl, placeholder);
 		
-		let tag = oFormPr ? GetStringParameter(oFormPr["tag"], undefined) : undefined;
+		let tag = formPr ? GetStringParameter(formPr["tag"], undefined) : undefined;
 		if (tag)
 			contentControl.SetTag(tag);
 		
@@ -489,6 +717,7 @@
 		sdtFormPr.SetHelpText(GetStringParameter(formPr["tip"], undefined));
 		sdtFormPr.SetRequired(GetBoolParameter(formPr["required"], false));
 		sdtFormPr.SetKey(GetStringParameter(formPr["key"], undefined));
+		sdtFormPr.SetRole(GetStringParameter(formPr["role"], undefined));
 		form.SetFormPr(sdtFormPr);
 	}
 	function ApplyTextFormPr(form, formPr, keepContent)
@@ -514,6 +743,16 @@
 
 		form.ApplyDatePickerPr(datePickerPr);
 	}
+	function ApplyComplexFormPr(form)
+	{
+		let complexFormPr = new AscWord.CSdtComplexFormPr();
+		form.SetComplexFormPr(complexFormPr);
+	}
+	function CheckForm(form)
+	{
+		CheckFormKey(form);
+		CheckFormRole(form);
+	}
 	function CheckFormKey(form)
 	{
 		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
@@ -535,16 +774,52 @@
 		formPr.SetKey(key);
 		form.SetFormPr(formPr);
 	}
+	function CheckFormRole(form)
+	{
+		let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
+		if (!form || !form.IsForm() || !logicDocument)
+			return;
+		
+		let role = form.GetFormRole();
+		if (role && "" !== role.trim())
+			return;
+		
+		let oform = logicDocument.GetOFormDocument();
+		if (!oform)
+			return;
+		
+		let defaultRole = oform.getDefaultRole();
+		if (!defaultRole)
+			return;
+		
+		form.SetFormRole(defaultRole.getRole());
+	}
+	function ParseRoleColor(color)
+	{
+		return color ? AscCommon.RgbaTextToRGBA(color) : {R : 254, G : 248, B : 229, A : 255};
+	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateDateForm"]		= Api.prototype.CreateDateForm;
-	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
+	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
+	Api.prototype["CreateComplexForm"]	= Api.prototype.CreateComplexForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
+	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
+	
+	ApiFormRoles.prototype["Add"]          = ApiFormRoles.prototype.Add;
+	ApiFormRoles.prototype["Remove"]       = ApiFormRoles.prototype.Remove;
+	ApiFormRoles.prototype["GetCount"]     = ApiFormRoles.prototype.GetCount;
+	ApiFormRoles.prototype["GetAllRoles"]  = ApiFormRoles.prototype.GetAllRoles;
+	ApiFormRoles.prototype["HaveRole"]     = ApiFormRoles.prototype.HaveRole;
+	ApiFormRoles.prototype["GetRoleColor"] = ApiFormRoles.prototype.GetRoleColor;
+	ApiFormRoles.prototype["SetRoleColor"] = ApiFormRoles.prototype.SetRoleColor;
+	ApiFormRoles.prototype["MoveUp"]       = ApiFormRoles.prototype.MoveUp;
+	ApiFormRoles.prototype["MoveDown"]     = ApiFormRoles.prototype.MoveDown;
 
 }(window, null));
 
