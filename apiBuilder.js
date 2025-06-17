@@ -58,12 +58,12 @@
 	/**
 	 * Common form properties.
 	 * @typedef {Object} FormPrBase
-	 * @property {string} key - Form key.
-	 * @property {string} tip - Form tip text.
-	 * @property {string} tag - Form tag.
+	 * @property {string} key - The form key.
+	 * @property {string} tip - The form tip text.
+	 * @property {string} tag - The form tag.
 	 * @property {string} role - The role to fill out form.
 	 * @property {boolean} required - Specifies if the form is required or not.
-	 * @property {string} placeholder - Form placeholder text.
+	 * @property {string} placeholder - The form placeholder text.
 	 * @see office-js-api/Examples/Enumerations/FormPrBase.js
 	 */
 
@@ -488,21 +488,20 @@
 	}
 	
 	/**
-	 * Role properties.
+	 * The date form properties.
 	 * @typedef {FormPrBase | DateFormPrBase} DateFormPr
 	 * @see office-js-api/Examples/Enumerations/DateFormPr.js
 	 */
 	
 	/**
-	 * Role properties.
+	 * The role properties.
 	 * @typedef {Object} RoleProperties
-	 * @property {string} color
-	 * @see office-js-api/Examples/Enumerations/RolePr.js
+	 * @property {string} color - The role color.
+	 * @see office-js-api/Examples/Enumerations/RoleProperties.js
 	 */
 	
 	/**
-	 * Get the collection of form roles.
-	 *
+	 * Returns a collection of form roles.
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
 	 * @returns {ApiFormRoles}
@@ -514,12 +513,12 @@
 	};
 	
 	/**
-	 * Add new role.
+	 * Adds a new form role.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
 	 * @param {string} name - The name of role being added.
-	 * @param {RoleProperties} props - Properties for the new role.
+	 * @param {RoleProperties} props - The role properties.
 	 * @returns {boolean}
 	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/Add.js
 	 */
@@ -537,12 +536,12 @@
 		return true;
 	};
 	/**
-	 * Remove role.
+	 * Removes a role with the specified name.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
 	 * @param {string} name - The name of role to be removed.
-	 * @param {string} [delegateRole] - The name of the role to which all forms binded to this role will be delegated.
+	 * @param {string} [delegateRole] - The name of the role to which all forms bound to this role will be delegated.
 	 * @returns {boolean}
 	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/Remove.js
 	 */
@@ -554,7 +553,7 @@
 		return this.oform.removeRole(name, delegateRole);
 	};
 	/**
-	 * Get the number of roles.
+	 * Returns a number of form roles.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
@@ -569,7 +568,7 @@
 		return this.oform.getAllRoles().length;
 	};
 	/**
-	 * List all roles.
+	 * Lists all available roles.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
@@ -590,11 +589,11 @@
 		return result;
 	};
 	/**
-	 * Check if a role with the specified name exists.
+	 * Checks if a role with the specified name exists.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
-	 * @param {string} name - The name of role.
+	 * @param {string} name - The role name.
 	 * @returns {boolean}
 	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/HaveRole.js
 	 */
@@ -603,11 +602,11 @@
 		return this.oform && this.oform.haveRole(name);
 	};
 	/**
-	 * Get the color of the specified role
+	 * Returns the RGB color of the specified role.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
-	 * @param {string} name - The name of role.
+	 * @param {string} name - The role name.
 	 * @returns {null | {r:byte, g:byte, b:byte}}
 	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/GetRoleColor.js
 	 */
@@ -627,12 +626,12 @@
 		};
 	};
 	/**
-	 * Set the color of the specified role
+	 * Sets the color for the specified role.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
-	 * @param {string} name - The name of role.
-	 * @param {string} color - The specified color.
+	 * @param {string} name - The role name.
+	 * @param {string} color - The role color.
 	 * @returns {boolean}
 	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/SetRoleColor.js
 	 */
@@ -650,11 +649,11 @@
 		return true;
 	};
 	/**
-	 * Move role up in filling order.
+	 * Moves a role up in filling order.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
-	 * @param {string} name - The name of role.
+	 * @param {string} name - The role name.
 	 * @returns {boolean}
 	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/MoveUp.js
 	 */
@@ -666,13 +665,13 @@
 		return this.oform.moveUpRole(name);
 	};
 	/**
-	 * Move role down in filling order.
+	 * Moves a role down in filling order.
 	 * @memberof ApiFormRoles
 	 * @since 9.0.0
 	 * @typeofeditors ["CFE"]
-	 * @param {string} name - The name of role.
+	 * @param {string} name - The role name.
 	 * @returns {boolean}
-	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/MoveUp.js
+	 * @see office-js-api/Examples/Forms/ApiFormRoles/Methods/MoveDown.js
 	 */
 	ApiFormRoles.prototype.MoveDown = function(name)
 	{
