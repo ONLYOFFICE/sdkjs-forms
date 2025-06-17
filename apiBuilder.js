@@ -185,19 +185,19 @@
 	 * Creates a text field with the specified text field properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {TextFormPr} oFormPr - Text field properties.
+	 * @param {TextFormPr} formPr - Text field properties.
 	 * @returns {ApiTextForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateTextForm.js
 	 */
-	Api.prototype.CreateTextForm = function(oFormPr)
+	Api.prototype.CreateTextForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
-			let form = CreateCommonForm(oFormPr);
-			ApplyTextFormPr(form, oFormPr);
+			let form = CreateCommonForm(formPr);
+			ApplyTextFormPr(form, formPr);
 			CheckForm(form);
 			return new AscBuilder.ApiTextForm(form);
 		}, this);
@@ -206,26 +206,26 @@
 	 * Creates a checkbox / radio button with the specified checkbox / radio button properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {CheckBoxFormPr} oFormPr - Checkbox / radio button properties.
+	 * @param {CheckBoxFormPr} formPr - Checkbox / radio button properties.
 	 * @returns {ApiCheckBoxForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateCheckBoxForm.js
 	 */
-	Api.prototype.CreateCheckBoxForm = function(oFormPr)
+	Api.prototype.CreateCheckBoxForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
-			oFormPr["placeholder"] = undefined;
+			formPr["placeholder"] = undefined;
 			
 			var oCC;
 			var oCheckboxPr = new AscCommon.CSdtCheckBoxPr();
-			if (GetBoolParameter(oFormPr["radio"], false))
+			if (GetBoolParameter(formPr["radio"], false))
 			{
 				oCheckboxPr.CheckedSymbol   = 0x25C9;
 				oCheckboxPr.UncheckedSymbol = 0x25CB;
-				oCheckboxPr.GroupKey        = GetStringParameter(oFormPr["key"], "Group1");
+				oCheckboxPr.GroupKey        = GetStringParameter(formPr["key"], "Group1");
 			}
 			else
 			{
@@ -256,7 +256,7 @@
 			
 			function private_PerformAddCheckBox()
 			{
-				oCC = CreateCommonForm(oFormPr);
+				oCC = CreateCommonForm(formPr);
 				oCC.ApplyCheckBoxPr(oCheckboxPr);
 			}
 			
@@ -281,25 +281,25 @@
 	 * Creates a combo box / dropdown list with the specified combo box / dropdown list properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {ComboBoxFormPr} oFormPr - Combo box / dropdown list properties.
+	 * @param {ComboBoxFormPr} formPr - Combo box / dropdown list properties.
 	 * @returns {ApiComboBoxForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComboBoxForm.js
 	 */
-	Api.prototype.CreateComboBoxForm = function(oFormPr)
+	Api.prototype.CreateComboBoxForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
 			var oPr = new AscCommon.CSdtComboBoxPr();
 			oPr.AddItem(AscCommon.translateManager.getValue("Choose an item"), "");
 			
-			var oCC = CreateCommonForm(oFormPr);
+			var oCC = CreateCommonForm(formPr);
 			
-			let sPlaceholder = GetStringParameter(oFormPr["placeholder"], undefined);
+			let sPlaceholder = GetStringParameter(formPr["placeholder"], undefined);
 			
-			let arrList = GetArrayParameter(oFormPr["items"], []);
+			let arrList = GetArrayParameter(formPr["items"], []);
 			for (let nIndex = 0, nCount = arrList.length; nIndex < nCount; ++nIndex)
 			{
 				let oItem = arrList[nIndex];
@@ -316,9 +316,9 @@
 						oPr.AddItem(sDisplay, sValue);
 				}
 			}
-			oPr.SetAutoFit(GetBoolParameter(oFormPr["autoFit"], false));
+			oPr.SetAutoFit(GetBoolParameter(formPr["autoFit"], false));
 			
-			if (!GetBoolParameter(oFormPr["editable"], false))
+			if (!GetBoolParameter(formPr["editable"], false))
 			{
 				if (sPlaceholder)
 				{
@@ -351,27 +351,27 @@
 	 * Creates a picture form with the specified picture form properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {PictureFormPr} oFormPr - Picture form properties.
+	 * @param {PictureFormPr} formPr - Picture form properties.
 	 * @returns {ApiPictureForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreatePictureForm.js
 	 */
-	Api.prototype.CreatePictureForm = function(oFormPr)
+	Api.prototype.CreatePictureForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
 			if (GetStringParameter("placeholder", null))
-				oFormPr["placeholder"] = AscCommon.translateManager.getValue("Click to load image");
+				formPr["placeholder"] = AscCommon.translateManager.getValue("Click to load image");
 			
-			var oCC = CreateCommonForm(oFormPr);
+			var oCC = CreateCommonForm(formPr);
 			oCC.ApplyPicturePr(true);
 			oCC.ConvertFormToFixed();
 			
 			let oPr = new AscCommon.CSdtPictureFormPr();
 			
-			let sScale = GetStringParameter(oFormPr["scaleFlag"], undefined);
+			let sScale = GetStringParameter(formPr["scaleFlag"], undefined);
 			switch (sScale)
 			{
 				case "always":
@@ -388,10 +388,10 @@
 					break;
 			}
 			
-			oPr.SetConstantProportions(GetBoolParameter(oFormPr["lockAspectRatio"], true));
-			oPr.SetRespectBorders(GetBoolParameter(oFormPr["respectBorders"], false));
-			oPr.SetShiftX(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftX"], 50))) / 100);
-			oPr.SetShiftY(Math.max(0, Math.min(100, GetNumberParameter(oFormPr["shiftY"], 50))) / 100);
+			oPr.SetConstantProportions(GetBoolParameter(formPr["lockAspectRatio"], true));
+			oPr.SetRespectBorders(GetBoolParameter(formPr["respectBorders"], false));
+			oPr.SetShiftX(Math.max(0, Math.min(100, GetNumberParameter(formPr["shiftX"], 50))) / 100);
+			oPr.SetShiftY(Math.max(0, Math.min(100, GetNumberParameter(formPr["shiftY"], 50))) / 100);
 			
 			oCC.SetPictureFormPr(oPr);
 			
@@ -403,53 +403,74 @@
 	 * Creates a date form with the specified date form properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {DateFormPr} oFormPr - Date form properties.
+	 * @param {DateFormPr} formPr - Date form properties.
 	 * @returns {ApiDateForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateDateForm.js
 	 */
-	Api.prototype.CreateDateForm = function(oFormPr)
+	Api.prototype.CreateDateForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
-			let form = CreateCommonForm(oFormPr);
-			ApplyDateFormPr(form, oFormPr);
+			let form = CreateCommonForm(formPr);
+			ApplyDateFormPr(form, formPr);
 			CheckForm(form);
 			return new AscBuilder.ApiDateForm(form);
+		}, this);
+	};
+	/**
+	 * Creates a complex form with the specified complex form properties.
+	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
+	 * @param {FormPrBase} formPr - Complex form properties.
+	 * @returns {ApiComplexForm}
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComplexForm.js
+	 */
+	Api.prototype.CreateComplexForm = function(formPr)
+	{
+		return executeNoFormLockCheck(function()
+		{
+			if (!formPr)
+				formPr = {};
+
+			let form = CreateCommonForm(formPr);
+			ApplyComplexFormPr(form);
+			CheckForm(form);
+			return new AscBuilder.ApiComplexForm(form);
 		}, this);
 	};
 	/**
 	 * Inserts a text box with the specified text box properties over the selected text.
 	 * @memberof ApiDocument
 	 * @typeofeditors ["CDE", "CFE"]
-	 * @param {TextFormInsertPr} oFormPr - Properties for inserting a text field.
+	 * @param {TextFormInsertPr} formPr - Properties for inserting a text field.
 	 * @returns {ApiTextForm}
 	 * @see office-js-api/Examples/Forms/ApiDocument/Methods/InsertTextForm.js
 	 */
-	ApiDocument.prototype.InsertTextForm = function(oFormPr)
+	ApiDocument.prototype.InsertTextForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
-			if (!oFormPr)
-				oFormPr = {};
+			if (!formPr)
+				formPr = {};
 			
 			let logicDocument = this.Document;
-			let placeholder   = GetStringParameter(oFormPr["placeholder"], undefined);
-			if (GetBoolParameter(oFormPr["placeholderFromSelection"], false))
+			let placeholder   = GetStringParameter(formPr["placeholder"], undefined);
+			if (GetBoolParameter(formPr["placeholderFromSelection"], false))
 				placeholder = logicDocument.GetSelectedText();
 			
-			if (!GetBoolParameter(oFormPr["keepSelectedTextInForm"], true))
+			if (!GetBoolParameter(formPr["keepSelectedTextInForm"], true))
 				logicDocument.RemoveBeforePaste();
 			
 			let contentControl = logicDocument.AddContentControl(c_oAscSdtLevelType.Inline);
 			if (!contentControl)
 				return null;
 			
-			ApplyCommonFormPr(contentControl, oFormPr);
+			ApplyCommonFormPr(contentControl, formPr);
 			SetFormPlaceholder(contentControl, placeholder);
-			ApplyTextFormPr(contentControl, oFormPr, true);
+			ApplyTextFormPr(contentControl, formPr, true);
 			CheckForm(contentControl);
 			return new AscBuilder.ApiTextForm(contentControl);
 		}, this);
@@ -662,16 +683,16 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	function CreateCommonForm(oFormPr)
+	function CreateCommonForm(formPr)
 	{
 		let contentControl = new AscCommonWord.CInlineLevelSdt();
 		
-		ApplyCommonFormPr(contentControl, oFormPr);
+		ApplyCommonFormPr(contentControl, formPr);
 		
-		let placeholder = oFormPr ? GetStringParameter(oFormPr["placeholder"], undefined) : undefined;
+		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
 		SetFormPlaceholder(contentControl, placeholder);
 		
-		let tag = oFormPr ? GetStringParameter(oFormPr["tag"], undefined) : undefined;
+		let tag = formPr ? GetStringParameter(formPr["tag"], undefined) : undefined;
 		if (tag)
 			contentControl.SetTag(tag);
 		
@@ -720,6 +741,11 @@
 		datePickerPr.SetLangId(nLcid);
 
 		form.ApplyDatePickerPr(datePickerPr);
+	}
+	function ApplyComplexFormPr(form)
+	{
+		let complexFormPr = new AscWord.CSdtComplexFormPr();
+		form.SetComplexFormPr(complexFormPr);
 	}
 	function CheckForm(form)
 	{
@@ -777,8 +803,9 @@
 	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
 	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
 	Api.prototype["CreateDateForm"]		= Api.prototype.CreateDateForm;
-	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;	
+	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;
 	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
+	Api.prototype["CreateComplexForm"]	= Api.prototype.CreateComplexForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
