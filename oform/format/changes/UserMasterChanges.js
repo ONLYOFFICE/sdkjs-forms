@@ -34,9 +34,11 @@
 
 (function(window)
 {
-	window['AscDFH'].historyitem_OForm_UserMaster_UserId = window['AscDFH'].historyitem_type_OForm_UserMaster | 1;
-	window['AscDFH'].historyitem_OForm_UserMaster_Role   = window['AscDFH'].historyitem_type_OForm_UserMaster | 2;
-	window['AscDFH'].historyitem_OForm_UserMaster_Color  = window['AscDFH'].historyitem_type_OForm_UserMaster | 3;
+	window['AscDFH'].historyitem_OForm_UserMaster_UserId    = window['AscDFH'].historyitem_type_OForm_UserMaster | 1;
+	window['AscDFH'].historyitem_OForm_UserMaster_Role      = window['AscDFH'].historyitem_type_OForm_UserMaster | 2;
+	window['AscDFH'].historyitem_OForm_UserMaster_Color     = window['AscDFH'].historyitem_type_OForm_UserMaster | 3;
+	window['AscDFH'].historyitem_OForm_UserMaster_UserName  = window['AscDFH'].historyitem_type_OForm_UserMaster | 4;
+	window['AscDFH'].historyitem_OForm_UserMaster_UserEmail = window['AscDFH'].historyitem_type_OForm_UserMaster | 5;
 
 	/**
 	 * @constructor
@@ -104,5 +106,47 @@
 		return new AscWord.CDocumentColor(0, 0, 0);
 	};
 	window['AscDFH'].CChangesOFormUserMasterColor = CChangesOFormUserMasterColor;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormUserMasterUserName(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormUserMasterUserName,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_UserMaster_UserName,
+		function(Value)
+		{
+			this.Class.UserName = Value;
+			this.Class.onChange();
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormUserMasterUserName = CChangesOFormUserMasterUserName;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormUserMasterUserEmail(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormUserMasterUserEmail,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_UserMaster_UserEmail,
+		function(Value)
+		{
+			this.Class.UserEmail = Value;
+			this.Class.onChange();
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormUserMasterUserEmail = CChangesOFormUserMasterUserEmail;
 
 })(window);
