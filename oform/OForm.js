@@ -621,6 +621,34 @@
 			this.Roles[roleIndex].setFilled(false);
 		}
 	};
+	OForm.prototype.setAllRolesFilled = function(userPr)
+	{
+		let name  = userPr ? userPr.name : null;
+		let id    = userPr ? userPr.id : null;
+		let email = userPr ? userPr.email : null;
+		
+		for (let roleIndex = 0, roleCount = this.Roles.length; roleIndex < roleCount; ++roleIndex)
+		{
+			let role = this.Roles[roleIndex];
+			if (role.isFilled())
+				continue;
+			
+			role.setFilled(true);
+			
+			let userMaster = role.getUserMaster();
+			if (!userMaster)
+				continue;
+			
+			if (name)
+				userMaster.setUserName(name);
+			
+			if (id)
+				userMaster.setUserId(id);
+			
+			if (email)
+				userMaster.setEmail(email);
+		}
+	};
 	OForm.prototype.isAllRolesFilled = function()
 	{
 		for (let roleIndex = 0, roleCount = this.Roles.length; roleIndex < roleCount; ++roleIndex)
