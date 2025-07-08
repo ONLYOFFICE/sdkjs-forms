@@ -59,10 +59,12 @@
 	function CUserMaster(generateId)
 	{
 		AscOForm.CBaseFormatObject.call(this);
-
-		this.UserId = undefined;
-		this.Role   = undefined;
-		this.Color  = undefined;
+		
+		this.UserId    = undefined;
+		this.UserName  = undefined;
+		this.UserEmail = undefined;
+		this.Role      = undefined;
+		this.Color     = undefined;
 		
 		if (true === generateId)
 			this.setUserId(AscCommon.CreateGUID());
@@ -90,6 +92,32 @@
 	CUserMaster.prototype.getUserId = function()
 	{
 		return this.UserId;
+	};
+	CUserMaster.prototype.setUserName = function(userName)
+	{
+		if (userName === this.UserName)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterUserName(this, this.UserName, userName));
+		this.UserName = userName;
+		this.onChange();
+	};
+	CUserMaster.prototype.getUserName = function()
+	{
+		return this.UserName;
+	};
+	CUserMaster.prototype.setUserEmail = function(userEmail)
+	{
+		if (userEmail === this.UserEmail)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormUserMasterUserEmail(this, this.UserEmail, userEmail));
+		this.UserEmail = userEmail;
+		this.onChange();
+	};
+	CUserMaster.prototype.getUserEmail = function()
+	{
+		return this.UserEmail;
 	};
 	CUserMaster.prototype.setRole = function(role)
 	{
@@ -192,6 +220,12 @@
 		if (this.UserId)
 			writer.WriteXmlNodeWithText("id", this.UserId);
 		
+		if (this.UserName)
+			writer.WriteXmlNodeWithText("name", this.UserName);
+		
+		if (this.UserEmail)
+			writer.WriteXmlNodeWithText("email", this.UserEmail);
+
 		if (this.Role)
 			writer.WriteXmlNodeWithText("role", this.Role);
 		
@@ -222,6 +256,12 @@
 			{
 				case "id":
 					um.setUserId(reader.GetTextDecodeXml());
+					break;
+				case "name":
+					um.setUserName(reader.GetTextDecodeXml());
+					break;
+				case "email":
+					um.setUserEmail(reader.GetTextDecodeXml());
 					break;
 				case "role":
 					um.setRole(reader.GetTextDecodeXml());

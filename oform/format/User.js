@@ -97,9 +97,28 @@
 	};
 	CUser.fromXml = function(reader)
 	{
+		if (!reader.ReadNextNode())
+			return null;
+		
+		let name = reader.GetNameNoNS();
+		if ("user" !== reader.GetNameNoNS())
+			return null;
+		
 		let user = new CUser();
-		
-		
+		let depth = reader.GetDepth();
+		while (reader.ReadNextSiblingNode(depth))
+		{
+			name = reader.GetNameNoNS();
+			switch(reader.GetNameNoNS())
+			{
+				case "email":
+					user.setEmail(reader.GetTextDecodeXml());
+					break;
+				case "telephone":
+					user.setTelephone(reader.GetTextDecodeXml());
+					break;
+			}
+		}
 		
 		return user;
 	};

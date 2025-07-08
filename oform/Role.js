@@ -84,8 +84,22 @@
 	};
 	CRole.prototype.setFilled = function(isFilled)
 	{
-		if (this.FieldGroup)
-			this.FieldGroup.setFilled(isFilled);
+		if (!this.FieldGroup || isFilled === this.FieldGroup.isFilled())
+			return;
+		
+		this.FieldGroup.setFilled(isFilled);
+		
+		if (isFilled)
+		{
+			this.FieldGroup.setDate(Date.now());
+		}
+		else
+		{
+			this.UserMaster.setUserId(AscCommon.CreateGUID());
+			this.UserMaster.setUserName(undefined);
+			this.UserMaster.setUserEmail(undefined);
+			this.FieldGroup.setDate(undefined);
+		}
 	};
 	CRole.prototype.getFieldGroup = function()
 	{
