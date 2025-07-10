@@ -43,6 +43,7 @@
 		AscOForm.CBaseFormatObject.call(this);
 
 		this.Filled = false;
+		this.Date   = undefined;
 		this.Weight = null;
 		this.Fields = [];
 		this.Users  = [];
@@ -83,6 +84,18 @@
 	CFieldGroup.prototype.getWeight = function()
 	{
 		return this.Weight;
+	};
+	CFieldGroup.prototype.setDate = function(date)
+	{
+		if (date === this.Date)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormFieldGroupDate(this, this.Date, date));
+		this.Date = date;
+	};
+	CFieldGroup.prototype.getDate = function()
+	{
+		return this.Date;
 	};
 	CFieldGroup.prototype.addField = function(field)
 	{
@@ -230,6 +243,13 @@
 		writer.WriteXmlNullableAttributeInt("weight", this.getWeight());
 		if (this.isFilled())
 			writer.WriteXmlNullableAttributeBool("filled", true);
+		
+		if (this.Date)
+		{
+			let dateUtc = new Date(this.Date).toISOString().slice(0, 19) + 'Z';
+			writer.WriteXmlNullableAttributeString("date", dateUtc);
+		}
+		
 		writer.WriteXmlAttributesEnd();
 		
 		for (let userIndex = 0, userCount = this.Users.length; userIndex < userCount; ++userIndex)
@@ -265,8 +285,14 @@
 			let attrName = reader.GetNameNoNS();
 			if ("weight" === attrName)
 				fG.setWeight(reader.GetValueInt());
-			if ("filled" === attrName)
+			else if ("filled" === attrName)
 				fG.setFilled(reader.GetValueBool());
+			else if ("date" === attrName)
+			{
+				let date = AscCommon.getTimeISO8601(reader.GetValueDecodeXml());
+				if (!isNaN(date))
+					fG.setDate(date);
+			}
 		}
 		
 		let xmlReaderContext = reader.GetOformContext();

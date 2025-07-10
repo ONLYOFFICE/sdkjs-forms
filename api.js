@@ -189,6 +189,17 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			let h = isSignature ? 32 / 72 * 25.4 : undefined;
 			
 			var oCC = oLogicDocument.AddContentControlPicture(w, h);
+			
+			// MSWord can't open files with anchored picture content controls (70332)
+			if (oCC && !oFormPr)
+			{
+				let allDrawings = oCC.GetAllDrawingObjects();
+				for (let i = 0; i < allDrawings.length; ++i)
+				{
+					allDrawings[i].MakeInline();
+				}
+			}
+			
 			let oFormParaDrawing = null;
 			if (oCC && oFormPr)
 			{
@@ -263,7 +274,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				else
 				{
 					oCC.ReplaceContentWithPlaceHolder();
-					oCC.ApplyPicturePr(true);
+					oCC.ApplyPicturePr(true, w, h);
 				}
 			}
 
@@ -672,6 +683,9 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			return;
 		
 		form.SetFormPr(formPr.Copy());
+		
+		if (!form.IsMainForm() && form.GetMainForm().GetFormRole() !== formPr.GetRole())
+			form.SetFormRole(form.GetMainForm().GetFormRole());
 		
 		let docPartId = form.GetPlaceholder();
 		let glossary  = logicDocument.GetGlossaryDocument();

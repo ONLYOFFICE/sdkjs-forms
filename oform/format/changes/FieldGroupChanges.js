@@ -38,6 +38,7 @@
 	window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveField = window['AscDFH'].historyitem_type_OForm_FieldGroup | 2;
 	window['AscDFH'].historyitem_OForm_FieldGroup_AddRemoveUser  = window['AscDFH'].historyitem_type_OForm_FieldGroup | 3;
 	window['AscDFH'].historyitem_OForm_FieldGroup_Filled         = window['AscDFH'].historyitem_type_OForm_FieldGroup | 4;
+	window['AscDFH'].historyitem_OForm_FieldGroup_Date           = window['AscDFH'].historyitem_type_OForm_FieldGroup | 5;
 
 	/**
 	 * @constructor
@@ -142,5 +143,26 @@
 		false
 	);
 	window['AscDFH'].CChangesOFormFieldGroupFilled = CChangesOFormFieldGroupFilled;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseStringProperty}
+	 */
+	function CChangesOFormFieldGroupDate(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseStringProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormFieldGroupDate,
+		window['AscDFH'].CChangesBaseStringProperty,
+		window['AscDFH'].historyitem_OForm_FieldGroup_Date,
+		function(value)
+		{
+			let v = parseInt(value);
+			this.Class.Date = isNaN(v) ? undefined : v;
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormFieldGroupDate = CChangesOFormFieldGroupDate;
 	
 })(window);
