@@ -175,7 +175,6 @@
 		
 		let fields = fieldGroup.getAllFields();
 		
-		
 		let delegateIndex = this.getRoleIndex(delegateName);
 		
 		// На самом деле можно убрать эту проверку, но тогда мы просто удалим группу по умолчнию и заново её добавим
@@ -243,6 +242,9 @@
 			
 			delegateFieldGroup.addUser(delegateUserMaster);
 			this.Format.addFieldGroup(delegateFieldGroup);
+			
+			if (!this.getDefaultRole() && delegateUserMaster)
+				this.Format.setDefaultUser(delegateUserMaster);
 		}
 		
 		this.NeedRedraw = true;
