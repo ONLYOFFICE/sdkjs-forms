@@ -134,6 +134,10 @@
 	{
 		return this.Role ? this.Role : "";
 	};
+	CUserMaster.prototype.isNoRole = function()
+	{
+		return (this === AscOForm.getNoRole());
+	};
 	CUserMaster.prototype.setColor = function(r, g, b)
 	{
 		let newColor = undefined !== r && null !== r ? new AscWord.CDocumentColor(r, g, b) : undefined;
