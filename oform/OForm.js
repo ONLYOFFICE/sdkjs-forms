@@ -187,14 +187,14 @@
 			{
 				if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
 					return false;
-				
+
 				defaultUserMaster.initDefaultUser();
-				
+
 				this.NeedRedraw = true;
 				this.endAction();
 				return true;
 			}
-			
+
 			return false;
 		}
 			
@@ -244,6 +244,35 @@
 			this.Format.addFieldGroup(delegateFieldGroup);
 			
 			if (!this.getDefaultRole() && delegateUserMaster)
+				this.Format.setDefaultUser(delegateUserMaster);
+		}
+		
+		if (!this.getDefaultRole())
+		{
+			let delegateUserMaster;
+			if (-1 === delegateIndex || delegateIndex === roleIndex)
+			{
+				this.updateRoles();
+				if (this.Roles.length <= 0)
+				{
+					let defaultGroup = new AscOForm.CFieldGroup();
+					defaultGroup.setWeight(this.Format.getMaxWeight() + 1);
+					this.Format.addFieldGroup(defaultGroup);
+					defaultGroup.addUser(this.Format.getDefaultUserMaster());
+					delegateUserMaster = this.Format.getDefaultUserMaster();
+					delegateUserMaster.initDefaultUser();
+				}
+				else
+				{
+					delegateUserMaster = this.Roles[0].getUserMaster();
+				}
+			}
+			else
+			{
+				delegateUserMaster = this.Roles[delegateIndex].getUserMaster();
+			}
+			
+			if (delegateUserMaster)
 				this.Format.setDefaultUser(delegateUserMaster);
 		}
 		
