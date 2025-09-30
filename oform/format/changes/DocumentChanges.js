@@ -45,6 +45,7 @@
 	window['AscDFH'].historyitem_OForm_Document_UserMaster  = window['AscDFH'].historyitem_type_OForm_Document | 9;
 	window['AscDFH'].historyitem_OForm_Document_FieldMaster = window['AscDFH'].historyitem_type_OForm_Document | 10;
 	window['AscDFH'].historyitem_OForm_Document_DefaultUser = window['AscDFH'].historyitem_type_OForm_Document | 11;
+	window['AscDFH'].historyitem_OForm_Document_Final       = window['AscDFH'].historyitem_type_OForm_Document | 12;
 
 	/**
 	 * @constructor
@@ -325,5 +326,26 @@
 		false
 	);
 	window['AscDFH'].CChangesOFormDocumentDefaultUser = CChangesOFormDocumentDefaultUser;
+	
+	/**
+	 * @constructor
+	 * @extends {window['AscDFH'].CChangesBaseBoolProperty}
+	 */
+	function CChangesOFormDocumentFinal(Class, Old, New)
+	{
+		window['AscDFH'].CChangesBaseBoolProperty.call(this, Class, Old, New);
+	}
+	window['AscDFH'].InheritPropertyChange(
+		CChangesOFormDocumentFinal,
+		window['AscDFH'].CChangesBaseBoolProperty,
+		window['AscDFH'].historyitem_OForm_Document_Final,
+		function(value)
+		{
+			this.Class.Final = value;
+			this.Class.onChangeFinal();
+		},
+		false
+	);
+	window['AscDFH'].CChangesOFormDocumentFinal = CChangesOFormDocumentFinal;
 
 })(window);

@@ -689,6 +689,10 @@
 		}
 		return true;
 	};
+	OForm.prototype.isFinal = fucntion()
+	{
+		return this.Format.isFinal();
+	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -714,6 +718,15 @@
 		
 		logicDocument.UpdateInterface();
 		logicDocument.FinalizeAction();
+	};
+	OForm.prototype.sendEvent = function()
+	{
+		let logicDocument = this.getDocument();
+		let api;
+		if (!logicDocument || !(api = logicDocument.GetApi()))
+			return;
+		
+		api.sendEvent.apply(api, arguments);
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.OForm = OForm;
