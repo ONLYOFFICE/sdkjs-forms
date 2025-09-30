@@ -689,7 +689,7 @@
 		}
 		return true;
 	};
-	OForm.prototype.isFinal = fucntion()
+	OForm.prototype.isFinal = function()
 	{
 		return this.Format.isFinal();
 	};
