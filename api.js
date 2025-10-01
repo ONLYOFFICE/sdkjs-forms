@@ -669,6 +669,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		let formManager  = logicDocument.GetFormsManager();
 		let keyGenerator = formManager.GetKeyGenerator();
 		
+		form.SetFormRequired(formManager.IsRadioGroupRequired(groupKey));
+		
 		let formPr = form.GetFormPr().Copy();
 		if (!formPr)
 			return;
