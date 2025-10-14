@@ -57,6 +57,7 @@
 		this.Type        = null;
 		this.Application = null;
 		this.DocumentId  = null;
+		this.Final       = false;
 		this.FieldGroups = [];
 
 		// Массивы всех имеющихся пользователей и полей
@@ -152,6 +153,19 @@
 	CDocument.prototype.getDocumentId = function()
 	{
 		return this.DocumentId;
+	};
+	CDocument.prototype.setFinal = function(isFinal)
+	{
+		if (this.Final === isFinal)
+			return;
+		
+		AscCommon.History.Add(new AscDFH.CChangesOFormDocumentFinal(this, this.Final, isFinal));
+		this.Final = isFinal;
+		this.onChangeFinal();
+	};
+	CDocument.prototype.isFinal = function()
+	{
+		return this.Final;
 	};
 	CDocument.prototype.addFieldGroup = function(fieldGroup)
 	{
@@ -303,6 +317,9 @@
 				case "description":
 					this.setDescription(reader.GetTextDecodeXml());
 					break;
+				case "final":
+					this.setFinal(reader.GetTextBool());
+					break
 				case "type":
 					this.setType(reader.GetTextDecodeXml());
 					break;
@@ -356,6 +373,9 @@
 		let application = this.getApplication();
 		if (application)
 			writer.WriteXmlNodeWithText("application", application);
+		
+		if (this.isFinal())
+			writer.WriteXmlNodeWithText("final", "1");
 		
 		let documentId = this.getDocumentId();
 		if (documentId)
@@ -624,6 +644,13 @@
 			if (!fieldMaster.isUseInDocument())
 				this.removeFieldMasterByIndex(fieldIndex);
 		}
+	};
+	CDocument.prototype.onChangeFinal = function()
+	{
+		if (!this.OForm)
+			return;
+		
+		this.OForm.sendEvent("asc_onOFormChangeFinal", this.isFinal());
 	};
 	
 	//--------------------------------------------------------export----------------------------------------------------

@@ -175,7 +175,6 @@
 		
 		let fields = fieldGroup.getAllFields();
 		
-		
 		let delegateIndex = this.getRoleIndex(delegateName);
 		
 		// На самом деле можно убрать эту проверку, но тогда мы просто удалим группу по умолчнию и заново её добавим
@@ -188,14 +187,14 @@
 			{
 				if (!this.startAction(AscDFH.historydescription_OForm_RemoveRole))
 					return false;
-				
+
 				defaultUserMaster.initDefaultUser();
-				
+
 				this.NeedRedraw = true;
 				this.endAction();
 				return true;
 			}
-			
+
 			return false;
 		}
 			
@@ -243,6 +242,38 @@
 			
 			delegateFieldGroup.addUser(delegateUserMaster);
 			this.Format.addFieldGroup(delegateFieldGroup);
+			
+			if (!this.getDefaultRole() && delegateUserMaster)
+				this.Format.setDefaultUser(delegateUserMaster);
+		}
+		
+		if (!this.getDefaultRole())
+		{
+			let delegateUserMaster;
+			if (-1 === delegateIndex || delegateIndex === roleIndex)
+			{
+				this.updateRoles();
+				if (this.Roles.length <= 0)
+				{
+					let defaultGroup = new AscOForm.CFieldGroup();
+					defaultGroup.setWeight(this.Format.getMaxWeight() + 1);
+					this.Format.addFieldGroup(defaultGroup);
+					defaultGroup.addUser(this.Format.getDefaultUserMaster());
+					delegateUserMaster = this.Format.getDefaultUserMaster();
+					delegateUserMaster.initDefaultUser();
+				}
+				else
+				{
+					delegateUserMaster = this.Roles[0].getUserMaster();
+				}
+			}
+			else
+			{
+				delegateUserMaster = this.Roles[delegateIndex].getUserMaster();
+			}
+			
+			if (delegateUserMaster)
+				this.Format.setDefaultUser(delegateUserMaster);
 		}
 		
 		this.NeedRedraw = true;
@@ -658,6 +689,14 @@
 		}
 		return true;
 	};
+	OForm.prototype.isFinal = function()
+	{
+		return this.Format.isFinal();
+	};
+	OForm.prototype.setFinal = function(isFinal)
+	{
+		return this.Format.setFinal(isFinal);
+	};
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Private area
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -683,6 +722,15 @@
 		
 		logicDocument.UpdateInterface();
 		logicDocument.FinalizeAction();
+	};
+	OForm.prototype.sendEvent = function()
+	{
+		let logicDocument = this.getDocument();
+		let api;
+		if (!logicDocument || !(api = logicDocument.GetApi()))
+			return;
+		
+		api.sendEvent.apply(api, arguments);
 	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.OForm = OForm;
