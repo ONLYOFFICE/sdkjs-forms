@@ -122,7 +122,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 					CheckType : AscCommon.changestype_Paragraph_Content
 				}))
 				{
-					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox, undefined, undefined, true);
 					oLogicDocument.RemoveSelection();
 
 					for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
@@ -146,7 +146,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				oLogicDocument.RemoveTextSelection();
 				if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 				{
-					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox, undefined, undefined, true);
 
 					var oCC = oLogicDocument.AddContentControlCheckBox(oPr);
 					private_ApplyPrToCheckBox(oCC, oPr);
@@ -182,7 +182,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlPicture);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlPicture, undefined, undefined, true);
 
 			// 150x32pt for Signature
 			let w = isSignature ? 150 / 72 * 25.4 : undefined;
@@ -309,7 +309,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList, undefined, undefined, isComboBox);
 
 			var oCC;
 			if (isComboBox)
@@ -344,7 +344,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList, undefined, undefined, true);
 			
 			let dateTimePr = null;
 			let formPr     = null;
