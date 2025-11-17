@@ -51,7 +51,7 @@
 		if (true === generateId)
 			this.setFieldId(AscCommon.CreateGUID());
 	}
-	AscFormat.InitClass(CFieldMaster, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldMaster);
+	AscCommon.InitClass(CFieldMaster, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldMaster);
 	CFieldMaster.prototype.setLogicField = function(logicField)
 	{
 		this.Field = logicField;

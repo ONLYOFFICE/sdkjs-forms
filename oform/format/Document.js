@@ -65,7 +65,7 @@
 		this.UserMasters  = [];
 		this.FieldMasters = [];
 	}
-	AscFormat.InitClass(CDocument, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
+	AscCommon.InitClass(CDocument, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_Document);
 	CDocument.prototype.clear = function()
 	{
 		// TODO: fields?

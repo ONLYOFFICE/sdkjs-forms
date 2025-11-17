@@ -50,7 +50,7 @@
 		if (userMaster)
 			this.setUserMaster(userMaster);
 	}
-	AscFormat.InitClass(CUser, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_User);
+	AscCommon.InitClass(CUser, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_User);
 	CUser.prototype.setUserMaster = function(userMaster)
 	{
 		if (this.UserMaster === userMaster)

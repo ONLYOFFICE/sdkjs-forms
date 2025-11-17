@@ -71,7 +71,7 @@
 		
 		this.Parent = null;
 	}
-	AscFormat.InitClass(CUserMaster, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
+	AscCommon.InitClass(CUserMaster, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_UserMaster);
 	CUserMaster.prototype.setParent = function(parent)
 	{
 		if (this.Parent === parent)

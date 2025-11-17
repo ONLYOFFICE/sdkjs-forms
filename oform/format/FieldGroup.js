@@ -50,7 +50,7 @@
 		
 		this.Parent = null;
 	}
-	AscFormat.InitClass(CFieldGroup, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
+	AscCommon.InitClass(CFieldGroup, AscOForm.CBaseFormatObject, AscDFH.historyitem_type_OForm_FieldGroup);
 	CFieldGroup.prototype.setParent = function(parent)
 	{
 		if (this.Parent === parent)
