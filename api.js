@@ -493,7 +493,17 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (!form || !form.IsForm())
 			return;
 		
-		return this.private_SetFormValue(form.GetId(), value);
+		if (typeof(value) === "string")
+		{
+			let _t = this;
+			AscFonts.FontPickerByCharacter.checkText(value, this, function() {
+				_t.private_SetFormValue(form.GetId(), value);
+			});
+		}
+		else
+		{
+			this.private_SetFormValue(form.GetId(), value);
+		}
 	};
 	window['Asc']['asc_docs_api'].prototype['asc_GetFormValue'] = window['Asc']['asc_docs_api'].prototype.asc_GetFormValue = function(formId)
 	{
