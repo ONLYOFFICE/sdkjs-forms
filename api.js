@@ -737,6 +737,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 	{
 		let form = logicDocument.GetContentControl();
 		
+		let mainForm = form ? form.GetMainForm() : null;
+		if (mainForm && mainForm.IsLabeledCheckBox())
+			return mainForm.MoveCursorOutsideForm(false);
+		
 		if (!form || !form.IsForm() || (form.IsComplexForm() && !isComplex))
 			return;
 		
