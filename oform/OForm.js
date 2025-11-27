@@ -718,8 +718,6 @@
 		if (!logicDocument)
 			return;
 		
-		this.onEndAction();
-		
 		logicDocument.UpdateInterface();
 		logicDocument.FinalizeAction();
 	};
