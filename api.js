@@ -80,7 +80,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			AscFonts.FontPickerByCharacter.getFontBySymbol(nUncheckedSymbol);
 		}
 
-		function private_ApplyPrToCheckBox(oCC)
+		function private_ApplyPrToCheckBox(oCC, checkBoxPr)
 		{
 			if (!oCC)
 				return;
@@ -94,7 +94,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				else
 					private_CheckFormKey(oCC, oLogicDocument);
 			}
-
+			
 			if (oCommonPr)
 				oCC.SetContentControlPr(oCommonPr);
 		}
@@ -122,13 +122,13 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 					CheckType : AscCommon.changestype_Paragraph_Content
 				}))
 				{
-					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox, undefined, undefined, true);
 					oLogicDocument.RemoveSelection();
 
 					for (let nIndex = 0, nCount = arrSelectedParagraphs.length; nIndex < nCount; ++nIndex)
 					{
 						let oCC = arrSelectedParagraphs[nIndex].AddCheckBoxToStartPos(oPr);
-						private_ApplyPrToCheckBox(oCC);
+						private_ApplyPrToCheckBox(oCC, oPr);
 					}
 
 					oLogicDocument.LoadDocumentState(oState);
@@ -146,10 +146,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 				oLogicDocument.RemoveTextSelection();
 				if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 				{
-					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox);
+					oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlCheckBox, undefined, undefined, true);
 
 					var oCC = oLogicDocument.AddContentControlCheckBox(oPr);
-					private_ApplyPrToCheckBox(oCC);
+					private_ApplyPrToCheckBox(oCC, oPr);
 
 					oLogicDocument.UpdateInterface();
 					oLogicDocument.Recalculate();
@@ -182,7 +182,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlPicture);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlPicture, undefined, undefined, true);
 
 			// 150x32pt for Signature
 			let w = isSignature ? 150 / 72 * 25.4 : undefined;
@@ -309,7 +309,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList, undefined, undefined, isComboBox);
 
 			var oCC;
 			if (isComboBox)
@@ -344,7 +344,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList, undefined, undefined, true);
 			
 			let dateTimePr = null;
 			let formPr     = null;
@@ -464,8 +464,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			return null;
 
 		let mainForm = form.GetMainForm();
+		if (!mainForm || !mainForm.IsComplexForm() || mainForm.IsLabeledCheckBox())
+			return null;
 
-		return (mainForm.IsComplexForm() ? mainForm : null);
+		return mainForm;
 	};
 	window['Asc']['asc_docs_api'].prototype['asc_ConvertFormToJson'] = window['Asc']['asc_docs_api'].prototype.asc_ConvertFormToJson = function(form)
 	{
@@ -491,7 +493,17 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		if (!form || !form.IsForm())
 			return;
 		
-		return this.private_SetFormValue(form.GetId(), value);
+		if (typeof(value) === "string")
+		{
+			let _t = this;
+			AscFonts.FontPickerByCharacter.checkText(value, this, function() {
+				_t.private_SetFormValue(form.GetId(), value);
+			});
+		}
+		else
+		{
+			this.private_SetFormValue(form.GetId(), value);
+		}
 	};
 	window['Asc']['asc_docs_api'].prototype['asc_GetFormValue'] = window['Asc']['asc_docs_api'].prototype.asc_GetFormValue = function(formId)
 	{
@@ -724,6 +736,10 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 	function CheckCurrentSelection(logicDocument, isComplex)
 	{
 		let form = logicDocument.GetContentControl();
+		
+		let mainForm = form ? form.GetMainForm() : null;
+		if (mainForm && mainForm.IsLabeledCheckBox())
+			return mainForm.MoveCursorOutsideForm(false);
 		
 		if (!form || !form.IsForm() || (form.IsComplexForm() && !isComplex))
 			return;
