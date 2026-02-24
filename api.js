@@ -309,7 +309,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList, undefined, undefined, isComboBox);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList);
 
 			var oCC;
 			if (isComboBox)
@@ -327,6 +327,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			if (oCC && oCommonPr)
 				oCC.SetContentControlPr(oCommonPr);
 
+			oLogicDocument.AddMacroData(AscDFH.historydescription_Document_AddContentControlList, {isComboBox : isComboBox});
 			oLogicDocument.Recalculate();
 			oLogicDocument.UpdateInterface();
 			oLogicDocument.UpdateSelection();
@@ -344,7 +345,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 		oLogicDocument.RemoveTextSelection();
 		if (!oLogicDocument.IsSelectionLocked(AscCommon.changestype_Paragraph_Content))
 		{
-			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlList, undefined, undefined, true);
+			oLogicDocument.StartAction(AscDFH.historydescription_Document_AddContentControlDatePicker, undefined, undefined, true);
 			
 			let dateTimePr = null;
 			let formPr     = null;

@@ -53,7 +53,7 @@
 	 * @class
 	 * @name Api
 	 */
-	var Api = window["Asc"]["asc_docs_api"] || window["Asc"]["spreadsheet_api"];
+	var Api = AscBuilder.Word.Api;
  
 	/**
 	 * Common form properties.
@@ -189,7 +189,7 @@
 	 * @returns {ApiTextForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateTextForm.js
 	 */
-	Api.prototype.CreateTextForm = function(formPr)
+	Api.CreateTextForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
@@ -210,7 +210,7 @@
 	 * @returns {ApiCheckBoxForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateCheckBoxForm.js
 	 */
-	Api.prototype.CreateCheckBoxForm = function(formPr)
+	Api.CreateCheckBoxForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
@@ -285,7 +285,7 @@
 	 * @returns {ApiComboBoxForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComboBoxForm.js
 	 */
-	Api.prototype.CreateComboBoxForm = function(formPr)
+	Api.CreateComboBoxForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
@@ -355,7 +355,7 @@
 	 * @returns {ApiPictureForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreatePictureForm.js
 	 */
-	Api.prototype.CreatePictureForm = function(formPr)
+	Api.CreatePictureForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
@@ -407,7 +407,7 @@
 	 * @returns {ApiDateForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateDateForm.js
 	 */
-	Api.prototype.CreateDateForm = function(formPr)
+	Api.CreateDateForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
@@ -428,7 +428,7 @@
 	 * @returns {ApiComplexForm}
 	 * @see office-js-api/Examples/Forms/Api/Methods/CreateComplexForm.js
 	 */
-	Api.prototype.CreateComplexForm = function(formPr)
+	Api.CreateComplexForm = function(formPr)
 	{
 		return executeNoFormLockCheck(function()
 		{
@@ -800,12 +800,12 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Api.prototype["CreateTextForm"]     = Api.prototype.CreateTextForm;
-	Api.prototype["CreatePictureForm"]  = Api.prototype.CreatePictureForm;
-	Api.prototype["CreateDateForm"]		= Api.prototype.CreateDateForm;
-	Api.prototype["CreateCheckBoxForm"] = Api.prototype.CreateCheckBoxForm;
-	Api.prototype["CreateComboBoxForm"] = Api.prototype.CreateComboBoxForm;
-	Api.prototype["CreateComplexForm"]	= Api.prototype.CreateComplexForm;
+	Api["CreateTextForm"]     = Api.CreateTextForm;
+	Api["CreatePictureForm"]  = Api.CreatePictureForm;
+	Api["CreateDateForm"]     = Api.CreateDateForm;
+	Api["CreateCheckBoxForm"] = Api.CreateCheckBoxForm;
+	Api["CreateComboBoxForm"] = Api.CreateComboBoxForm;
+	Api["CreateComplexForm"]  = Api.CreateComplexForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
