@@ -168,6 +168,29 @@
 
 		return "";
 	};
+	/**
+	 * Checks whether the specified form has been digitally signed.
+	 * @memberof Api
+	 * @typeofeditors ["CDE"]
+	 * @alias IsFormSigned
+	 * @returns {boolean} Returns true if the form is signed, false otherwise.
+	 * @since 9.3.0
+	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods/IsFormSigned.js
+	 */
+	Api.prototype["pluginMethod_IsFormSigned"] = function()
+	{
+		let signatures = this.signatures;
+		if (!signatures || !Array.isArray(signatures))
+			return false;
+		
+		for (let i = 0; i < signatures.length; ++i)
+		{
+			if (signatures[i].isForm)
+				return true;
+		}
+		
+		return false;
+	};
 
 })(window);
 
