@@ -164,6 +164,7 @@
 	//---------------------------------------------interface export-----------------------------------------------------
 	CRole.prototype['asc_getSettings']           = CRole.prototype.getSettings;
 	window['AscCommon']["CRoleSettings"]         = CRoleSettings;
+	window['AscCommon'].CRoleSettings            = CRoleSettings;
 	CRoleSettings.prototype["asc_getName"]       = CRoleSettings.prototype.getName;
 	CRoleSettings.prototype["asc_putName"]       = CRoleSettings.prototype.setName;
 	CRoleSettings.prototype["asc_getColor"]      = CRoleSettings.prototype.getAscColor;
