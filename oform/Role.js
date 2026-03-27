@@ -165,9 +165,9 @@
 	CRole.prototype['asc_getSettings']           = CRole.prototype.getSettings;
 	window['AscCommon']["CRoleSettings"]         = CRoleSettings;
 	window['AscCommon'].CRoleSettings            = CRoleSettings;
-	CRoleSettings.prototype["asc_getName"]       = CRoleSettings.prototype.getName;
-	CRoleSettings.prototype["asc_putName"]       = CRoleSettings.prototype.setName;
-	CRoleSettings.prototype["asc_getColor"]      = CRoleSettings.prototype.getAscColor;
-	CRoleSettings.prototype["asc_putColor"]      = CRoleSettings.prototype.setAscColor;
-	CRoleSettings.prototype["asc_getFieldCount"] = CRoleSettings.prototype.getFieldCount;
+	CRoleSettings.prototype["asc_getName"]       = CRoleSettings.prototype.asc_getName       = CRoleSettings.prototype.getName;
+	CRoleSettings.prototype["asc_putName"]       = CRoleSettings.prototype.asc_putName       = CRoleSettings.prototype.setName;
+	CRoleSettings.prototype["asc_getColor"]      = CRoleSettings.prototype.asc_getColor      = CRoleSettings.prototype.getAscColor;
+	CRoleSettings.prototype["asc_putColor"]      = CRoleSettings.prototype.asc_putColor      = CRoleSettings.prototype.setAscColor;
+	CRoleSettings.prototype["asc_getFieldCount"] = CRoleSettings.prototype.asc_getFieldCount = CRoleSettings.prototype.getFieldCount;
 })(window);
