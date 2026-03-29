@@ -35,8 +35,8 @@
 (function(window)
 {
 	/**
-	 * Класс представляющий роль при заполнении формы. В данный момент роль - это ровно один userMaster
-	 * и группа полей связанные с данным userMaster
+	 * Class representing a role when filling out a form. Currently, a role is exactly one userMaster
+	 * and a field group associated with this userMaster
 	 * @param fieldGroup
 	 * @param userMaster
 	 * @constructor
@@ -107,7 +107,7 @@
 	};
 	
 	/**
-	 * Класс для задания настроек роли из интерфейса
+	 * Class for setting role configuration from the interface
 	 * @constructor
 	 */
 	function CRoleSettings()

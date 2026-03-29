@@ -155,7 +155,7 @@
 	};
 	CUserMaster.prototype.initDefaultUser = function()
 	{
-		// TODO: Возможно стоит придумать уникальный id общий для дефолтовой роли
+		// TODO: Consider creating a unique id common for the default role
 		this.setRole("Anyone");
 		this.setColor(255, 239, 191);
 	};

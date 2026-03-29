@@ -35,7 +35,7 @@
 (function(window)
 {
 	/**
-	 * Основной класс для работы с форматом oform
+	 * Main class for working with the oform format
 	 * @param document {AscWord.CDocument}
 	 * @constructor
 	 */
@@ -45,7 +45,7 @@
 		this.Document    = document;
 		this.CurrentUser = null;
 		
-		// Сейчас у нас роль - это ровно один userMaster и ровно одна группа полей
+		// Currently, a role is exactly one userMaster and exactly one field group
 		this.Roles = [];
 		this.NeedUpdateRoles = true;
 		this.NeedRedraw      = true;
@@ -78,7 +78,7 @@
 		writer.context = xmlPkg.getContext();
 		this.Format.toPkg(xmlPkg, opt_fieldMastersPartMap);
 		
-		// Наш XmlPackage работает в общей папке, а нам нужно запихнуть в zip подпапку oform
+		// Our XmlPackage works in the shared folder, but we need to put the oform subfolder into zip
 		zip.getPaths().forEach(function(path)
 		{
 			let fileData = zip.getFile(path);
@@ -177,7 +177,7 @@
 		
 		let delegateIndex = this.getRoleIndex(delegateName);
 		
-		// На самом деле можно убрать эту проверку, но тогда мы просто удалим группу по умолчнию и заново её добавим
+		// Actually, we can remove this check, but then we would just delete the default group and add it again
 		if (this.Roles.length <= 1
 			&& this.Roles[roleIndex].getUserMaster() === this.Format.getDefaultUserMaster()
 			&& -1 === delegateIndex)
@@ -528,7 +528,7 @@
 			let user = fieldGroup.getFirstUser();
 			if (!user)
 			{
-				// TODO: Разобраться с такими группами
+				// TODO: Handle such groups
 			}
 			
 			let haveRole = false;
@@ -543,7 +543,7 @@
 			
 			if (haveRole)
 			{
-				// TODO: Разобраться с такими ситуациями
+				// TODO: Handle such situations
 			}
 			
 			let weight       = fieldGroup.getWeight();
@@ -569,7 +569,7 @@
 	};
 	OForm.prototype.correctFieldGroups = function()
 	{
-		// Проверяем есть ли хоть одна группа с заданной ролью (где указан userMaster)
+		// Check if there is at least one group with a specified role (where userMaster is set)
 		for (let fgIndex = 0, fgCount = this.Format.getFieldGroupsCount(); fgIndex < fgCount; ++fgIndex)
 		{
 			let fieldGroup = this.Format.getFieldGroup(fgIndex);
@@ -580,7 +580,7 @@
 			return;
 		}
 		
-		// Нельзя, чтобы групп не было вообще
+		// There must be at least one group
 		let defaultGroup = new AscOForm.CFieldGroup();
 		defaultGroup.setWeight(this.Format.getMaxWeight() + 1);
 		this.Format.addFieldGroup(defaultGroup);

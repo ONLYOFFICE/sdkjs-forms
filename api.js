@@ -351,8 +351,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			let formPr     = null;
 			let ccPr       = null;
 			
-			// Пока для совместимости со старым форматом оставляем, чтобы настройки могли приходить по старому (oPr, oCommonPr)
-			// но в будущем надо перейти на новый вариант contentPr (AscCommon.CContentControlPr)
+			// For now, keeping compatibility with the old format so settings can come in the old way (oPr, oCommonPr)
+			// but in the future we need to switch to the new contentPr variant (AscCommon.CContentControlPr)
 			if (oPr && (oPr instanceof AscCommon.CContentControlPr))
 			{
 				dateTimePr = oPr.DateTimePr;
@@ -541,8 +541,8 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			|| !oForm.IsForm())
 			return;
 		
-		// При проверке лока внутри параграфа мы ориентируемся на выделение внутри этого параграфа
-		// поэтому нужно выделить форму
+		// When checking lock inside a paragraph, we rely on the selection within that paragraph
+		// so we need to select the form
 		let state = oLogicDocument.SaveDocumentState();
 		oForm.SelectContentControl();
 		
@@ -634,7 +634,7 @@ window["AscOForm"] = window.AscOForm = AscOForm;
 			else
 				oForm.SetInnerText(sValue);
 			
-			// TODO: Надо FullDate попытаться выставить по заданному значение. Сейчас мы всегда сбрасываем на текущую дату
+			// TODO: Need to try setting FullDate to the given value. Currently we always reset to the current date
 			 let datePickerPr = oForm.GetDatePickerPr().Copy();
 			 datePickerPr.SetFullDate(null);
 			 oForm.SetDatePickerPr(datePickerPr);
