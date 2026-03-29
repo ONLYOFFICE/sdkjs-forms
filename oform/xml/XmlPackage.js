@@ -35,7 +35,7 @@
 (function(window)
 {
 	/**
-	 * Класс для работы с форматом oform в xml
+	 * Class for working with the oform format in xml
 	 * @constructor
 	 * @extends {AscCommon.openXml.OpenXmlPackage}
 	 */

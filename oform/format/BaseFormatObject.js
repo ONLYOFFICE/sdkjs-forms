@@ -37,7 +37,7 @@
 	
 	
 	/**
-	 * Базовый класс для всех форматных классов в oform
+	 * Base class for all format classes in oform
 	 * @constructor
 	 */
 	function CBaseFormatObject()
