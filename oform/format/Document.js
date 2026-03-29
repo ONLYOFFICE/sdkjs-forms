@@ -35,7 +35,7 @@
 (function(window)
 {
 	/**
-	 * Основной класс для работы с форматом oform
+	 * Main class for working with the oform format
 	 * @param oform {AscOForm.OForm}
 	 * @constructor
 	 * @extends AscOForm.CBaseFormatObject
@@ -50,7 +50,7 @@
 		this.DefaultUser.initDefaultUser();
 		this.DefaultUser.setParent(this);
 
-		// Форматная часть
+		// Format properties
 		this.Author      = null;
 		this.Date        = null;
 		this.Description = null;
@@ -60,7 +60,7 @@
 		this.Final       = false;
 		this.FieldGroups = [];
 
-		// Массивы всех имеющихся пользователей и полей
+		// Arrays of all existing users and fields
 		this.Users        = [];
 		this.UserMasters  = [];
 		this.FieldMasters = [];
@@ -617,8 +617,8 @@
 			let fieldMaster = form.GetFieldMaster();
 			if (!fieldMaster)
 			{
-				// TODO: Мы не можем здесь генерировать id, т.к. данная функция вызывается на открытии
-				// и тогда у разных клиентов будут разные id. Поэтому, пока лучше вообще такие поля будут без id
+				// TODO: We cannot generate id here because this function is called on document open
+				// and then different clients would have different ids. So for now, it's better to leave such fields without id
 				fieldMaster = new AscOForm.CFieldMaster(false);
 				this.addFieldMaster(fieldMaster);
 				fieldMaster.addUser(this.getDefaultUserMaster());

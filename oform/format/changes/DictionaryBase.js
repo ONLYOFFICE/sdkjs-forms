@@ -35,8 +35,7 @@
 (function(window)
 {
 	/**
-	 * Базовое изменение для работы с каким-либо контейнером, в который по ключу-key (string)
-	 * добавляют/удаляют значение
+	 * Base change for working with a container where values are added/removed by string key
 	 * @constructor
 	 * @extends {window['AscDFH'].CChangesBase}
 	 */

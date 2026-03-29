@@ -40,7 +40,7 @@
 	const PATH_FIELD_MASTERS = "/fieldMasters/";
 	
 	/**
-	 * Класс для работы с ссылками внутри xml структуры во время чтения
+	 * Class for working with references inside xml structure during reading
 	 * @constructor
 	 */
 	function XmlReaderContext(pkg)
@@ -184,7 +184,7 @@
 	
 	
 	/**
-	 * Класс для работы с ссылками внутри xml структуры во время записи
+	 * Class for working with references inside xml structure during writing
 	 * @constructor
 	 */
 	function XmlWriterContext(pkg)
