@@ -400,6 +400,42 @@
 		}, this);
 	};
 	/**
+	 * Creates a picture form with the specified picture form properties.
+	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
+	 * @param {FormPrBase} formPr - form properties.
+	 * @returns {ApiSignatureForm}
+	 * @since 9.4.0
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateSignatureForm.js
+	 */
+	Api.CreateSignatureForm = function(formPr)
+	{
+		return executeNoFormLockCheck(function()
+		{
+			formPr = formPr ? formPr : {};
+			
+			let form = CreateCommonForm(formPr);
+			
+			let pictPr = new AscCommon.CSdtPictureFormPr();
+			let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
+			
+			pictPr.SetSignature(true);
+			let glossary = logicDocument ? logicDocument.GetGlossaryDocument() : null;
+			if (glossary)
+				form.SetPlaceholder(glossary.GetDefaultPlaceholderSignatureOformDocPartId());
+			
+			form.SetPictureFormPr(pictPr);
+			form.ApplyPicturePr(true);
+			
+			let w = 150 / 72 * 25.4;
+			let h = 32 / 72 * 25.4;
+			form.ConvertFormToFixed(w, h);
+			
+			CheckForm(form);
+			return new AscBuilder.ApiSignatureForm(form);
+		}, this);
+	};
+	/**
 	 * Creates a date form with the specified date form properties.
 	 * @memberof Api
 	 * @typeofeditors ["CDE", "CFE"]
@@ -800,12 +836,13 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Api["CreateTextForm"]     = Api.CreateTextForm;
-	Api["CreatePictureForm"]  = Api.CreatePictureForm;
-	Api["CreateDateForm"]     = Api.CreateDateForm;
-	Api["CreateCheckBoxForm"] = Api.CreateCheckBoxForm;
-	Api["CreateComboBoxForm"] = Api.CreateComboBoxForm;
-	Api["CreateComplexForm"]  = Api.CreateComplexForm;
+	Api["CreateTextForm"]      = Api.CreateTextForm;
+	Api["CreatePictureForm"]   = Api.CreatePictureForm;
+	Api["CreateSignatureForm"] = Api.CreateSignatureForm;
+	Api["CreateDateForm"]      = Api.CreateDateForm;
+	Api["CreateCheckBoxForm"]  = Api.CreateCheckBoxForm;
+	Api["CreateComboBoxForm"]  = Api.CreateComboBoxForm;
+	Api["CreateComplexForm"]   = Api.CreateComplexForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
