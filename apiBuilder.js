@@ -198,7 +198,7 @@
 			
 			let form = CreateCommonForm(formPr);
 			ApplyTextFormPr(form, formPr);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiTextForm(form);
 		}, this);
 	};
@@ -273,7 +273,7 @@
 				private_PerformAddCheckBox();
 			}
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiCheckBoxForm(oCC);
 		}, this);
 	};
@@ -343,7 +343,7 @@
 				}
 			}
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiComboBoxForm(oCC);
 		}, this);
 	};
@@ -395,7 +395,7 @@
 			
 			oCC.SetPictureFormPr(oPr);
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiPictureForm(oCC);
 		}, this);
 	};
@@ -431,7 +431,7 @@
 			let h = 32 / 72 * 25.4;
 			form.ConvertFormToFixed(w, h);
 			
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiSignatureForm(form);
 		}, this);
 	};
@@ -452,7 +452,7 @@
 			
 			let form = CreateCommonForm(formPr);
 			ApplyDateFormPr(form, formPr);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiDateForm(form);
 		}, this);
 	};
@@ -473,7 +473,7 @@
 
 			let form = CreateCommonForm(formPr);
 			ApplyComplexFormPr(form);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiComplexForm(form);
 		}, this);
 	};
@@ -507,7 +507,7 @@
 			ApplyCommonFormPr(contentControl, formPr);
 			SetFormPlaceholder(contentControl, placeholder);
 			ApplyTextFormPr(contentControl, formPr, true);
-			CheckForm(contentControl);
+			CheckForm(contentControl, formPr);
 			return new AscBuilder.ApiTextForm(contentControl);
 		}, this);
 	};
@@ -725,9 +725,6 @@
 		
 		ApplyCommonFormPr(contentControl, formPr);
 		
-		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
-		SetFormPlaceholder(contentControl, placeholder);
-		
 		let tag = formPr ? GetStringParameter(formPr["tag"], undefined) : undefined;
 		if (tag)
 			contentControl.SetTag(tag);
@@ -736,10 +733,17 @@
 		contentControl.UpdatePlaceHolderTextPrForForm();
 		return contentControl;
 	}
+	function UpdatePlaceholder(form, formPr)
+	{
+		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
+		SetFormPlaceholder(form, placeholder);
+	}
 	function SetFormPlaceholder(form, text)
 	{
 		if (text)
 			form.SetPlaceholderText(text);
+		else if (form.IsSignatureForm())
+			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 		else
 			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 	}
@@ -783,8 +787,9 @@
 		let complexFormPr = new AscWord.CSdtComplexFormPr();
 		form.SetComplexFormPr(complexFormPr);
 	}
-	function CheckForm(form)
+	function CheckForm(form, formPr)
 	{
+		UpdatePlaceholder(form, formPr);
 		CheckFormKey(form);
 		CheckFormRole(form);
 	}
