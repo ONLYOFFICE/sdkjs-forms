@@ -309,6 +309,15 @@
 		this.endAction();
 		return true;
 	};
+	OForm.prototype.removeAllRoles = function()
+	{
+		this.updateRoles();
+		
+		for (let i = this.Roles.length - 1; i >= 0; --i)
+		{
+			this.removeRole(this.Roles[i].getRole());
+		}
+	};
 	OForm.prototype.moveUpRole = function(name)
 	{
 		let role = this.getRole(name);
