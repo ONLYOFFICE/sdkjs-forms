@@ -306,6 +306,18 @@
 		else if (undefined !== color)
 			userMaster.setColor(color.r, color.g, color.b);
 		
+		let userName = roleSettings.getUserName();
+		if (null === userName)
+			userMaster.setUserName(undefined);
+		else if (userName)
+			userMaster.setUserName(userName);
+		
+		let userId = roleSettings.getUserId();
+		if (null === userId)
+			userMaster.setUserId(undefined);
+		else if (userId)
+			userMaster.setUserId(userId);
+		
 		this.endAction();
 		return true;
 	};
