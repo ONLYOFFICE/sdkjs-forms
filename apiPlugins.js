@@ -67,7 +67,7 @@
 	/**
 	 * Returns information about all the forms that have been added to the document.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias GetAllForms
 	 * @returns {ContentControl[]} - An array with all the forms from the document.
 	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods/GetAllForms.js
@@ -89,7 +89,7 @@
 	/**
 	 * Returns information about all the forms that have been added to the document with specified tag.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias GetFormsByTag
 	 * @param {string} tag - The form tag.
 	 * @returns {ContentControl[]} - An array with all the forms from the document with the specified tag.
@@ -115,7 +115,7 @@
 	/**
 	 * Sets a value to the specified form.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias SetFormValue
 	 * @param {string} internalId - A unique internal identifier of the form.
 	 * @param {string | boolean} value - Form value to be set. Its type depends on the form type.
@@ -128,7 +128,7 @@
 	/**
 	 * Returns a value of the specified form.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias GetFormValue
 	 * @param {string} internalId - A unique internal identifier of the form.
 	 * @returns {null | string | boolean} The form value in the string or boolean format depending on the form type. The null value means that the form is filled with a placeholder.
@@ -179,7 +179,7 @@
 	/**
 	 * Checks whether the specified form has been digitally signed.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias IsFormSigned
 	 * @returns {boolean} Returns true if the form is signed, false otherwise.
 	 * @since 9.3.0
