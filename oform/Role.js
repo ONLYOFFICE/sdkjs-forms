@@ -54,10 +54,16 @@
 		{
 			r.setName(this.UserMaster.getRole());
 			r.setColor(this.UserMaster.getColor());
+			r.setUserName(this.UserMaster.getUserName());
+			r.setUserId(this.UserMaster.getUserId());
 		}
 
 		if (this.FieldGroup)
+		{
 			r.setFieldCount(this.FieldGroup.getAllFields().length)
+			r.setFilled(this.FieldGroup.isFilled());
+			r.setDate(this.FieldGroup.getDate());
+		}
 
 		return r;
 	};
@@ -115,6 +121,11 @@
 		this.Name       = "";
 		this.Color      = null;
 		this.FieldCount = 0;
+		
+		this.Date     = undefined;
+		this.UserId   = undefined;
+		this.UserName = undefined;
+		this.Filled   = false;
 	}
 	CRoleSettings.prototype.getName = function()
 	{
@@ -158,15 +169,54 @@
 	{
 		return this.FieldCount;
 	};
+	CRoleSettings.prototype.getFilled = function()
+	{
+		return this.Filled;
+	};
+	CRoleSettings.prototype.setFilled = function(isFilled)
+	{
+		this.Filled = isFilled;
+	};
+	CRoleSettings.prototype.getDate = function()
+	{
+		return this.Date;
+	};
+	CRoleSettings.prototype.setDate = function(date)
+	{
+		this.Date = date;
+	};
+	CRoleSettings.prototype.getUserId = function()
+	{
+		return this.UserId;
+	};
+	CRoleSettings.prototype.setUserId = function(userId)
+	{
+		return this.UserId = userId
+	};
+	CRoleSettings.prototype.getUserName = function()
+	{
+		return this.UserName;
+	};
+	CRoleSettings.prototype.setUserName = function(userName)
+	{
+		this.UserName = userName;
+	};
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.CRole         = CRole;
 	AscOForm.CRoleSettings = CRoleSettings;
 	//---------------------------------------------interface export-----------------------------------------------------
 	CRole.prototype['asc_getSettings']           = CRole.prototype.getSettings;
 	window['AscCommon']["CRoleSettings"]         = CRoleSettings;
-	CRoleSettings.prototype["asc_getName"]       = CRoleSettings.prototype.getName;
-	CRoleSettings.prototype["asc_putName"]       = CRoleSettings.prototype.setName;
-	CRoleSettings.prototype["asc_getColor"]      = CRoleSettings.prototype.getAscColor;
-	CRoleSettings.prototype["asc_putColor"]      = CRoleSettings.prototype.setAscColor;
-	CRoleSettings.prototype["asc_getFieldCount"] = CRoleSettings.prototype.getFieldCount;
+	window['AscCommon'].CRoleSettings            = CRoleSettings;
+	CRoleSettings.prototype["asc_getName"]       = CRoleSettings.prototype.asc_getName       = CRoleSettings.prototype.getName;
+	CRoleSettings.prototype["asc_putName"]       = CRoleSettings.prototype.asc_putName       = CRoleSettings.prototype.setName;
+	CRoleSettings.prototype["asc_getColor"]      = CRoleSettings.prototype.asc_getColor      = CRoleSettings.prototype.getAscColor;
+	CRoleSettings.prototype["asc_putColor"]      = CRoleSettings.prototype.asc_putColor      = CRoleSettings.prototype.setAscColor;
+	CRoleSettings.prototype["asc_getFieldCount"] = CRoleSettings.prototype.asc_getFieldCount = CRoleSettings.prototype.getFieldCount;
+	CRoleSettings.prototype["asc_getFilled"]     = CRoleSettings.prototype.asc_getFilled     = CRoleSettings.prototype.getFilled;
+	CRoleSettings.prototype["asc_getDate"]       = CRoleSettings.prototype.asc_getDate       = CRoleSettings.prototype.getDate;
+	CRoleSettings.prototype["asc_getUserId"]     = CRoleSettings.prototype.asc_getUserId     = CRoleSettings.prototype.getUserId;
+	CRoleSettings.prototype["asc_putUserId"]     = CRoleSettings.prototype.asc_putUserId     = CRoleSettings.prototype.setUserId;
+	CRoleSettings.prototype["asc_getUserName"]   = CRoleSettings.prototype.asc_getUserName   = CRoleSettings.prototype.getUserName;
+	CRoleSettings.prototype["asc_putUserName"]   = CRoleSettings.prototype.asc_putUserName   = CRoleSettings.prototype.setUserName;
 })(window);

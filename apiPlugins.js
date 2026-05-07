@@ -35,31 +35,39 @@
 (function(window)
 {
 	let Api = window["asc_docs_api"];
-
+	
 	/**
-     * @typedef {Object} ContentControl
-	 * Content control object.
-     * @property {string} Tag - A tag assigned to the content control. The same tag can be assigned to several content controls so that it is possible to make reference to them in your code.
-     * @property {string} Id - A unique identifier of the content control. It can be used to search for a certain content control and make reference to it in the code.
-     * @property {ContentControlLock} Lock - A value that defines if it is possible to delete and/or edit the content control or not: 0 - only deleting, 1 - no deleting or editing, 2 - only editing, 3 - full access.
-     * @property {string} InternalId - A unique internal identifier of the content control. It is used for all operations with content controls.
-     * @see office-js-api/Examples/Plugins/Forms/Enumeration/ContentControl.js
+	 * @typedef {Object} ContentControl
+	 * The content control object.
+	 * @property {string} Tag - A tag assigned to the content control. The same tag can be assigned to several content controls so that you can make reference to them in your code.
+	 * @property {string} Id - A unique content control identifier. It can be used to search for a certain content control and make reference to it in your code.
+	 * @property {ContentControlLock} Lock - A value that defines if it is possible to delete and/or edit the content control or not.
+	 * @property {string} InternalId - A unique internal identifier of the content control. It is used for all operations with content controls.
+	 * @property {string} Alias - An alias of the content control.
+	 * @property {1 | 2} Appearance - The visualization type of the content control: <b>1</b> - frame (bounding box), <b>2</b> - hidden.
+	 * @property {string} [FormKey] - A unique form key. Present only if the content control is a form field.
+	 * @property {string} [RadioGroup] - A group key of the radio button. Present only if the content control is a radio button form field .
+	 * @property {*} [FormValue] - The current value of the form field. Present only if the content control is a form field.
+	 * @property {{R: number, G: number, B: number}} [Color] - The tag color of the content control. Present only if the tag color is set.
+	 * @property {{Color: {R: number, G: number, B: number, A: number}}} [Border] - The border color of the content control. Present only if the border color is set.
+	 * @property {{Color: {R: number, G: number, B: number, A: number}}} [Shd] - The shading color of the content control. Present only if the shading color is set.
+	 * @see office-js-api/Examples/Plugins/Forms/Enumeration/ContentControl.js
 	 */
-
+	
 	/**
-     * @typedef {(0 | 1 | 2 | 3)} ContentControlLock
-     * A value that defines if it is possible to delete and/or edit the content control or not:
+	 * @typedef {(0 | 1 | 2 | 3)} ContentControlLock
+	 * A value that defines if it is possible to delete and/or edit the content control or not:
 	 * **0** - only deleting
 	 * **1** - disable deleting or editing
 	 * **2** - only editing
 	 * **3** - full access
-     * @see office-js-api/Examples/Plugins/Forms/Enumeration/ContentControlLock.js
+	 * @see office-js-api/Examples/Plugins/Forms/Enumeration/ContentControlLock.js
 	 */
 
 	/**
 	 * Returns information about all the forms that have been added to the document.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias GetAllForms
 	 * @returns {ContentControl[]} - An array with all the forms from the document.
 	 * @see office-js-api/Examples/Plugins/Forms/Api/Methods/GetAllForms.js
@@ -81,7 +89,7 @@
 	/**
 	 * Returns information about all the forms that have been added to the document with specified tag.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias GetFormsByTag
 	 * @param {string} tag - The form tag.
 	 * @returns {ContentControl[]} - An array with all the forms from the document with the specified tag.
@@ -107,7 +115,7 @@
 	/**
 	 * Sets a value to the specified form.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias SetFormValue
 	 * @param {string} internalId - A unique internal identifier of the form.
 	 * @param {string | boolean} value - Form value to be set. Its type depends on the form type.
@@ -120,7 +128,7 @@
 	/**
 	 * Returns a value of the specified form.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias GetFormValue
 	 * @param {string} internalId - A unique internal identifier of the form.
 	 * @returns {null | string | boolean} The form value in the string or boolean format depending on the form type. The null value means that the form is filled with a placeholder.
@@ -171,7 +179,7 @@
 	/**
 	 * Checks whether the specified form has been digitally signed.
 	 * @memberof Api
-	 * @typeofeditors ["CDE"]
+	 * @typeofeditors ["CDE", "CFE"]
 	 * @alias IsFormSigned
 	 * @returns {boolean} Returns true if the form is signed, false otherwise.
 	 * @since 9.3.0

@@ -306,8 +306,29 @@
 		else if (undefined !== color)
 			userMaster.setColor(color.r, color.g, color.b);
 		
+		let userName = roleSettings.getUserName();
+		if (null === userName)
+			userMaster.setUserName(undefined);
+		else if (userName)
+			userMaster.setUserName(userName);
+		
+		let userId = roleSettings.getUserId();
+		if (null === userId)
+			userMaster.setUserId(undefined);
+		else if (userId)
+			userMaster.setUserId(userId);
+		
 		this.endAction();
 		return true;
+	};
+	OForm.prototype.removeAllRoles = function()
+	{
+		this.updateRoles();
+		
+		for (let i = this.Roles.length - 1; i >= 0; --i)
+		{
+			this.removeRole(this.Roles[i].getRole());
+		}
 	};
 	OForm.prototype.moveUpRole = function(name)
 	{
@@ -733,14 +754,14 @@
 	//--------------------------------------------------------export----------------------------------------------------
 	AscOForm.OForm = OForm;
 	//---------------------------------------------interface export-----------------------------------------------------
-	OForm.prototype['asc_getAllRoles']  = OForm.prototype.getAllRoles;
-	OForm.prototype['asc_addRole']      = OForm.prototype.addRole;
-	OForm.prototype['asc_removeRole']   = OForm.prototype.removeRole;
-	OForm.prototype['asc_editRole']     = OForm.prototype.editRole;
-	OForm.prototype['asc_moveUpRole']   = OForm.prototype.moveUpRole;
-	OForm.prototype['asc_moveDownRole'] = OForm.prototype.moveDownRole;
-	OForm.prototype['asc_haveRole']     = OForm.prototype.haveRole;
-	OForm.prototype['asc_getRole']      = OForm.prototype.getRoleSettings;
-	OForm.prototype['asc_canFillRole']  = OForm.prototype.canFillRole;
+	OForm.prototype['asc_getAllRoles']  = OForm.prototype.asc_getAllRoles  = OForm.prototype.getAllRoles;
+	OForm.prototype['asc_addRole']      = OForm.prototype.asc_addRole      = OForm.prototype.addRole;
+	OForm.prototype['asc_removeRole']   = OForm.prototype.asc_removeRole   = OForm.prototype.removeRole;
+	OForm.prototype['asc_editRole']     = OForm.prototype.asc_editRole     = OForm.prototype.editRole;
+	OForm.prototype['asc_moveUpRole']   = OForm.prototype.asc_moveUpRole   = OForm.prototype.moveUpRole;
+	OForm.prototype['asc_moveDownRole'] = OForm.prototype.asc_moveDownRole = OForm.prototype.moveDownRole;
+	OForm.prototype['asc_haveRole']     = OForm.prototype.asc_haveRole     = OForm.prototype.haveRole;
+	OForm.prototype['asc_getRole']      = OForm.prototype.asc_getRole      = OForm.prototype.getRoleSettings;
+	OForm.prototype['asc_canFillRole']  = OForm.prototype.asc_canFillRole  = OForm.prototype.canFillRole;
 	
 })(window);

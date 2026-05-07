@@ -198,7 +198,7 @@
 			
 			let form = CreateCommonForm(formPr);
 			ApplyTextFormPr(form, formPr);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiTextForm(form);
 		}, this);
 	};
@@ -273,7 +273,7 @@
 				private_PerformAddCheckBox();
 			}
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiCheckBoxForm(oCC);
 		}, this);
 	};
@@ -343,7 +343,7 @@
 				}
 			}
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiComboBoxForm(oCC);
 		}, this);
 	};
@@ -395,8 +395,44 @@
 			
 			oCC.SetPictureFormPr(oPr);
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiPictureForm(oCC);
+		}, this);
+	};
+	/**
+	 * Creates a picture form with the specified picture form properties.
+	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
+	 * @param {FormPrBase} formPr - form properties.
+	 * @returns {ApiSignatureForm}
+	 * @since 9.4.0
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateSignatureForm.js
+	 */
+	Api.CreateSignatureForm = function(formPr)
+	{
+		return executeNoFormLockCheck(function()
+		{
+			formPr = formPr ? formPr : {};
+			
+			let form = CreateCommonForm(formPr);
+			
+			let pictPr = new AscCommon.CSdtPictureFormPr();
+			let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
+			
+			pictPr.SetSignature(true);
+			let glossary = logicDocument ? logicDocument.GetGlossaryDocument() : null;
+			if (glossary)
+				form.SetPlaceholder(glossary.GetDefaultPlaceholderSignatureOformDocPartId());
+			
+			form.SetPictureFormPr(pictPr);
+			form.ApplyPicturePr(true);
+			
+			let w = 150 / 72 * 25.4;
+			let h = 32 / 72 * 25.4;
+			form.ConvertFormToFixed(w, h);
+			
+			CheckForm(form, formPr);
+			return new AscBuilder.ApiSignatureForm(form);
 		}, this);
 	};
 	/**
@@ -416,7 +452,7 @@
 			
 			let form = CreateCommonForm(formPr);
 			ApplyDateFormPr(form, formPr);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiDateForm(form);
 		}, this);
 	};
@@ -437,7 +473,7 @@
 
 			let form = CreateCommonForm(formPr);
 			ApplyComplexFormPr(form);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiComplexForm(form);
 		}, this);
 	};
@@ -471,7 +507,7 @@
 			ApplyCommonFormPr(contentControl, formPr);
 			SetFormPlaceholder(contentControl, placeholder);
 			ApplyTextFormPr(contentControl, formPr, true);
-			CheckForm(contentControl);
+			CheckForm(contentControl, formPr);
 			return new AscBuilder.ApiTextForm(contentControl);
 		}, this);
 	};
@@ -689,9 +725,6 @@
 		
 		ApplyCommonFormPr(contentControl, formPr);
 		
-		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
-		SetFormPlaceholder(contentControl, placeholder);
-		
 		let tag = formPr ? GetStringParameter(formPr["tag"], undefined) : undefined;
 		if (tag)
 			contentControl.SetTag(tag);
@@ -700,10 +733,17 @@
 		contentControl.UpdatePlaceHolderTextPrForForm();
 		return contentControl;
 	}
+	function UpdatePlaceholder(form, formPr)
+	{
+		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
+		SetFormPlaceholder(form, placeholder);
+	}
 	function SetFormPlaceholder(form, text)
 	{
 		if (text)
 			form.SetPlaceholderText(text);
+		else if (form.IsSignatureForm())
+			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 		else
 			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 	}
@@ -747,8 +787,9 @@
 		let complexFormPr = new AscWord.CSdtComplexFormPr();
 		form.SetComplexFormPr(complexFormPr);
 	}
-	function CheckForm(form)
+	function CheckForm(form, formPr)
 	{
+		UpdatePlaceholder(form, formPr);
 		CheckFormKey(form);
 		CheckFormRole(form);
 	}
@@ -800,12 +841,13 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Api["CreateTextForm"]     = Api.CreateTextForm;
-	Api["CreatePictureForm"]  = Api.CreatePictureForm;
-	Api["CreateDateForm"]     = Api.CreateDateForm;
-	Api["CreateCheckBoxForm"] = Api.CreateCheckBoxForm;
-	Api["CreateComboBoxForm"] = Api.CreateComboBoxForm;
-	Api["CreateComplexForm"]  = Api.CreateComplexForm;
+	Api["CreateTextForm"]      = Api.CreateTextForm;
+	Api["CreatePictureForm"]   = Api.CreatePictureForm;
+	Api["CreateSignatureForm"] = Api.CreateSignatureForm;
+	Api["CreateDateForm"]      = Api.CreateDateForm;
+	Api["CreateCheckBoxForm"]  = Api.CreateCheckBoxForm;
+	Api["CreateComboBoxForm"]  = Api.CreateComboBoxForm;
+	Api["CreateComplexForm"]   = Api.CreateComplexForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
