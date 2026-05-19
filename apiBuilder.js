@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2024
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 
@@ -198,7 +201,7 @@
 			
 			let form = CreateCommonForm(formPr);
 			ApplyTextFormPr(form, formPr);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiTextForm(form);
 		}, this);
 	};
@@ -273,7 +276,7 @@
 				private_PerformAddCheckBox();
 			}
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiCheckBoxForm(oCC);
 		}, this);
 	};
@@ -343,7 +346,7 @@
 				}
 			}
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiComboBoxForm(oCC);
 		}, this);
 	};
@@ -395,8 +398,44 @@
 			
 			oCC.SetPictureFormPr(oPr);
 			
-			CheckForm(oCC);
+			CheckForm(oCC, formPr);
 			return new AscBuilder.ApiPictureForm(oCC);
+		}, this);
+	};
+	/**
+	 * Creates a picture form with the specified picture form properties.
+	 * @memberof Api
+	 * @typeofeditors ["CDE", "CFE"]
+	 * @param {FormPrBase} formPr - form properties.
+	 * @returns {ApiSignatureForm}
+	 * @since 9.4.0
+	 * @see office-js-api/Examples/Forms/Api/Methods/CreateSignatureForm.js
+	 */
+	Api.CreateSignatureForm = function(formPr)
+	{
+		return executeNoFormLockCheck(function()
+		{
+			formPr = formPr ? formPr : {};
+			
+			let form = CreateCommonForm(formPr);
+			
+			let pictPr = new AscCommon.CSdtPictureFormPr();
+			let logicDocument = editor && editor.WordControl && editor.WordControl.m_oLogicDocument;
+			
+			pictPr.SetSignature(true);
+			let glossary = logicDocument ? logicDocument.GetGlossaryDocument() : null;
+			if (glossary)
+				form.SetPlaceholder(glossary.GetDefaultPlaceholderSignatureOformDocPartId());
+			
+			form.SetPictureFormPr(pictPr);
+			form.ApplyPicturePr(true);
+			
+			let w = 150 / 72 * 25.4;
+			let h = 32 / 72 * 25.4;
+			form.ConvertFormToFixed(w, h);
+			
+			CheckForm(form, formPr);
+			return new AscBuilder.ApiSignatureForm(form);
 		}, this);
 	};
 	/**
@@ -416,7 +455,7 @@
 			
 			let form = CreateCommonForm(formPr);
 			ApplyDateFormPr(form, formPr);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiDateForm(form);
 		}, this);
 	};
@@ -437,7 +476,7 @@
 
 			let form = CreateCommonForm(formPr);
 			ApplyComplexFormPr(form);
-			CheckForm(form);
+			CheckForm(form, formPr);
 			return new AscBuilder.ApiComplexForm(form);
 		}, this);
 	};
@@ -471,7 +510,7 @@
 			ApplyCommonFormPr(contentControl, formPr);
 			SetFormPlaceholder(contentControl, placeholder);
 			ApplyTextFormPr(contentControl, formPr, true);
-			CheckForm(contentControl);
+			CheckForm(contentControl, formPr);
 			return new AscBuilder.ApiTextForm(contentControl);
 		}, this);
 	};
@@ -689,9 +728,6 @@
 		
 		ApplyCommonFormPr(contentControl, formPr);
 		
-		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
-		SetFormPlaceholder(contentControl, placeholder);
-		
 		let tag = formPr ? GetStringParameter(formPr["tag"], undefined) : undefined;
 		if (tag)
 			contentControl.SetTag(tag);
@@ -700,10 +736,17 @@
 		contentControl.UpdatePlaceHolderTextPrForForm();
 		return contentControl;
 	}
+	function UpdatePlaceholder(form, formPr)
+	{
+		let placeholder = formPr ? GetStringParameter(formPr["placeholder"], undefined) : undefined;
+		SetFormPlaceholder(form, placeholder);
+	}
 	function SetFormPlaceholder(form, text)
 	{
 		if (text)
 			form.SetPlaceholderText(text);
+		else if (form.IsSignatureForm())
+			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 		else
 			form.SetPlaceholder(c_oAscDefaultPlaceholderName.Text);
 	}
@@ -747,8 +790,9 @@
 		let complexFormPr = new AscWord.CSdtComplexFormPr();
 		form.SetComplexFormPr(complexFormPr);
 	}
-	function CheckForm(form)
+	function CheckForm(form, formPr)
 	{
+		UpdatePlaceholder(form, formPr);
 		CheckFormKey(form);
 		CheckFormRole(form);
 	}
@@ -800,12 +844,13 @@
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Export
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	Api["CreateTextForm"]     = Api.CreateTextForm;
-	Api["CreatePictureForm"]  = Api.CreatePictureForm;
-	Api["CreateDateForm"]     = Api.CreateDateForm;
-	Api["CreateCheckBoxForm"] = Api.CreateCheckBoxForm;
-	Api["CreateComboBoxForm"] = Api.CreateComboBoxForm;
-	Api["CreateComplexForm"]  = Api.CreateComplexForm;
+	Api["CreateTextForm"]      = Api.CreateTextForm;
+	Api["CreatePictureForm"]   = Api.CreatePictureForm;
+	Api["CreateSignatureForm"] = Api.CreateSignatureForm;
+	Api["CreateDateForm"]      = Api.CreateDateForm;
+	Api["CreateCheckBoxForm"]  = Api.CreateCheckBoxForm;
+	Api["CreateComboBoxForm"]  = Api.CreateComboBoxForm;
+	Api["CreateComplexForm"]   = Api.CreateComplexForm;
 	
 	ApiDocument.prototype["InsertTextForm"] = ApiDocument.prototype.InsertTextForm;
 	ApiDocument.prototype["GetFormRoles"]   = ApiDocument.prototype.GetFormRoles;
